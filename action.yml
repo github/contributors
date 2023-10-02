@@ -1,0 +1,10 @@
+---
+name: 'contributors'
+author: 'github'
+description: 'A GitHub Action to report out contributors'
+runs:
+  using: 'docker'
+  image: 'docker://ghcr.io/github/contributors:v2'
+branding:
+  icon: 'users'
+  color: 'green'
