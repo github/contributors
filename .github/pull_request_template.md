@@ -1,10 +1,7 @@
-<!-- Please ensure your PR title is brief and descriptive for a good changelog entry -->
-<!-- Link to issue if there is one -->
-
-<!-- Describe what the changes are -->
+<!-- PR title should be brief and descriptive for a good changelog entry -->
 
 ## Proposed Changes
-
+<!-- Describe what the changes are and link to a GitHub Issue if one exists -->
 
 ## Readiness Checklist
 
