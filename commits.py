@@ -8,7 +8,7 @@ def get_commits(
     """Get commit information for a single author from the repository"""
     search_dates = ""
     if start_date and end_date:
-        search_dates = f" committer-date:{start_date}..{end_date}"
+        search_dates = f"committer-date:{start_date}..{end_date}"
 
     commits = github_connection.search_commits(
         f"repo:{repo.full_name} author:{author} merge:false {search_dates}"

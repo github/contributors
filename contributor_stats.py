@@ -16,7 +16,7 @@
 class ContributorStats:
     """A class to represent a contributor_stats object"""
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs):  # pylint: disable=unused-argument
         """Create a new contributor_stats object"""
         return super().__new__(cls)
 
@@ -29,4 +29,8 @@ class ContributorStats:
 
     def __repr__(self) -> str:
         """Return the representation of the contributor_stats object"""
-        return f"contributor_stats(username={self.username}, avatar_url={self.avatar_url}, contribution_count={self.contribution_count}, commits={self.commits})"
+        return (
+            f"contributor_stats(username={self.username}, "
+            f"avatar_url={self.avatar_url}, "
+            f"contribution_count={self.contribution_count}, commits={self.commits})"
+        )
