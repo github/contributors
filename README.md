@@ -1,4 +1,5 @@
 # Contributors action
+[![Python package](https://github.com/github/contributors/actions/workflows/python-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/python-ci.yml) [![Docker Image CI](https://github.com/github/contributors/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/docker-ci.yml) [![CodeQL](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql)
 
 This is a GitHub Action that given an organization or repository, produces information about the contributors over the specified time period.
 
