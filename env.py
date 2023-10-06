@@ -2,6 +2,8 @@
 
 import os
 from typing import List
+from os.path import dirname, join
+from dotenv import load_dotenv
 
 
 def get_env_vars() -> tuple[str, str, List[str]]:
@@ -15,6 +17,10 @@ def get_env_vars() -> tuple[str, str, List[str]]:
         str: the start date to get contributor information from
         str: the end date to get contributor information to.
     """
+    # Load from .env file if it exists
+    dotenv_path = join(dirname(__file__), ".env")
+    load_dotenv(dotenv_path)
+
     organization = os.getenv("ORGANIZATION")
     repository = os.getenv("REPOSITORY")
     # Either organization or repository must be set
