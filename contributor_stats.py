@@ -5,10 +5,7 @@
 #     "username" : "zkoppert",
 #     "avatar_url" : "https://avatars.githubusercontent.com/u/29484535?v=4",
 #     "contribution_count" : "1261",
-#     "commits" : {
-#        "744d20e": "2023-06-29 09:43:24 -0700",
-#        "5c622f9" : "2023-06-29 15:55:38 -0700"
-#     },
+#     "commits" : "https://github.com/github/contributors/commits?author=zkoppert&since=2023-10-01&until=2023-10-05"
 #   }
 # ]
 

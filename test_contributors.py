@@ -11,8 +11,7 @@ class TestContributors(unittest.TestCase):
     """
 
     @patch("contributors.contributor_stats.ContributorStats")
-    @patch("contributors.commits.get_commits")
-    def test_get_contributors(self, mock_get_commits, mock_contributor_stats):
+    def test_get_contributors(self, mock_contributor_stats):
         """
         Test the get_contributors function.
         """
@@ -22,15 +21,15 @@ class TestContributors(unittest.TestCase):
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
         mock_user.contributions_count = "100"
         mock_repo.contributors.return_value = [mock_user]
-        mock_github_connection = MagicMock()
+        mock_repo.full_name = "owner/repo"
 
-        get_contributors(mock_repo, mock_github_connection, "2022-01-01", "2022-12-31")
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31")
 
         mock_contributor_stats.assert_called_once_with(
             "user",
             "https://avatars.githubusercontent.com/u/12345678?v=4",
             "100",
-            mock_get_commits.return_value,
+            "https://github.com/owner/repo/commits?author=user&since=2022-01-01&until=2022-12-31",
         )
 
 

@@ -3,7 +3,7 @@
 import env
 import auth
 import contributor_stats
-import commits
+import markdown
 
 
 def main():
@@ -26,8 +26,7 @@ def main():
 
     # Output the contributors information
     print(contributors)
-    # print_contributors(contributors)
-    # write_to_markdown(contributors)
+    markdown.write_to_markdown(contributors, "contributors.md")
     # write_to_json(contributors)
 
 
@@ -49,20 +48,15 @@ def get_all_contributors(
     all_contributors = []
     if repos:
         for repo in repos:
-            all_contributors.append(
-                get_contributors(repo, github_connection, start_date, end_date)
-            )
+            all_contributors.append(get_contributors(repo, start_date, end_date))
     else:
-        all_contributors.append(
-            get_contributors(repository_obj, github_connection, start_date, end_date)
-        )
+        all_contributors.append(get_contributors(repository_obj, start_date, end_date))
 
     return all_contributors
 
 
 def get_contributors(
     repo: object,
-    github_connection: object,
     start_date: str,
     end_date: str,
 ):
@@ -75,13 +69,17 @@ def get_contributors(
             continue
 
         # Store the contributor information in a ContributorStats object
+        if start_date and end_date:
+            commit_url = f"https://github.com/{repo.full_name}/commits?author={user.login}&since={start_date}&until={end_date}"
+        else:
+            commit_url = (
+                f"https://github.com/{repo.full_name}/commits?author={user.login}"
+            )
         contributor = contributor_stats.ContributorStats(
             user.login,
             user.avatar_url,
             user.contributions_count,
-            commits.get_commits(
-                user.login, repo, github_connection, start_date, end_date
-            ),
+            commit_url,
         )
         contributors.append(contributor)
 
