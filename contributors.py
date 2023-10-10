@@ -24,9 +24,25 @@ def main():
         github_connection,
     )
 
+    # Check for new contributor if user provided start_date and end_date
+    if start_date and end_date:
+        ## get the list of contributors from before start_date so we can see if contributors after start_date are new or returning
+        returning_contributors = get_all_contributors(
+            organization,
+            repository,
+            start_date="2008-02-29",  # GitHub was founded on 2008-02-29
+            end_date=start_date,
+            github_connection=github_connection,
+        )
+        for contributor in contributors:
+            for user in contributor:
+                user.new_contributor = contributor_stats.is_new_contributor(
+                    user.username, returning_contributors
+                )
+
     # Output the contributors information
     print(contributors)
-    markdown.write_to_markdown(contributors, "contributors.md")
+    markdown.write_to_markdown(contributors, "contributors.md", start_date, end_date)
     # write_to_json(contributors)
 
 
@@ -68,6 +84,18 @@ def get_contributors(
         if "[bot]" in user.login:
             continue
 
+        # Check if user has commits in the date range
+        if start_date and end_date:
+            user_commits = repo.commits(
+                author=user.login, since=start_date, until=end_date
+            )
+
+            # If the user has no commits in the date range, skip them
+            try:
+                next(user_commits)
+            except StopIteration:
+                continue
+
         # Store the contributor information in a ContributorStats object
         if start_date and end_date:
             commit_url = f"https://github.com/{repo.full_name}/commits?author={user.login}&since={start_date}&until={end_date}"
@@ -77,6 +105,7 @@ def get_contributors(
             )
         contributor = contributor_stats.ContributorStats(
             user.login,
+            False,
             user.avatar_url,
             user.contributions_count,
             commit_url,

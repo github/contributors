@@ -17,16 +17,20 @@ class TestMarkdown(unittest.TestCase):
         """
         person1 = contributor_stats.ContributorStats(
             "user1",
+            False,
             "url",
             100,
             "commit url",
         )
         person2 = contributor_stats.ContributorStats(
             "user2",
+            False,
             "url2",
             200,
             "commit url2",
         )
+        # Set person2 as a new contributor since this cannot be set on initiatization of the object
+        person2.new_contributor = True
         collaborators = [
             [
                 person1,
@@ -34,12 +38,12 @@ class TestMarkdown(unittest.TestCase):
             ]
         ]
 
-        write_to_markdown(collaborators, "filename")
+        write_to_markdown(collaborators, "filename", "2023-01-01", "2023-01-02")
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
         mock_file().write.assert_any_call("# Contributors\n\n")
         mock_file().write.assert_any_call(
-            "| Username | Contribution Count | Commits |\n| --- | --- | --- |\n| user1 | 100 | commit url |\n| user2 | 200 | commit url2 |\n"
+            "| Username | Contribution Count | New Contributor | Commits |\n| --- | --- | --- | --- |\n| user1 | 100 | False | commit url |\n| user2 | 200 | True | commit url2 |\n"
         )
 
 
