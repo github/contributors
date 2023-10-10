@@ -15,6 +15,7 @@ class TestContributorStats(unittest.TestCase):
         """
         self.contributor = ContributorStats(
             "zkoppert",
+            False,
             "https://avatars.githubusercontent.com/u/29484535?v=4",
             "1261",
             "commit_url5",
@@ -25,6 +26,7 @@ class TestContributorStats(unittest.TestCase):
         Test the __init__ method of the ContributorStats class.
         """
         self.assertEqual(self.contributor.username, "zkoppert")
+        self.assertEqual(self.contributor.new_contributor, False)
         self.assertEqual(
             self.contributor.avatar_url,
             "https://avatars.githubusercontent.com/u/29484535?v=4",

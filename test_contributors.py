@@ -27,6 +27,7 @@ class TestContributors(unittest.TestCase):
 
         mock_contributor_stats.assert_called_once_with(
             "user",
+            False,
             "https://avatars.githubusercontent.com/u/12345678?v=4",
             "100",
             "https://github.com/owner/repo/commits?author=user&since=2022-01-01&until=2022-12-31",
@@ -95,6 +96,36 @@ class TestContributors(unittest.TestCase):
         )
         mock_get_contributors.assert_called_once_with(
             "repo", "2022-01-01", "2022-12-31"
+        )
+
+    @patch("contributors.contributor_stats.ContributorStats")
+    def test_get_contributors_skip_users_with_no_commits(self, mock_contributor_stats):
+        """
+        Test the get_contributors function skips users with no commits in the date range.
+        """
+        mock_repo = MagicMock()
+        mock_user = MagicMock()
+        mock_user.login = "user"
+        mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
+        mock_user.contributions_count = "100"
+        mock_user2 = MagicMock()
+        mock_user2.login = "user2"
+        mock_user2.avatar_url = "https://avatars.githubusercontent.com/u/12345679?v=4"
+        mock_user2.contributions_count = "102"
+
+        mock_repo.contributors.return_value = [mock_user]
+        mock_repo.full_name = "owner/repo"
+        mock_repo.get_commits.side_effect = StopIteration
+
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31")
+
+        # Note that only user is returned and user2 is not returned here because there were no commits in the date range
+        mock_contributor_stats.assert_called_once_with(
+            "user",
+            False,
+            "https://avatars.githubusercontent.com/u/12345678?v=4",
+            "100",
+            "https://github.com/owner/repo/commits?author=user&since=2022-01-01&until=2022-12-31",
         )
 
 
