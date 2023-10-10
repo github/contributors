@@ -5,7 +5,7 @@
 #     "username" : "zkoppert",
 #     "avatar_url" : "https://avatars.githubusercontent.com/u/29484535?v=4",
 #     "contribution_count" : "1261",
-#     "commits" : "https://github.com/github/contributors/commits?author=zkoppert&since=2023-10-01&until=2023-10-05"
+#     "commit_url" : "https://github.com/github/contributors/commits?author=zkoppert&since=2023-10-01&until=2023-10-05"
 #   }
 # ]
 
@@ -17,17 +17,17 @@ class ContributorStats:
         """Create a new contributor_stats object"""
         return super().__new__(cls)
 
-    def __init__(self, username, avatar_url, contribution_count, commits):
+    def __init__(self, username, avatar_url, contribution_count, commit_url):
         """Initialize the contributor_stats object"""
         self.username = username
         self.avatar_url = avatar_url
         self.contribution_count = contribution_count
-        self.commits = commits
+        self.commit_url = commit_url
 
     def __repr__(self) -> str:
         """Return the representation of the contributor_stats object"""
         return (
             f"contributor_stats(username={self.username}, "
             f"avatar_url={self.avatar_url}, "
-            f"contribution_count={self.contribution_count}, commits={self.commits})"
+            f"contribution_count={self.contribution_count}, commit_url={self.commit_url})"
         )
