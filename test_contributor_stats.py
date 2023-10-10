@@ -17,10 +17,7 @@ class TestContributorStats(unittest.TestCase):
             "zkoppert",
             "https://avatars.githubusercontent.com/u/29484535?v=4",
             "1261",
-            {
-                "744d20e": "2023-06-29 09:43:24 -0700",
-                "5c622f9": "2023-06-29 15:55:38 -0700",
-            },
+            "commit_url5",
         )
 
     def test_init(self):
@@ -34,11 +31,8 @@ class TestContributorStats(unittest.TestCase):
         )
         self.assertEqual(self.contributor.contribution_count, "1261")
         self.assertEqual(
-            self.contributor.commits,
-            {
-                "744d20e": "2023-06-29 09:43:24 -0700",
-                "5c622f9": "2023-06-29 15:55:38 -0700",
-            },
+            self.contributor.commit_url,
+            "commit_url5",
         )
 
 

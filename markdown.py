@@ -19,9 +19,9 @@ def write_to_markdown(collaborators, filename):
         for collaborator in repo:
             username = collaborator.username
             contribution_count = collaborator.contribution_count
-            commits = collaborator.commits
+            commit_url = collaborator.commit_url
 
-            row = f"| {username} | {contribution_count} | {commits} |\n"
+            row = f"| {username} | {contribution_count} | {commit_url} |\n"
             table += row
 
     with open(filename, "w", encoding="utf-8") as markdown_file:
