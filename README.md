@@ -19,6 +19,14 @@ This action was developed by the GitHub OSPO for our own use and developed in a 
 
 If you need support using this project or have questions about it, please [open up an issue in this repository](https://github.com/github/contributors/issues). Requests made directly to GitHub staff or support team will be redirected here to open an issue. GitHub SLA's and support/services contracts do not apply to this repository.
 
+## What is a contributor?
+
+Contributors have made commits to the specified repository/organization on a default branch. The endpoint used may return information that is a few hours old because the GitHub REST API caches contributor data to improve performance.
+
+GitHub identifies contributors by author email address. Contribution counts are grouped by GitHub user, which includes all associated email addresses. To improve performance, only the first 500 author email addresses in the repository link to GitHub users. The rest will appear as anonymous contributors without associated GitHub user information.
+
+Find out more in the [GitHub API documentation](https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repository-contributors).
+
 ## Use as a GitHub Action
 
 1. Create a repository to host this GitHub Action or select an existing repository.
