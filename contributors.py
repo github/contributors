@@ -41,7 +41,7 @@ def main():
             )
 
     # Output the contributors information
-    print(contributors)
+    # print(contributors)
     markdown.write_to_markdown(contributors, "contributors.md", start_date, end_date)
     # write_to_json(contributors)
 

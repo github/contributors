@@ -60,7 +60,7 @@ class TestContributorStats(unittest.TestCase):
             False,
             "https://avatars.githubusercontent.com/u/29484535?v=4",
             150,
-            "commit_url1",
+            "commit_url3",
         )
         all_contributors = [
             [
@@ -75,7 +75,7 @@ class TestContributorStats(unittest.TestCase):
                 False,
                 "https://avatars.githubusercontent.com/u/29484535?v=4",
                 250,
-                "commit_url1",
+                "commit_url1, commit_url3",
             ),
             ContributorStats(
                 "user2",

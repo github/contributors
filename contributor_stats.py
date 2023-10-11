@@ -67,13 +67,26 @@ def merge_contributors(contributors: list) -> list:
     merged_contributors = []
     for contributor_list in contributors:
         for contributor in contributor_list:
-            # if the contributor is already in the merged list, add their contribution count into the existing contributor
+            # if the contributor is already in the merged list, merge their relavent attributes
             if contributor.username in [c.username for c in merged_contributors]:
                 for merged_contributor in merged_contributors:
                     if merged_contributor.username == contributor.username:
+                        # Merge the contribution counts via addition
                         merged_contributor.contribution_count += (
                             contributor.contribution_count
                         )
+                        # Merge the commit urls via concatenation
+                        merged_contributor.commit_url = (
+                            merged_contributor.commit_url
+                            + ", "
+                            + contributor.commit_url
+                        )
+                        # Merge the new_contributor attribute via OR
+                        merged_contributor.new_contributor = (
+                            merged_contributor.new_contributor
+                            or contributor.new_contributor
+                        )
+
             else:
                 merged_contributors.append(contributor)
 

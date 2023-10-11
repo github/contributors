@@ -66,7 +66,7 @@ class TestContributors(unittest.TestCase):
                     False,
                     "https://avatars.githubusercontent.com/u/29484535?v=4",
                     200,
-                    "commit_url",
+                    "commit_url, commit_url",
                 ),
             ],
         )
