@@ -26,7 +26,8 @@ def main():
 
     # Check for new contributor if user provided start_date and end_date
     if start_date and end_date:
-        ## get the list of contributors from before start_date so we can see if contributors after start_date are new or returning
+        # get the list of contributors from before start_date
+        # so we can see if contributors after start_date are new or returning
         returning_contributors = get_all_contributors(
             organization,
             repository,
@@ -35,13 +36,12 @@ def main():
             github_connection=github_connection,
         )
         for contributor in contributors:
-            for user in contributor:
-                user.new_contributor = contributor_stats.is_new_contributor(
-                    user.username, returning_contributors
-                )
+            contributor.new_contributor = contributor_stats.is_new_contributor(
+                contributor.username, returning_contributors
+            )
 
     # Output the contributors information
-    print(contributors)
+    # print(contributors)
     markdown.write_to_markdown(contributors, "contributors.md", start_date, end_date)
     # write_to_json(contributors)
 
@@ -67,6 +67,9 @@ def get_all_contributors(
             all_contributors.append(get_contributors(repo, start_date, end_date))
     else:
         all_contributors.append(get_contributors(repository_obj, start_date, end_date))
+
+    # Check for duplicates and merge when usernames are equal
+    all_contributors = contributor_stats.merge_contributors(all_contributors)
 
     return all_contributors
 

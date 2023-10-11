@@ -5,7 +5,7 @@
 #     "username" : "zkoppert",
 #     "new_contributor" : "False",
 #     "avatar_url" : "https://avatars.githubusercontent.com/u/29484535?v=4",
-#     "contribution_count" : "1261",
+#     "contribution_count" : 1261,
 #     "commit_url" : "https://github.com/github/contributors/commits?author=zkoppert&since=2023-10-01&until=2023-10-05"
 #   }
 # ]
@@ -19,7 +19,12 @@ class ContributorStats:
         return super().__new__(cls)
 
     def __init__(
-        self, username, new_contributor, avatar_url, contribution_count, commit_url
+        self,
+        username: str,
+        new_contributor: bool,
+        avatar_url: str,
+        contribution_count: int,
+        commit_url: str,
     ):
         """Initialize the contributor_stats object"""
         new_contributor = False
@@ -38,9 +43,51 @@ class ContributorStats:
             f"contribution_count={self.contribution_count}, commit_url={self.commit_url})"
         )
 
+    def __eq__(self, other) -> bool:
+        """Check if two contributor_stats objects are equal"""
+        return (
+            self.username == other.username
+            and self.new_contributor == other.new_contributor
+            and self.avatar_url == other.avatar_url
+            and self.contribution_count == other.contribution_count
+            and self.commit_url == other.commit_url
+        )
+
 
 def is_new_contributor(username: str, returning_contributors: list) -> bool:
     """Check if the contributor is new or returning"""
-    if username in returning_contributors:
-        return True
+    for contributor in returning_contributors:
+        if username in contributor.username:
+            return True
     return False
+
+
+def merge_contributors(contributors: list) -> list:
+    """Merge contributors with the same username"""
+    merged_contributors = []
+    for contributor_list in contributors:
+        for contributor in contributor_list:
+            # if the contributor is already in the merged list, merge their relavent attributes
+            if contributor.username in [c.username for c in merged_contributors]:
+                for merged_contributor in merged_contributors:
+                    if merged_contributor.username == contributor.username:
+                        # Merge the contribution counts via addition
+                        merged_contributor.contribution_count += (
+                            contributor.contribution_count
+                        )
+                        # Merge the commit urls via concatenation
+                        merged_contributor.commit_url = (
+                            merged_contributor.commit_url
+                            + ", "
+                            + contributor.commit_url
+                        )
+                        # Merge the new_contributor attribute via OR
+                        merged_contributor.new_contributor = (
+                            merged_contributor.new_contributor
+                            or contributor.new_contributor
+                        )
+
+            else:
+                merged_contributors.append(contributor)
+
+    return merged_contributors
