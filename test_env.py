@@ -15,13 +15,21 @@ class TestEnv(unittest.TestCase):
         """
         Test the get_env_vars function when all environment variables are set correctly.
         """
-        mock_getenv.side_effect = ["org", "repo", "token", "2022-01-01", "2022-12-31"]
+        mock_getenv.side_effect = [
+            "org",
+            "repo",
+            "token",
+            "",
+            "2022-01-01",
+            "2022-12-31",
+        ]
 
-        organization, repository, token, start_date, end_date = env.get_env_vars()
+        organization, repository, token, ghe, start_date, end_date = env.get_env_vars()
 
         self.assertEqual(organization, "org")
         self.assertEqual(repository, "repo")
         self.assertEqual(token, "token")
+        self.assertEqual(ghe, "")
         self.assertEqual(start_date, "2022-01-01")
         self.assertEqual(end_date, "2022-12-31")
 
@@ -31,7 +39,7 @@ class TestEnv(unittest.TestCase):
         Test the get_env_vars function when none of the environment variables are set.
         Expect a ValueError to be raised.
         """
-        mock_getenv.side_effect = [None, None, None, None, None]
+        mock_getenv.side_effect = [None, None, None, None, None, None]
 
         with self.assertRaises(ValueError):
             env.get_env_vars()
