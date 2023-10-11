@@ -52,9 +52,54 @@ Below are the allowed configuration options:
 | `START_DATE`          | False    |   Beginning of time      | The date from which you want to start gathering contributor information. ie. Aug 1st, 2023 would be `2023-08-01` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. **Performance Note:** Using start and end dates will reduce speed of the action by approximately 63X. ie without dates if the action takes 1.7 seconds, it will take 1 minute and 47 seconds.|
 | `END_DATE`            | False    |   Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. |
 
-### Example workflows
+### Example workflow
 
-TO BE WRITTEN
+```yaml
+name: Monthly contributor report
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '3 2 1 * *'
+
+permissions:
+  issues: write
+
+jobs:
+  contributor_report:
+    name: issue metrics
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Get dates for last month
+      shell: bash
+      run: |
+        # Calculate the first day of the previous month
+        start_date=$(date -d "last month" +%Y-%m-01)
+
+        # Calculate the last day of the previous month
+        end_date=$(date -d "$first_day +1 month -1 day" +%Y-%m-%d)
+
+        #Set an environment variable with the date range
+        echo "START_DATE=$start_date" >> "$GITHUB_ENV"
+        echo "END_DATE=$end_date" >> "$GITHUB_ENV"
+
+    - name: Run contributor action
+      uses: github/contributors@v1
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        START_DATE: ${{ secrets.START_DATE }}
+        END_DATE: ${{ secrets.END_DATE }}
+        ORGANIZATION: <YOUR_ORGANIZATION_GOES_HERE>
+
+    - name: Create issue
+      uses: peter-evans/create-issue-from-file@v4
+      with:
+        title: Monthly contributor report
+        token: ${{ secrets.GITHUB_TOKEN }}
+        content-filepath: ./contributors.md
+        assignees: <YOUR_GITHUB_HANDLE_HERE>
+```
 
 ## Example markdown output with `start_date` and `end_date` supplied
 
