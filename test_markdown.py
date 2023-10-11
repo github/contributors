@@ -36,10 +36,18 @@ class TestMarkdown(unittest.TestCase):
             person2,
         ]
 
-        write_to_markdown(collaborators, "filename", "2023-01-01", "2023-01-02")
+        write_to_markdown(
+            collaborators, "filename", "2023-01-01", "2023-01-02", None, None
+        )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
         mock_file().write.assert_any_call("# Contributors\n\n")
+        mock_file().write.assert_any_call(
+            "Date range for contributor list:  2023-01-01 to 2023-01-02\n"
+        )
+        mock_file().write.assert_any_call(
+            "| Total Contributors | Total Contributions | % new contributors |\n| --- | --- | --- |\n| 2 | 300 | 50.0% | \n\n"
+        )
         mock_file().write.assert_any_call(
             "| Username | Contribution Count | New Contributor | Commits |\n"
             "| --- | --- | --- | --- |\n"

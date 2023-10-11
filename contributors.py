@@ -42,7 +42,9 @@ def main():
 
     # Output the contributors information
     # print(contributors)
-    markdown.write_to_markdown(contributors, "contributors.md", start_date, end_date)
+    markdown.write_to_markdown(
+        contributors, "contributors.md", start_date, end_date, organization, repository
+    )
     # write_to_json(contributors)
 
 
