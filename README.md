@@ -2,7 +2,7 @@
 
 [![Python package](https://github.com/github/contributors/actions/workflows/python-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/python-ci.yml) [![Docker Image CI](https://github.com/github/contributors/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/docker-ci.yml) [![CodeQL](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql)
 
-This is a GitHub Action that given an organization or repository, produces information about the contributors over the specified time period (if specified).
+This is a GitHub Action that given an organization or repository, produces information about the [contributors](https://chaoss.community/kb/metric-contributors/) over the specified time period (if specified).
 
 Similar actions to help you recognize contributors by putting them into a `README` or `CONTRIBUTORS.md` include:
 
@@ -37,11 +37,12 @@ Below are the allowed configuration options:
 
 | field                 | required | default | description |
 |-----------------------|----------|---------|-------------|
-| `GH_TOKEN`            | True     |         | The GitHub Token used to scan the repository or organization. Must have read access to all repository you are interested in scanning. |
+| `GH_TOKEN`            | True     |   ""    | The GitHub Token used to scan the repository or organization. Must have read access to all repository you are interested in scanning. |
+| `GH_ENTERPRISE_URL`   | False    |   ""    | The `GH_ENTERPRISE_URL` is used to connect to an enterprise server instance of GitHub. github.com users should not enter anything here. |
 | `ORGANIZATION`        | Required to have `ORGANIZATION` or `REPOSITORY` |         | The name of the GitHub organization which you want the contributor information of all repos from. ie. github.com/github would be `github` |
 | `REPOSITORY`          | Required to have `ORGANIZATION` or `REPOSITORY` |         | The name of the repository and organization which you want the contributor information from. ie. `github/contributors` |
-| `START_DATE`                | False |   Beginning of time      | The date from which you want to start gathering contributor information. ie. Aug 1st, 2023 would be `2023-08-01` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. **Performance Note:** Using start and end dates will reduce speed of the action by approximately 63X. ie without dates if the action takes 1.7 seconds, it will take 1 minute and 47 seconds.|
-| `END_DATE`                | False |   Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. |
+| `START_DATE`          | False    |   Beginning of time      | The date from which you want to start gathering contributor information. ie. Aug 1st, 2023 would be `2023-08-01` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. **Performance Note:** Using start and end dates will reduce speed of the action by approximately 63X. ie without dates if the action takes 1.7 seconds, it will take 1 minute and 47 seconds.|
+| `END_DATE`            | False    |   Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. |
 
 ### Example workflows
 
