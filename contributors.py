@@ -10,10 +10,10 @@ def main():
     """Run the main program"""
 
     # Get environment variables
-    organization, repository, token, start_date, end_date = env.get_env_vars()
+    organization, repository, token, ghe, start_date, end_date = env.get_env_vars()
 
     # Auth to GitHub.com
-    github_connection = auth.auth_to_github(token)
+    github_connection = auth.auth_to_github(token, ghe)
 
     # Get the contributors
     contributors = get_all_contributors(

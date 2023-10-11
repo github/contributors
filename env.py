@@ -10,10 +10,14 @@ def get_env_vars() -> tuple[str, str, List[str]]:
     """
     Get the environment variables for use in the action.
 
+    Args:
+        None
+
     Returns:
         str: the organization to get contributor information for
         str: the repository to get contributor information for
         str: the GitHub token to use for authentication
+        str: the GitHub Enterprise URL to use for authentication
         str: the start date to get contributor information from
         str: the end date to get contributor information to.
     """
@@ -34,6 +38,8 @@ def get_env_vars() -> tuple[str, str, List[str]]:
     if not token:
         raise ValueError("GH_TOKEN environment variable not set")
 
+    ghe = os.getenv("GH_ENTERPRISE_URL", default="").strip()
+
     start_date = os.getenv("START_DATE")
     # make sure that start date is in the format YYYY-MM-DD
     if start_date and len(start_date) != 10:
@@ -44,4 +50,4 @@ def get_env_vars() -> tuple[str, str, List[str]]:
     if end_date and len(end_date) != 10:
         raise ValueError("END_DATE environment variable not in the format YYYY-MM-DD")
 
-    return organization, repository, token, start_date, end_date
+    return organization, repository, token, ghe, start_date, end_date

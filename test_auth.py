@@ -16,7 +16,7 @@ class TestAuth(unittest.TestCase):
         """
         mock_login.return_value = "Authenticated to GitHub.com"
 
-        result = auth.auth_to_github("token")
+        result = auth.auth_to_github("token", "")
 
         self.assertEqual(result, "Authenticated to GitHub.com")
 
@@ -26,7 +26,17 @@ class TestAuth(unittest.TestCase):
         Expect a ValueError to be raised.
         """
         with self.assertRaises(ValueError):
-            auth.auth_to_github("")
+            auth.auth_to_github("", "")
+
+    @patch("github3.github.GitHubEnterprise")
+    def test_auth_to_github_with_ghe(self, mock_ghe):
+        """
+        Test the auth_to_github function when the GitHub Enterprise URL is provided.
+        """
+        mock_ghe.return_value = "Authenticated to GitHub Enterprise"
+        result = auth.auth_to_github("token", "https://github.example.com")
+
+        self.assertEqual(result, "Authenticated to GitHub Enterprise")
 
 
 if __name__ == "__main__":
