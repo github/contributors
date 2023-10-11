@@ -2,6 +2,7 @@
 
 import unittest
 from unittest.mock import patch, MagicMock
+from contributor_stats import ContributorStats
 from contributors import get_contributors, get_all_contributors
 
 
@@ -19,7 +20,7 @@ class TestContributors(unittest.TestCase):
         mock_user = MagicMock()
         mock_user.login = "user"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
-        mock_user.contributions_count = "100"
+        mock_user.contributions_count = 100
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
 
@@ -29,7 +30,7 @@ class TestContributors(unittest.TestCase):
             "user",
             False,
             "https://avatars.githubusercontent.com/u/12345678?v=4",
-            "100",
+            100,
             "https://github.com/owner/repo/commits?author=user&since=2022-01-01&until=2022-12-31",
         )
 
@@ -44,7 +45,13 @@ class TestContributors(unittest.TestCase):
             "repo2",
         ]
         mock_get_contributors.return_value = [
-            {"username": "user", "contribution_count": "100", "commits": "commit_url"}
+            ContributorStats(
+                "user",
+                False,
+                "https://avatars.githubusercontent.com/u/29484535?v=4",
+                100,
+                "commit_url",
+            ),
         ]
 
         result = get_all_contributors(
@@ -54,15 +61,14 @@ class TestContributors(unittest.TestCase):
         self.assertEqual(
             result,
             [
-                [
-                    {
-                        "username": "user",
-                        "contribution_count": "100",
-                        "commits": "commit_url",
-                    }
-                ]
-            ]
-            * 2,
+                ContributorStats(
+                    "user",
+                    False,
+                    "https://avatars.githubusercontent.com/u/29484535?v=4",
+                    200,
+                    "commit_url",
+                ),
+            ],
         )
         mock_get_contributors.assert_any_call("repo1", "2022-01-01", "2022-12-31")
         mock_get_contributors.assert_any_call("repo2", "2022-01-01", "2022-12-31")
@@ -75,7 +81,13 @@ class TestContributors(unittest.TestCase):
         mock_github_connection = MagicMock()
         mock_github_connection.repository.return_value = "repo"
         mock_get_contributors.return_value = [
-            {"username": "user", "contribution_count": "100", "commits": "commit_url2"}
+            ContributorStats(
+                "user",
+                False,
+                "https://avatars.githubusercontent.com/u/29484535?v=4",
+                100,
+                "commit_url2",
+            )
         ]
 
         result = get_all_contributors(
@@ -85,13 +97,13 @@ class TestContributors(unittest.TestCase):
         self.assertEqual(
             result,
             [
-                [
-                    {
-                        "username": "user",
-                        "contribution_count": "100",
-                        "commits": "commit_url2",
-                    }
-                ]
+                ContributorStats(
+                    "user",
+                    False,
+                    "https://avatars.githubusercontent.com/u/29484535?v=4",
+                    100,
+                    "commit_url2",
+                ),
             ],
         )
         mock_get_contributors.assert_called_once_with(
@@ -107,11 +119,11 @@ class TestContributors(unittest.TestCase):
         mock_user = MagicMock()
         mock_user.login = "user"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
-        mock_user.contributions_count = "100"
+        mock_user.contributions_count = 100
         mock_user2 = MagicMock()
         mock_user2.login = "user2"
         mock_user2.avatar_url = "https://avatars.githubusercontent.com/u/12345679?v=4"
-        mock_user2.contributions_count = "102"
+        mock_user2.contributions_count = 102
 
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
@@ -124,7 +136,7 @@ class TestContributors(unittest.TestCase):
             "user",
             False,
             "https://avatars.githubusercontent.com/u/12345678?v=4",
-            "100",
+            100,
             "https://github.com/owner/repo/commits?author=user&since=2022-01-01&until=2022-12-31",
         )
 

@@ -19,19 +19,18 @@ def write_to_markdown(collaborators, filename, start_date, end_date):
 
     table = headers
 
-    for repo in collaborators:
-        for collaborator in repo:
-            username = collaborator.username
-            contribution_count = collaborator.contribution_count
-            commit_url = collaborator.commit_url
-            new_contributor = collaborator.new_contributor
+    for collaborator in collaborators:
+        username = collaborator.username
+        contribution_count = collaborator.contribution_count
+        commit_url = collaborator.commit_url
+        new_contributor = collaborator.new_contributor
 
-            if start_date and end_date:
-                row = f"| {username} | {contribution_count} | {new_contributor} | {commit_url} |\n"
-            else:
-                row = f"| {username} | {contribution_count} | {commit_url} |\n"
+        if start_date and end_date:
+            row = f"| {username} | {contribution_count} | {new_contributor} | {commit_url} |\n"
+        else:
+            row = f"| {username} | {contribution_count} | {commit_url} |\n"
 
-            table += row
+        table += row
 
     with open(filename, "w", encoding="utf-8") as markdown_file:
         markdown_file.write("# Contributors\n\n")
