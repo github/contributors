@@ -12,7 +12,17 @@
 
 
 class ContributorStats:
-    """A class to represent a contributor_stats object"""
+    """
+    A class to represent a contributor_stats object correlating to a single contributors stats.
+
+    Attributes:
+        username (str): The username of the contributor
+        new_contributor (bool): Whether the contributor is new or returning
+        avatar_url (str): The url of the contributor's avatar
+        contribution_count (int): The number of contributions the contributor has made
+        commit_url (str): The url of the contributor's commits
+
+    """
 
     def __new__(cls, *args, **kwargs):  # pylint: disable=unused-argument
         """Create a new contributor_stats object"""
@@ -55,7 +65,16 @@ class ContributorStats:
 
 
 def is_new_contributor(username: str, returning_contributors: list) -> bool:
-    """Check if the contributor is new or returning"""
+    """
+    Check if the contributor is new or returning
+
+    Args:
+        username (str): The username of the contributor
+        returning_contributors (list): A list of ContributorStats objects
+            representing contributors who have contributed to the repository
+            before the start_date
+
+    """
     for contributor in returning_contributors:
         if username in contributor.username:
             return True
@@ -63,7 +82,15 @@ def is_new_contributor(username: str, returning_contributors: list) -> bool:
 
 
 def merge_contributors(contributors: list) -> list:
-    """Merge contributors with the same username"""
+    """
+    Merge contributors with the same username from multiple repositories.
+
+    Args:
+        contributors (list): A list of lists of ContributorStats objects
+
+    Returns:
+        merged_contributors (list): A list of ContributorStats objects with no duplicate usernames
+    """
     merged_contributors = []
     for contributor_list in contributors:
         for contributor in contributor_list:
