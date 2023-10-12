@@ -105,8 +105,8 @@ jobs:
 
 # Contributors
 
-Date range for contributor list:  2021-01-01 to 2023-10-10
-Organization: super-linter
+- Date range for contributor list:  2021-01-01 to 2023-10-10
+- Organization: super-linter
 
 | Total Contributors | Total Contributions | % new contributors |
 | --- | --- | --- |
@@ -120,7 +120,7 @@ Organization: super-linter
 
 # Contributors
 
-Organization: super-linter
+- Organization: super-linter
 
 | Total Contributors | Total Contributions |
 | --- | --- |
