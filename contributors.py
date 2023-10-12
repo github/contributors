@@ -55,7 +55,19 @@ def get_all_contributors(
     end_date: str,
     github_connection: object,
 ):
-    """Get all contributors from the organization or repository"""
+    """
+    Get all contributors from the organization or repository
+
+    Args:
+        organization (str): The organization for which the contributors are being listed.
+        repository (str): The repository for which the contributors are being listed.
+        start_date (str): The start date of the date range for the contributor list.
+        end_date (str): The end date of the date range for the contributor list.
+        github_connection (object): The authenticated GitHub connection object from PyGithub
+
+    Returns:
+        all_contributors (list): A list of ContributorStats objects
+    """
     repos = []
     if organization:
         repos = github_connection.organization(organization).repositories()
@@ -81,7 +93,17 @@ def get_contributors(
     start_date: str,
     end_date: str,
 ):
-    """Get contributors from a single repository and filter by start end dates"""
+    """
+    Get contributors from a single repository and filter by start end dates if present.
+
+    Args:
+        repo (object): The repository object from PyGithub
+        start_date (str): The start date of the date range for the contributor list.
+        end_date (str): The end date of the date range for the contributor list.
+
+    Returns:
+        contributors (list): A list of ContributorStats objects
+    """
     all_repo_contributors = repo.contributors()
     contributors = []
     for user in all_repo_contributors:
