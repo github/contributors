@@ -114,7 +114,7 @@ jobs:
 
 | Username | Contribution Count | New Contributor | Commits |
 | --- | --- | --- | --- |
-| zkoppert | 143 | False | https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-01-01&until=2023-10-10 |
+| zkoppert | 143 | False | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-01-01&until=2023-10-10) |
 
 ## Example markdown output with no dates supplied
 
@@ -128,7 +128,7 @@ jobs:
 
 | Username | Contribution Count | Commits |
 | --- | --- | --- |
-| zkoppert | 210 | https://github.com/super-linter/super-linter/commits?author=zkoppert |
+| zkoppert | 210 | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert) |
 
 ## Local usage without Docker
 
