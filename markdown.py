@@ -78,9 +78,9 @@ def write_to_markdown(
                 f"Date range for contributor list:  {start_date} to {end_date}\n"
             )
         if organization:
-            markdown_file.write(f"Organization: {organization}\n")
+            markdown_file.write(f"- Organization: {organization}\n")
         if repository:
-            markdown_file.write(f"Repository: {repository}\n")
+            markdown_file.write(f"- Repository: {repository}\n")
         markdown_file.write("\n")
         markdown_file.write(summary_table)
         markdown_file.write(table)
