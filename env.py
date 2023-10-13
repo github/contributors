@@ -1,12 +1,11 @@
 """A GitHub Action that given an organization or repository, produces information about the contributors over the specified time period."""
 
 import os
-from typing import List
 from os.path import dirname, join
 from dotenv import load_dotenv
 
 
-def get_env_vars() -> tuple[str, str, List[str]]:
+def get_env_vars() -> tuple[str, str, str, str, str, str, str]:
     """
     Get the environment variables for use in the action.
 
@@ -20,6 +19,8 @@ def get_env_vars() -> tuple[str, str, List[str]]:
         str: the GitHub Enterprise URL to use for authentication
         str: the start date to get contributor information from
         str: the end date to get contributor information to.
+        str: whether to get sponsor information on the contributor
+
     """
     # Load from .env file if it exists
     dotenv_path = join(dirname(__file__), ".env")
@@ -50,4 +51,12 @@ def get_env_vars() -> tuple[str, str, List[str]]:
     if end_date and len(end_date) != 10:
         raise ValueError("END_DATE environment variable not in the format YYYY-MM-DD")
 
-    return organization, repository, token, ghe, start_date, end_date
+    sponsor_info = os.getenv("SPONSOR_INFO")
+    # make sure that sponsor_string is a boolean
+    sponsor_info = sponsor_info.lower().strip()
+    if sponsor_info not in ["true", "false", ""]:
+        raise ValueError(
+            "SPONSOR_INFO environment variable not a boolean. ie. True or False or blank"
+        )
+
+    return organization, repository, token, ghe, start_date, end_date, sponsor_info

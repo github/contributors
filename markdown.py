@@ -3,7 +3,13 @@
 
 
 def write_to_markdown(
-    collaborators, filename, start_date, end_date, organization, repository
+    collaborators,
+    filename,
+    start_date,
+    end_date,
+    organization,
+    repository,
+    sponsor_info,
 ):
     """
     This function writes a list of collaborators to a markdown file in table format.
@@ -17,6 +23,7 @@ def write_to_markdown(
         end_date (str): The end date of the date range for the contributor list.
         organization (str): The organization for which the contributors are being listed.
         repository (str): The repository for which the contributors are being listed.
+        sponsor_info (str): True if the user wants the sponsor_url shown in the report
 
     Returns:
         None
@@ -24,7 +31,7 @@ def write_to_markdown(
     """
     # Put together the contributor table
     table, total_contributions = get_contributor_table(
-        collaborators, start_date, end_date, organization, repository
+        collaborators, start_date, end_date, organization, repository, sponsor_info
     )
 
     # Put together the summary table including # of new contributions, # of new contributors, % new contributors, % returning contributors
@@ -91,7 +98,7 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
 
     """
     if start_date and end_date:
-        summary_table = "| Total Contributors | Total Contributions | % new contributors |\n| --- | --- | --- |\n"
+        summary_table = "| Total Contributors | Total Contributions | % New Contributors |\n| --- | --- | --- |\n"
         summary_table += (
             "| "
             + str(len(collaborators))
@@ -106,7 +113,7 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
                     2,
                 )
             )
-            + "% | \n\n"
+            + "% |\n\n"
         )
     else:
         summary_table = "| Total Contributors | Total Contributions |\n| --- | --- |\n"
@@ -118,7 +125,7 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
 
 
 def get_contributor_table(
-    collaborators, start_date, end_date, organization, repository
+    collaborators, start_date, end_date, organization, repository, sponsor_info
 ):
     """
     This function returns a string containing a markdown table of the contributors and the total contribution count.
@@ -130,16 +137,22 @@ def get_contributor_table(
         end_date (str): The end date of the date range for the contributor list.
         organization (str): The organization for which the contributors are being listed.
         repository (str): The repository for which the contributors are being listed.
+        sponsor_info (str): True if the user wants the sponsor_url shown in the report
 
     Returns:
         table (str): A string containing a markdown table of the contributors and the total contribution count.
         total_contributions (int): The total number of contributions made by all of the contributors.
 
     """
+    columns = ["Username", "Contribution Count"]
     if start_date and end_date:
-        headers = "| Username | Contribution Count | New Contributor | Commits |\n| --- | --- | --- | --- |\n"
-    else:
-        headers = "| Username | Contribution Count | Commits |\n| --- | --- | --- |\n"
+        columns += ["New Contributor"]
+    if sponsor_info == "true":
+        columns += ["Sponsor URL"]
+    columns += ["Commits"]
+
+    headers = "| " + " | ".join(columns) + " |\n"
+    headers += "| " + " | ".join(["---"] * len(columns)) + " |\n"
 
     table = headers
     total_contributions = 0
@@ -162,10 +175,15 @@ def get_contributor_table(
                 commit_urls += url + ", "
         new_contributor = collaborator.new_contributor
 
-        if start_date and end_date:
-            row = f"| {username} | {contribution_count} | {new_contributor} | {commit_urls} |\n"
-        else:
-            row = f"| {username} | {contribution_count} | {commit_urls} |\n"
+        row = f"| {username} | {contribution_count} |"
+        if "New Contributor" in columns:
+            row += f" {new_contributor} |"
+        if "Sponsor URL" in columns:
+            if collaborator.sponsor_info == "":
+                row += " not sponsorable |"
+            else:
+                row += f" [Sponsor Link]({collaborator.sponsor_info}) |"
+        row += f" {commit_urls} |\n"
 
         table += row
     return table, total_contributions
