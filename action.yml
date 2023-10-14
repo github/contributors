@@ -1,7 +1,7 @@
 ---
-name: 'contributors report'
+name: 'Contributors Action'
 author: 'github'
-description: 'A GitHub Action to report out contributors'
+description: 'A GitHub Action to report out contributors and contributions to a repository or organization'
 runs:
   using: 'docker'
   image: 'docker://ghcr.io/github/contributors:v1'
