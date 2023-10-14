@@ -22,9 +22,18 @@ class TestEnv(unittest.TestCase):
             "",
             "2022-01-01",
             "2022-12-31",
+            "False",
         ]
 
-        organization, repository, token, ghe, start_date, end_date = env.get_env_vars()
+        (
+            organization,
+            repository,
+            token,
+            ghe,
+            start_date,
+            end_date,
+            sponsor_info,
+        ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
         self.assertEqual(repository, "repo")
@@ -32,6 +41,7 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(ghe, "")
         self.assertEqual(start_date, "2022-01-01")
         self.assertEqual(end_date, "2022-12-31")
+        self.assertEqual(sponsor_info, "false")
 
     @patch("os.getenv")
     def test_get_env_vars_missing_values(self, mock_getenv):
@@ -39,7 +49,7 @@ class TestEnv(unittest.TestCase):
         Test the get_env_vars function when none of the environment variables are set.
         Expect a ValueError to be raised.
         """
-        mock_getenv.side_effect = [None, None, None, None, None, None]
+        mock_getenv.side_effect = [None, None, None, None, None, None, None]
 
         with self.assertRaises(ValueError):
             env.get_env_vars()

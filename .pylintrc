@@ -9,3 +9,4 @@ ignore=.git,
 disable=
 	line-too-long,
 	too-many-arguments,
+	duplicate-code,

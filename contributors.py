@@ -10,7 +10,15 @@ def main():
     """Run the main program"""
 
     # Get environment variables
-    organization, repository, token, ghe, start_date, end_date = env.get_env_vars()
+    (
+        organization,
+        repository,
+        token,
+        ghe,
+        start_date,
+        end_date,
+        sponsor_info,
+    ) = env.get_env_vars()
 
     # Auth to GitHub.com
     github_connection = auth.auth_to_github(token, ghe)
@@ -40,10 +48,19 @@ def main():
                 contributor.username, returning_contributors
             )
 
+    # Get sponsor information on the contributor
+    if sponsor_info == "true":
+        contributors = contributor_stats.get_sponsor_information(contributors, token)
     # Output the contributors information
     # print(contributors)
     markdown.write_to_markdown(
-        contributors, "contributors.md", start_date, end_date, organization, repository
+        contributors,
+        "contributors.md",
+        start_date,
+        end_date,
+        organization,
+        repository,
+        sponsor_info,
     )
     # write_to_json(contributors)
 
@@ -136,6 +153,7 @@ def get_contributors(
             user.avatar_url,
             user.contributions_count,
             commit_url,
+            "",
         )
         contributors.append(contributor)
 
