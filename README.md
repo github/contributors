@@ -81,7 +81,7 @@ jobs:
         start_date=$(date -d "last month" +%Y-%m-01)
 
         # Calculate the last day of the previous month
-        end_date=$(date -d "$first_day +1 month -1 day" +%Y-%m-%d)
+        end_date=$(date -d "$start_date +1 month -1 day" +%Y-%m-%d)
 
         #Set an environment variable with the date range
         echo "START_DATE=$start_date" >> "$GITHUB_ENV"
@@ -91,8 +91,8 @@ jobs:
       uses: github/contributors@v1
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        START_DATE: ${{ secrets.START_DATE }}
-        END_DATE: ${{ secrets.END_DATE }}
+        START_DATE: ${{ env.START_DATE }}
+        END_DATE: ${{ env.END_DATE }}
         ORGANIZATION: <YOUR_ORGANIZATION_GOES_HERE>
         SPONSOR_INFO: "true"
 
