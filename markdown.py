@@ -99,20 +99,22 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
     """
     if start_date and end_date:
         summary_table = "| Total Contributors | Total Contributions | % New Contributors |\n| --- | --- | --- |\n"
+        if len(collaborators) > 0:
+            new_contributors_percentage = round(
+                (len([x for x in collaborators if x.new_contributor is True]))
+                / len(collaborators)
+                * 100,
+                2,
+            )
+        else:
+            new_contributors_percentage = 0
         summary_table += (
             "| "
             + str(len(collaborators))
             + " | "
             + str(total_contributions)
             + " | "
-            + str(
-                round(
-                    (len([x for x in collaborators if x.new_contributor is True]))
-                    / len(collaborators)
-                    * 100,
-                    2,
-                )
-            )
+            + str(new_contributors_percentage)
             + "% |\n\n"
         )
     else:
