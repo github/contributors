@@ -55,6 +55,8 @@ Below are the allowed configuration options:
 
 ### Example workflows
 
+**Be sure to change at least these values: `<YOUR_ORGANIZATION_GOES_HERE>`, `<YOUR_GITHUB_HANDLE_HERE>`**
+
 ```yaml
 name: Monthly contributor report
 on:
@@ -92,6 +94,7 @@ jobs:
         START_DATE: ${{ secrets.START_DATE }}
         END_DATE: ${{ secrets.END_DATE }}
         ORGANIZATION: <YOUR_ORGANIZATION_GOES_HERE>
+        SPONSOR_INFO: "true"
 
     - name: Create issue
       uses: peter-evans/create-issue-from-file@v4
