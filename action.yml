@@ -1,5 +1,5 @@
 ---
-name: 'contributors'
+name: 'contributors report'
 author: 'github'
 description: 'A GitHub Action to report out contributors'
 runs:
