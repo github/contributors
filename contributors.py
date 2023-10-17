@@ -1,5 +1,7 @@
+# pylint: disable=broad-exception-caught
 """This file contains the main() and other functions needed to get contributor information from the organization or repository"""
 
+import sys
 import env
 import auth
 import contributor_stats
@@ -123,39 +125,47 @@ def get_contributors(
     """
     all_repo_contributors = repo.contributors()
     contributors = []
-    for user in all_repo_contributors:
-        # Ignore contributors with [bot] in their name
-        if "[bot]" in user.login:
-            continue
-
-        # Check if user has commits in the date range
-        if start_date and end_date:
-            user_commits = repo.commits(
-                author=user.login, since=start_date, until=end_date
-            )
-
-            # If the user has no commits in the date range, skip them
-            try:
-                next(user_commits)
-            except StopIteration:
+    try:
+        for user in all_repo_contributors:
+            # Ignore contributors with [bot] in their name
+            if "[bot]" in user.login:
                 continue
 
-        # Store the contributor information in a ContributorStats object
-        if start_date and end_date:
-            commit_url = f"https://github.com/{repo.full_name}/commits?author={user.login}&since={start_date}&until={end_date}"
-        else:
-            commit_url = (
-                f"https://github.com/{repo.full_name}/commits?author={user.login}"
+            # Check if user has commits in the date range
+            if start_date and end_date:
+                user_commits = repo.commits(
+                    author=user.login, since=start_date, until=end_date
+                )
+
+                # If the user has no commits in the date range, skip them
+                try:
+                    next(user_commits)
+                except StopIteration:
+                    continue
+
+            # Store the contributor information in a ContributorStats object
+            if start_date and end_date:
+                commit_url = f"https://github.com/{repo.full_name}/commits?author={user.login}&since={start_date}&until={end_date}"
+            else:
+                commit_url = (
+                    f"https://github.com/{repo.full_name}/commits?author={user.login}"
+                )
+            contributor = contributor_stats.ContributorStats(
+                user.login,
+                False,
+                user.avatar_url,
+                user.contributions_count,
+                commit_url,
+                "",
             )
-        contributor = contributor_stats.ContributorStats(
-            user.login,
-            False,
-            user.avatar_url,
-            user.contributions_count,
-            commit_url,
-            "",
+            contributors.append(contributor)
+    except Exception as e:
+        print("Error getting contributors for repository: " + repo.full_name)
+        print(
+            "No more repositories will be processed. Please delete the (empty?) repository and try again."
         )
-        contributors.append(contributor)
+        print(e)
+        sys.exit(1)
 
     return contributors
 
