@@ -69,7 +69,7 @@ permissions:
 
 jobs:
   contributor_report:
-    name: issue metrics
+    name: contributor report
     runs-on: ubuntu-latest
 
     steps:
