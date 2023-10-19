@@ -2,7 +2,7 @@
 
 [![Python package](https://github.com/github/contributors/actions/workflows/python-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/python-ci.yml) [![Docker Image CI](https://github.com/github/contributors/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/docker-ci.yml) [![CodeQL](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql)
 
-This is a GitHub Action that given an organization or repository, produces information about the [contributors](https://chaoss.community/kb/metric-contributors/) over the specified time period (if specified).
+This is a GitHub Action that given an organization or specified repositories, produces information about the [contributors](https://chaoss.community/kb/metric-contributors/) over the specified time period.
 
 Similar actions to help you recognize contributors by putting them into a `README` or `CONTRIBUTORS.md` include:
 
@@ -21,7 +21,7 @@ If you need support using this project or have questions about it, please [open 
 
 ## What is a contributor?
 
-Contributors have made commits to the specified repositories/organization on a default branch. The endpoint used may return information that is a few hours old because the GitHub REST API caches contributor data to improve performance.
+Contributors have made commits to the specified repositories/organization on a default branch. Contributions can also be issue, pull request and discussion interactions. The endpoint used may return information that is a few hours old because the GitHub REST API caches contributor data to improve performance.
 
 GitHub identifies contributors by author email address. Contribution counts are grouped by GitHub user, which includes all associated email addresses. To improve performance, only the first 500 author email addresses in the repository link to GitHub users. The rest will appear as anonymous contributors without associated GitHub user information.
 
@@ -48,7 +48,7 @@ Below are the allowed configuration options:
 | `GH_TOKEN`            | True     |   ""    | The GitHub Token used to scan the repository or organization. Must have read access to all repository you are interested in scanning. |
 | `GH_ENTERPRISE_URL`   | False    |   ""    | The `GH_ENTERPRISE_URL` is used to connect to an enterprise server instance of GitHub. github.com users should not enter anything here. |
 | `ORGANIZATION`        | Required to have `ORGANIZATION` or `REPOSITORY` |         | The name of the GitHub organization which you want the contributor information of all repos from. ie. github.com/github would be `github` |
-| `REPOSITORY`          | Required to have `ORGANIZATION` or `REPOSITORY` |         | The name of the repository and organization which you want the contributor information from. ie. `github/contributors` or a comma separated list of repositories `github/contributor,super-linter/super-linter` |
+| `REPOSITORY`          | Required to have `ORGANIZATION` or `REPOSITORY` |         | The name of the repository and organization which you want the contributor information from. ie. `github/contributors` or a comma separated list of multiple repositories `github/contributor,super-linter/super-linter` |
 | `START_DATE`          | False    |   Beginning of time      | The date from which you want to start gathering contributor information. ie. Aug 1st, 2023 would be `2023-08-01` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. **Performance Note:** Using start and end dates will reduce speed of the action by approximately 63X. ie without dates if the action takes 1.7 seconds, it will take 1 minute and 47 seconds.|
 | `END_DATE`            | False    |   Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. |
 | `SPONSOR_INFO`        | False    |   False      | If you want to include sponsor information in the output. This will include the sponsor count and the sponsor URL. This will impact action performance. ie. SPONSOR_INFO = "False" or SPONSOR_INFO = "True" |
