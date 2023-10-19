@@ -17,7 +17,7 @@ class TestEnv(unittest.TestCase):
         """
         mock_getenv.side_effect = [
             "org",
-            "repo",
+            "repo,repo2",
             "token",
             "",
             "2022-01-01",
@@ -27,7 +27,7 @@ class TestEnv(unittest.TestCase):
 
         (
             organization,
-            repository,
+            repository_list,
             token,
             ghe,
             start_date,
@@ -36,7 +36,7 @@ class TestEnv(unittest.TestCase):
         ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
-        self.assertEqual(repository, "repo")
+        self.assertEqual(repository_list, ["repo", "repo2"])
         self.assertEqual(token, "token")
         self.assertEqual(ghe, "")
         self.assertEqual(start_date, "2022-01-01")

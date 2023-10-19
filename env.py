@@ -14,7 +14,7 @@ def get_env_vars() -> tuple[str, str, str, str, str, str, str]:
 
     Returns:
         str: the organization to get contributor information for
-        str: the repository to get contributor information for
+        List[str]: A list of the repositories to get contributor information for
         str: the GitHub token to use for authentication
         str: the GitHub Enterprise URL to use for authentication
         str: the start date to get contributor information from
@@ -27,11 +27,11 @@ def get_env_vars() -> tuple[str, str, str, str, str, str, str]:
     load_dotenv(dotenv_path)
 
     organization = os.getenv("ORGANIZATION")
-    repository = os.getenv("REPOSITORY")
+    repositories_str = os.getenv("REPOSITORY")
     # Either organization or repository must be set
-    if not organization and not repository:
+    if not organization and not repositories_str:
         raise ValueError(
-            "ORGANIZATION and repository environment variables were both not set. Please enter a valid value for one of them."
+            "ORGANIZATION and REPOSITORY environment variables were both not set. Please enter a valid value for one of them."
         )
 
     token = os.getenv("GH_TOKEN")
@@ -59,4 +59,19 @@ def get_env_vars() -> tuple[str, str, str, str, str, str, str]:
             "SPONSOR_INFO environment variable not a boolean. ie. True or False or blank"
         )
 
-    return organization, repository, token, ghe, start_date, end_date, sponsor_info
+    # Separate repositories_str into a list based on the comma separator
+    repositories_list = []
+    if repositories_str:
+        repositories_list = [
+            repository.strip() for repository in repositories_str.split(",")
+        ]
+
+    return (
+        organization,
+        repositories_list,
+        token,
+        ghe,
+        start_date,
+        end_date,
+        sponsor_info,
+    )

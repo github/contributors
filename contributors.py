@@ -2,6 +2,7 @@
 """This file contains the main() and other functions needed to get contributor information from the organization or repository"""
 
 import sys
+from typing import List
 import env
 import auth
 import contributor_stats
@@ -14,7 +15,7 @@ def main():
     # Get environment variables
     (
         organization,
-        repository,
+        repository_list,
         token,
         ghe,
         start_date,
@@ -28,7 +29,7 @@ def main():
     # Get the contributors
     contributors = get_all_contributors(
         organization,
-        repository,
+        repository_list,
         start_date,
         end_date,
         github_connection,
@@ -40,7 +41,7 @@ def main():
         # so we can see if contributors after start_date are new or returning
         returning_contributors = get_all_contributors(
             organization,
-            repository,
+            repository_list,
             start_date="2008-02-29",  # GitHub was founded on 2008-02-29
             end_date=start_date,
             github_connection=github_connection,
@@ -61,7 +62,7 @@ def main():
         start_date,
         end_date,
         organization,
-        repository,
+        repository_list,
         sponsor_info,
     )
     # write_to_json(contributors)
@@ -69,7 +70,7 @@ def main():
 
 def get_all_contributors(
     organization: str,
-    repository: str,
+    repository_list: List[str],
     start_date: str,
     end_date: str,
     github_connection: object,
@@ -79,7 +80,7 @@ def get_all_contributors(
 
     Args:
         organization (str): The organization for which the contributors are being listed.
-        repository (str): The repository for which the contributors are being listed.
+        repository_list (List[str]): The repository list for which the contributors are being listed.
         start_date (str): The start date of the date range for the contributor list.
         end_date (str): The end date of the date range for the contributor list.
         github_connection (object): The authenticated GitHub connection object from PyGithub
@@ -91,15 +92,16 @@ def get_all_contributors(
     if organization:
         repos = github_connection.organization(organization).repositories()
     else:
-        owner, repo = repository.split("/")
-        repository_obj = github_connection.repository(owner, repo)
+        repos = []
+        for repo in repository_list:
+            owner, repo_name = repo.split("/")
+            repository_obj = github_connection.repository(owner, repo_name)
+            repos.append(repository_obj)
 
     all_contributors = []
     if repos:
         for repo in repos:
             all_contributors.append(get_contributors(repo, start_date, end_date))
-    else:
-        all_contributors.append(get_contributors(repository_obj, start_date, end_date))
 
     # Check for duplicates and merge when usernames are equal
     all_contributors = contributor_stats.merge_contributors(all_contributors)
