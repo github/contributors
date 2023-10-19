@@ -95,7 +95,7 @@ class TestContributors(unittest.TestCase):
         ]
 
         result = get_all_contributors(
-            "", "owner/repo", "2022-01-01", "2022-12-31", mock_github_connection
+            "", ["owner/repo"], "2022-01-01", "2022-12-31", mock_github_connection
         )
 
         self.assertEqual(
