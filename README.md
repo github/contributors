@@ -12,7 +12,7 @@ This action was developed by the GitHub OSPO for our own use and developed in a 
 
 ## Example use cases
 
-- As a maintainer, you may want to ackowledge recent contributors in a discussion post
+- As a maintainer, you may want to acknowledge recent contributors in a discussion post
 - As an OSPO or maintainer, you may want to know who candidates are for new maintainers
 
 ## Support
