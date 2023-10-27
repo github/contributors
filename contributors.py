@@ -1,7 +1,6 @@
 # pylint: disable=broad-exception-caught
 """This file contains the main() and other functions needed to get contributor information from the organization or repository"""
 
-import sys
 from typing import List
 import env
 import auth
@@ -101,7 +100,9 @@ def get_all_contributors(
     all_contributors = []
     if repos:
         for repo in repos:
-            all_contributors.append(get_contributors(repo, start_date, end_date))
+            repo_contributors = get_contributors(repo, start_date, end_date)
+            if repo_contributors:
+                all_contributors.append(repo_contributors)
 
     # Check for duplicates and merge when usernames are equal
     all_contributors = contributor_stats.merge_contributors(all_contributors)
@@ -163,11 +164,8 @@ def get_contributors(
             contributors.append(contributor)
     except Exception as e:
         print("Error getting contributors for repository: " + repo.full_name)
-        print(
-            "No more repositories will be processed. Please delete the (empty?) repository and try again."
-        )
         print(e)
-        sys.exit(1)
+        return None
 
     return contributors
 
