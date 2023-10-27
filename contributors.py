@@ -164,9 +164,6 @@ def get_contributors(
             contributors.append(contributor)
     except Exception as e:
         print("Error getting contributors for repository: " + repo.full_name)
-        print(
-            "Please delete the (empty?) repository and try again if you need results for this repository."
-        )
         print(e)
         return None
 
