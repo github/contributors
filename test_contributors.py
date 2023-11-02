@@ -3,6 +3,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from contributor_stats import ContributorStats
+
 from contributors import get_contributors, get_all_contributors
 
 
