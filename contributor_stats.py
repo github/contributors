@@ -99,7 +99,7 @@ def merge_contributors(contributors: list) -> list:
     Returns:
         merged_contributors (list): A list of ContributorStats objects with no duplicate usernames
     """
-    merged_contributors = []
+    merged_contributors:List[ContributorStats] = []
     for contributor_list in contributors:
         for contributor in contributor_list:
             # if the contributor is already in the merged list, merge their relavent attributes
