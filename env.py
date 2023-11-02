@@ -54,7 +54,8 @@ def get_env_vars() -> tuple[str, str, str, str, str, str, str]:
 
     sponsor_info = os.getenv("SPONSOR_INFO")
     # make sure that sponsor_string is a boolean
-    sponsor_info = sponsor_info.lower().strip()
+    if sponsor_info:
+        sponsor_info = sponsor_info.lower().strip()
     if sponsor_info not in ["true", "false", ""]:
         raise ValueError(
             "SPONSOR_INFO environment variable not a boolean. ie. True or False or blank"
