@@ -2,11 +2,14 @@
 
 import os
 from os.path import dirname, join
+from typing import Any
 
 from dotenv import load_dotenv
 
 
-def get_env_vars() -> tuple[str | None, list[str], str, str, str | None, str | None, str | Any]:
+def get_env_vars() -> (
+    tuple[str | None, list[str], str, str, str | None, str | None, str | Any]
+):
     """
     Get the environment variables for use in the action.
 
