@@ -2,9 +2,10 @@
 """This file contains the main() and other functions needed to get contributor information from the organization or repository"""
 
 from typing import List
-import env
+
 import auth
 import contributor_stats
+import env
 import markdown
 
 
