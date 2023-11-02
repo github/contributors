@@ -18,4 +18,9 @@
 ###############
 # Rules by id #
 ###############
-MD013: false                  # Line length
+# line length
+MD013: false
+# singe h1
+MD025: false
+# duplicate headers
+MDO24: false
