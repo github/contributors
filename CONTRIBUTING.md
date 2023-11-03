@@ -29,8 +29,9 @@ We will then take care of the issue as soon as possible.
 
 ## I Want To Contribute
 
-> ### Legal Notice <!-- omit in toc -->
-> When contributing to this project, you must agree that you have authored 100% of the content, that you have the necessary rights to the content and that the content you contribute may be provided under the project license.
+### Legal Notice <!-- omit in toc -->
+
+When contributing to this project, you must agree that you have authored 100% of the content, that you have the necessary rights to the content and that the content you contribute may be provided under the project license.
 
 ## Reporting Bugs
 
@@ -92,6 +93,7 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/github
 
 To release a new version, maintainers are to release new versions following semantic versioning and via GitHub Releases.
 Once the code is ready to release please do the following
+
 1. Create a [GitHub release](https://github.com/github/contributors/releases) based off the current draft and review release notes
 2. Ensure that the versioning is correct given the content of the release
 3. Check the box to release it to the GitHub Marketplace

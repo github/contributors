@@ -1,8 +1,9 @@
 """This is the test module for the markdown module"""
 import unittest
-from unittest.mock import patch, mock_open
-from markdown import write_to_markdown
+from unittest.mock import mock_open, patch
+
 import contributor_stats
+from markdown import write_to_markdown
 
 
 class TestMarkdown(unittest.TestCase):

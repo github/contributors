@@ -1,6 +1,7 @@
 """This module contains the tests for the ContributorStats class."""
 
 import unittest
+
 from contributor_stats import ContributorStats, is_new_contributor, merge_contributors
 
 

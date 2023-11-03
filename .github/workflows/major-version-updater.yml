@@ -3,7 +3,7 @@ name: Major Version Updater
 # Whenever a new release is made, push a major version tag
 on:
   release:
-    types: [ published ]
+    types: published
 
 jobs:
   update-major-version-tag:
@@ -14,13 +14,15 @@ jobs:
 
       - name: version
         id: version
+        shell: bash
         run: |
-          tag=${GITHUB_REF/refs\/tags\//}
-          version=${tag#v}
-          major=${version%%.*}
-          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
-          echo "version=${version}" >> "$GITHUB_OUTPUT"
-          echo "major=${major}" >> "$GITHUB_OUTPUT"
+          # shellcheck disable=all
+          tag=${GITHUB_REF/refs\/tags\//};
+          version=${tag#v} ;
+          major=${version%%.*} ;
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT" ;
+          echo "version=${version}" >> "$GITHUB_OUTPUT" ;
+          echo "major=${major}" >> "$GITHUB_OUTPUT" ;
 
       - name: force update major tag
         run: |

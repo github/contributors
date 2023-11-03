@@ -1,9 +1,10 @@
 """This module contains the tests for the contributors.py module"""
 
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 from contributor_stats import ContributorStats
-from contributors import get_contributors, get_all_contributors
+from contributors import get_all_contributors, get_contributors
 
 
 class TestContributors(unittest.TestCase):
