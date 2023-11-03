@@ -16,7 +16,7 @@ jobs:
         id: version
         shell: bash
         run: |
-          # shellcheck disable=all
+          # shellcheck disable=all \
           tag=${GITHUB_REF/refs\/tags\//}; \
           version=${tag#v} ; \
           major=${version%%.*} ; \
