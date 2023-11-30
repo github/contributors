@@ -1,4 +1,7 @@
-"""A GitHub Action that given an organization or repository, produces information about the contributors over the specified time period."""
+"""
+A GitHub Action that given an organization or repository,
+produces information about the contributors over the specified time period.
+"""
 
 import os
 from os.path import dirname, join
@@ -35,7 +38,7 @@ def get_env_vars() -> (
     # Either organization or repository must be set
     if not organization and not repositories_str:
         raise ValueError(
-            "ORGANIZATION and REPOSITORY environment variables were both not set. Please enter a valid value for one of them."
+            "ORGANIZATION and REPOSITORY environment variables were not set. Please set one"
         )
 
     token = os.getenv("GH_TOKEN")
@@ -59,10 +62,10 @@ def get_env_vars() -> (
     # make sure that sponsor_string is a boolean
     if sponsor_info:
         sponsor_info = sponsor_info.lower().strip()
-    if sponsor_info not in ["true", "false", ""]:
-        raise ValueError(
-            "SPONSOR_INFO environment variable not a boolean. ie. True or False or blank"
-        )
+        if sponsor_info not in ["true", "false", ""]:
+            raise ValueError(
+                "SPONSOR_INFO environment variable not a boolean. ie. True or False or blank"
+            )
 
     # Separate repositories_str into a list based on the comma separator
     repositories_list = []
