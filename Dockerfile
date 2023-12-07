@@ -1,5 +1,14 @@
 FROM python:3.12-slim
-LABEL org.opencontainers.image.source https://github.com/github/contributors
+LABEL com.github.actions.name="contributors" \
+    com.github.actions.description="GitHub Action that given an organization or repository, produces information about the contributors over the specified time period." \
+    com.github.actions.icon="users" \
+    com.github.actions.color="green" \
+    maintainer="@zkoppert" \
+    org.opencontainers.image.url="https://github.com/github/contributors" \
+    org.opencontainers.image.source="https://github.com/github/contributors" \
+    org.opencontainers.image.documentation="https://github.com/github/contributors" \
+    org.opencontainers.image.vendor="GitHub" \
+    org.opencontainers.image.description="GitHub Action that given an organization or repository, produces information about the contributors over the specified time period."
 
 WORKDIR /action/workspace
 COPY requirements.txt *.py /action/workspace/
