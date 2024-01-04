@@ -10,6 +10,7 @@ def write_to_markdown(
     organization,
     repository,
     sponsor_info,
+    ltp
 ):
     """
     This function writes a list of collaborators to a markdown file in table format.
@@ -24,6 +25,7 @@ def write_to_markdown(
         organization (str): The organization for which the contributors are being listed.
         repository (str): The repository for which the contributors are being listed.
         sponsor_info (str): True if the user wants the sponsor_url shown in the report
+        ltp (str): True if the user wants the username linked to Github profile in the report
 
     Returns:
         None
@@ -31,7 +33,7 @@ def write_to_markdown(
     """
     # Put together the contributor table
     table, total_contributions = get_contributor_table(
-        collaborators, start_date, end_date, organization, repository, sponsor_info
+        collaborators, start_date, end_date, organization, repository, sponsor_info, ltp
     )
 
     # Put together the summary table including # of new contributions, # of new contributors, % new contributors, % returning contributors
@@ -127,7 +129,7 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
 
 
 def get_contributor_table(
-    collaborators, start_date, end_date, organization, repository, sponsor_info
+    collaborators, start_date, end_date, organization, repository, sponsor_info, ltp
 ):
     """
     This function returns a string containing a markdown table of the contributors and the total contribution count.
@@ -140,6 +142,7 @@ def get_contributor_table(
         organization (str): The organization for which the contributors are being listed.
         repository (str): The repository for which the contributors are being listed.
         sponsor_info (str): True if the user wants the sponsor_url shown in the report
+        ltp (str): True if the user wants the username linked to Github profile in the report
 
     Returns:
         table (str): A string containing a markdown table of the contributors and the total contribution count.
@@ -177,7 +180,7 @@ def get_contributor_table(
                 commit_urls += url + ", "
         new_contributor = collaborator.new_contributor
 
-        row = f"| {username} | {contribution_count} |"
+        row = f"| {'' if ltp == 'false' else '@'}{username} | {contribution_count} |"
         if "New Contributor" in columns:
             row += f" {new_contributor} |"
         if "Sponsor URL" in columns:

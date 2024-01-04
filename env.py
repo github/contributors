@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 
 def get_env_vars() -> (
-    tuple[str | None, list[str], str, str, str | None, str | None, str | Any]
+    tuple[str | None, list[str], str, str, str | None, str | None, str | Any, str | Any]
 ):
     """
     Get the environment variables for use in the action.
@@ -27,6 +27,7 @@ def get_env_vars() -> (
         str: the start date to get contributor information from
         str: the end date to get contributor information to.
         str: whether to get sponsor information on the contributor
+        str: whether to link username to Github profile in markdown output
 
     """
     # Load from .env file if it exists
@@ -67,6 +68,15 @@ def get_env_vars() -> (
                 "SPONSOR_INFO environment variable not a boolean. ie. True or False or blank"
             )
 
+    ltp = os.getenv("LINK_TO_PROFILE")
+    # make sure that ltp is a boolean
+    if ltp:
+        ltp = ltp.lower().strip()
+        if ltp not in ["true", "false", ""]:
+            raise ValueError(
+                "LINK_TO_PROFILE environment variable not a boolean. ie. True or False or blank"
+            )
+
     # Separate repositories_str into a list based on the comma separator
     repositories_list = []
     if repositories_str:
@@ -82,4 +92,5 @@ def get_env_vars() -> (
         start_date,
         end_date,
         sponsor_info,
+        ltp,
     )
