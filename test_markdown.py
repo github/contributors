@@ -47,7 +47,7 @@ class TestMarkdown(unittest.TestCase):
             None,
             "org/repo",
             "false",
-            "true"
+            "true",
         )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
@@ -101,7 +101,7 @@ class TestMarkdown(unittest.TestCase):
             None,
             "org/repo",
             "true",
-            "true"
+            "true",
         )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
@@ -155,7 +155,7 @@ class TestMarkdown(unittest.TestCase):
             None,
             "org/repo",
             "false",
-            "false"
+            "false",
         )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")

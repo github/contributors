@@ -52,7 +52,7 @@ Below are the allowed configuration options:
 | `START_DATE`          | False    |   Beginning of time      | The date from which you want to start gathering contributor information. ie. Aug 1st, 2023 would be `2023-08-01` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. **Performance Note:** Using start and end dates will reduce speed of the action by approximately 63X. ie without dates if the action takes 1.7 seconds, it will take 1 minute and 47 seconds.|
 | `END_DATE`            | False    |   Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02` If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date. |
 | `SPONSOR_INFO`        | False    |   False      | If you want to include sponsor information in the output. This will include the sponsor count and the sponsor URL. This will impact action performance. ie. SPONSOR_INFO = "False" or SPONSOR_INFO = "True" |
-| `LINK_TO_PROFILE`     | False    |   True      | If you want to link usernames to their Github profiles in the output. ie. LINK_TO_PROFILE = "True" or LINK_TO_PROFILE = "False" |
+| `LINK_TO_PROFILE`     | False    |   True      | If you want to link usernames to their GitHub profiles in the output. ie. LINK_TO_PROFILE = "True" or LINK_TO_PROFILE = "False" |
 
 ### Example workflows
 

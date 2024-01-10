@@ -24,7 +24,7 @@ class TestEnv(unittest.TestCase):
             "2022-01-01",
             "2022-12-31",
             "False",
-            "True"
+            "True",
         ]
 
         (
@@ -45,7 +45,7 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(start_date, "2022-01-01")
         self.assertEqual(end_date, "2022-12-31")
         self.assertEqual(sponsor_info, "false")
-        self.assertEqual(link_to_profile, 'true')
+        self.assertEqual(link_to_profile, "true")
 
     @patch("os.getenv")
     def test_get_env_vars_missing_values(self, mock_getenv):

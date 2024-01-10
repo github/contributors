@@ -33,7 +33,13 @@ def write_to_markdown(
     """
     # Put together the contributor table
     table, total_contributions = get_contributor_table(
-        collaborators, start_date, end_date, organization, repository, sponsor_info, link_to_profile
+        collaborators,
+        start_date,
+        end_date,
+        organization,
+        repository,
+        sponsor_info,
+        link_to_profile,
     )
 
     # Put together the summary table including # of new contributions, # of new contributors, % new contributors, % returning contributors
@@ -129,7 +135,13 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
 
 
 def get_contributor_table(
-    collaborators, start_date, end_date, organization, repository, sponsor_info, link_to_profile
+    collaborators,
+    start_date,
+    end_date,
+    organization,
+    repository,
+    sponsor_info,
+    link_to_profile,
 ):
     """
     This function returns a string containing a markdown table of the contributors and the total contribution count.
