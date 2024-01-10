@@ -68,11 +68,11 @@ def get_env_vars() -> (
                 "SPONSOR_INFO environment variable not a boolean. ie. True or False or blank"
             )
 
-    ltp = os.getenv("LINK_TO_PROFILE")
-    # make sure that ltp is a boolean
-    if ltp:
-        ltp = ltp.lower().strip()
-        if ltp not in ["true", "false", ""]:
+    link_to_profile = os.getenv("LINK_TO_PROFILE")
+    # make sure that link_to_profile is a boolean
+    if link_to_profile:
+        link_to_profile = link_to_profile.lower().strip()
+        if link_to_profile not in ["true", "false", ""]:
             raise ValueError(
                 "LINK_TO_PROFILE environment variable not a boolean. ie. True or False or blank"
             )
@@ -92,5 +92,5 @@ def get_env_vars() -> (
         start_date,
         end_date,
         sponsor_info,
-        ltp,
+        link_to_profile,
     )

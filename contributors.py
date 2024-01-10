@@ -21,7 +21,7 @@ def main():
         start_date,
         end_date,
         sponsor_info,
-        ltp
+        link_to_profile,
     ) = env.get_env_vars()
 
     # Auth to GitHub.com
@@ -65,7 +65,7 @@ def main():
         organization,
         repository_list,
         sponsor_info,
-        ltp
+        link_to_profile,
     )
     # write_to_json(contributors)
 
