@@ -3,16 +3,68 @@ A GitHub Action that given an organization or repository,
 produces information about the contributors over the specified time period.
 """
 
+import datetime
 import os
 from os.path import dirname, join
-from typing import Any
 
 from dotenv import load_dotenv
 
 
-def get_env_vars() -> (
-    tuple[str | None, list[str], str, str, str | None, str | None, str | Any, str | Any]
-):
+def get_bool_env_var(env_var_name: str) -> bool:
+    """Get a boolean environment variable.
+
+    Args:
+        env_var_name: The name of the environment variable to retrieve.
+
+    Returns:
+        The value of the environment variable as a boolean.
+    """
+    return os.environ.get(env_var_name, "").strip().lower() == "true"
+
+
+def get_int_env_var(env_var_name: str) -> int | None:
+    """Get an integer environment variable.
+
+    Args:
+        env_var_name: The name of the environment variable to retrieve.
+
+    Returns:
+        The value of the environment variable as an integer or None.
+    """
+    env_var = os.environ.get(env_var_name)
+    if env_var is None or not env_var.strip():
+        return None
+    try:
+        return int(env_var)
+    except ValueError:
+        return None
+
+
+def validate_date_format(env_var_name: str) -> str:
+    """Validate the date format of the environment variable.
+
+    Args:
+        env_var_name: The name of the environment variable to retrieve.
+
+    Returns:
+        The value of the environment variable as a string.
+    """
+    date_to_validate = os.getenv(env_var_name, "")
+    pattern = "%Y-%m-%d"
+    try:
+        datetime.datetime.strptime(date_to_validate, pattern)
+    except ValueError as exc:
+        raise ValueError(
+            f"{env_var_name} environment variable not in the format YYYY-MM-DD"
+        ) from exc
+    return date_to_validate
+
+
+def get_env_vars(
+    test: bool = False,
+) -> tuple[
+    str | None, list[str], int | None, int | None, bytes, str, str, str, str, bool, bool
+]:
     """
     Get the environment variables for use in the action.
 
@@ -22,6 +74,9 @@ def get_env_vars() -> (
     Returns:
         str: the organization to get contributor information for
         List[str]: A list of the repositories to get contributor information for
+        int|None: the GitHub App ID to use for authentication
+        int|None: the GitHub App Installation ID to use for authentication
+        bytes: the GitHub App Private Key as bytes to use for authentication
         str: the GitHub token to use for authentication
         str: the GitHub Enterprise URL to use for authentication
         str: the start date to get contributor information from
@@ -30,9 +85,10 @@ def get_env_vars() -> (
         str: whether to link username to Github profile in markdown output
 
     """
-    # Load from .env file if it exists
-    dotenv_path = join(dirname(__file__), ".env")
-    load_dotenv(dotenv_path)
+
+    if not test:
+        dotenv_path = join(dirname(__file__), ".env")
+        load_dotenv(dotenv_path)
 
     organization = os.getenv("ORGANIZATION")
     repositories_str = os.getenv("REPOSITORY")
@@ -42,40 +98,31 @@ def get_env_vars() -> (
             "ORGANIZATION and REPOSITORY environment variables were not set. Please set one"
         )
 
-    token = os.getenv("GH_TOKEN")
-    # required env variable
-    if not token:
+    gh_app_id = get_int_env_var("GH_APP_ID")
+    gh_app_private_key_bytes = os.environ.get("GH_APP_PRIVATE_KEY", "").encode("utf8")
+    gh_app_installation_id = get_int_env_var("GH_APP_INSTALLATION_ID")
+
+    if gh_app_id and (not gh_app_private_key_bytes or not gh_app_installation_id):
+        raise ValueError(
+            "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set"
+        )
+
+    token = os.getenv("GH_TOKEN", "")
+    if (
+        not gh_app_id
+        and not gh_app_private_key_bytes
+        and not gh_app_installation_id
+        and not token
+    ):
         raise ValueError("GH_TOKEN environment variable not set")
 
     ghe = os.getenv("GH_ENTERPRISE_URL", default="").strip()
 
-    start_date = os.getenv("START_DATE")
-    # make sure that start date is in the format YYYY-MM-DD
-    if start_date and len(start_date) != 10:
-        raise ValueError("START_DATE environment variable not in the format YYYY-MM-DD")
+    start_date = validate_date_format("START_DATE")
+    end_date = validate_date_format("END_DATE")
 
-    end_date = os.getenv("END_DATE")
-    # make sure that end date is in the format YYYY-MM-DD
-    if end_date and len(end_date) != 10:
-        raise ValueError("END_DATE environment variable not in the format YYYY-MM-DD")
-
-    sponsor_info = os.getenv("SPONSOR_INFO")
-    # make sure that sponsor_string is a boolean
-    if sponsor_info:
-        sponsor_info = sponsor_info.lower().strip()
-        if sponsor_info not in ["true", "false", ""]:
-            raise ValueError(
-                "SPONSOR_INFO environment variable not a boolean. ie. True or False or blank"
-            )
-
-    link_to_profile = os.getenv("LINK_TO_PROFILE")
-    # make sure that link_to_profile is a boolean
-    if link_to_profile:
-        link_to_profile = link_to_profile.lower().strip()
-        if link_to_profile not in ["true", "false", ""]:
-            raise ValueError(
-                "LINK_TO_PROFILE environment variable not a boolean. ie. True or False or blank"
-            )
+    sponsor_info = get_bool_env_var("SPONSOR_INFO")
+    link_to_profile = get_bool_env_var("LINK_TO_PROFILE")
 
     # Separate repositories_str into a list based on the comma separator
     repositories_list = []
@@ -87,6 +134,9 @@ def get_env_vars() -> (
     return (
         organization,
         repositories_list,
+        gh_app_id,
+        gh_app_installation_id,
+        gh_app_private_key_bytes,
         token,
         ghe,
         start_date,
