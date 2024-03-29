@@ -16,6 +16,9 @@ def main():
     (
         organization,
         repository_list,
+        gh_app_id,
+        gh_app_installation_id,
+        gh_app_private_key_bytes,
         token,
         ghe,
         start_date,
@@ -25,7 +28,9 @@ def main():
     ) = env.get_env_vars()
 
     # Auth to GitHub.com
-    github_connection = auth.auth_to_github(token, ghe)
+    github_connection = auth.auth_to_github(
+        gh_app_id, gh_app_installation_id, gh_app_private_key_bytes, token, ghe
+    )
 
     # Get the contributors
     contributors = get_all_contributors(
