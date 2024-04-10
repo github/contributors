@@ -21,6 +21,10 @@ This action was developed by the GitHub OSPO for our own use and developed in a 
 
 If you need support using this project or have questions about it, please [open up an issue in this repository](https://github.com/github/contributors/issues). Requests made directly to GitHub staff or support team will be redirected here to open an issue. GitHub SLA's and support/services contracts do not apply to this repository.
 
+### OSPO GitHub Actions as a Whole
+
+All feedback regarding our GitHub Actions, as a whole, should be communicated through [issues on our github-ospo repository](https://github.com/github/github-ospo/issues/new).
+
 ## What is a contributor?
 
 Contributors have made commits to the specified repositories/organization on a default branch. Contributions can also be issue, pull request and discussion interactions. The endpoint used may return information that is a few hours old because the GitHub REST API caches contributor data to improve performance.
