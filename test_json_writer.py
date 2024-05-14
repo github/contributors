@@ -1,8 +1,9 @@
 """ Test the write_to_json function in json_writer.py. """
 
-import unittest
-import os
 import json
+import os
+import unittest
+
 from contributor_stats import ContributorStats
 from json_writer import write_to_json
 
