@@ -6,6 +6,7 @@ from typing import List
 import auth
 import contributor_stats
 import env
+import json_writer
 import markdown
 
 
@@ -72,7 +73,16 @@ def main():
         sponsor_info,
         link_to_profile,
     )
-    # write_to_json(contributors)
+    json_writer.write_to_json(
+        filename="contributors.json",
+        start_date=start_date,
+        end_date=end_date,
+        organization=organization,
+        repository_list=repository_list,
+        sponsor_info=sponsor_info,
+        link_to_profile=link_to_profile,
+        contributors=contributors,
+    )
 
 
 def get_all_contributors(
