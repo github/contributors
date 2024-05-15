@@ -1,5 +1,6 @@
 # Output files
 contributors.md
+contributors.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
