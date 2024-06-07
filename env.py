@@ -10,16 +10,20 @@ from os.path import dirname, join
 from dotenv import load_dotenv
 
 
-def get_bool_env_var(env_var_name: str) -> bool:
+def get_bool_env_var(env_var_name: str, default: bool = False) -> bool:
     """Get a boolean environment variable.
 
     Args:
         env_var_name: The name of the environment variable to retrieve.
+        default: The default value to return if the environment variable is not set.
 
     Returns:
         The value of the environment variable as a boolean.
     """
-    return os.environ.get(env_var_name, "").strip().lower() == "true"
+    ev = os.environ.get(env_var_name, "")
+    if ev == "" and default:
+        return default
+    return ev.strip().lower() == "true"
 
 
 def get_int_env_var(env_var_name: str) -> int | None:
@@ -121,8 +125,8 @@ def get_env_vars(
     start_date = validate_date_format("START_DATE")
     end_date = validate_date_format("END_DATE")
 
-    sponsor_info = get_bool_env_var("SPONSOR_INFO")
-    link_to_profile = get_bool_env_var("LINK_TO_PROFILE")
+    sponsor_info = get_bool_env_var("SPONSOR_INFO", False)
+    link_to_profile = get_bool_env_var("LINK_TO_PROFILE", False)
 
     # Separate repositories_str into a list based on the comma separator
     repositories_list = []
