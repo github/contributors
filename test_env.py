@@ -136,6 +136,55 @@ class TestEnv(unittest.TestCase):
             "START_DATE environment variable not in the format YYYY-MM-DD",
         )
 
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "token",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "",
+            "END_DATE": "",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_no_dates(self):
+        """
+        Test the get_env_vars function when all environment variables are set correctly
+        and start_date and end_date are not set.
+        """
+
+        (
+            organization,
+            repository_list,
+            gh_app_id,
+            gh_app_installation_id,
+            gh_app_private_key_bytes,
+            token,
+            ghe,
+            start_date,
+            end_date,
+            sponsor_info,
+            link_to_profile,
+        ) = env.get_env_vars()
+
+        self.assertEqual(organization, "org")
+        self.assertEqual(repository_list, ["repo", "repo2"])
+        self.assertIsNone(gh_app_id)
+        self.assertIsNone(gh_app_installation_id)
+        self.assertEqual(gh_app_private_key_bytes, b"")
+        self.assertEqual(token, "token")
+        self.assertEqual(ghe, "")
+        self.assertEqual(start_date, "")
+        self.assertEqual(end_date, "")
+        self.assertFalse(sponsor_info)
+        self.assertTrue(link_to_profile)
+
 
 if __name__ == "__main__":
     unittest.main()
