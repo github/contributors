@@ -47,6 +47,8 @@ def get_int_env_var(env_var_name: str) -> int | None:
 def validate_date_format(env_var_name: str) -> str:
     """Validate the date format of the environment variable.
 
+    Does nothing if the environment variable is not set.
+
     Args:
         env_var_name: The name of the environment variable to retrieve.
 
@@ -54,6 +56,10 @@ def validate_date_format(env_var_name: str) -> str:
         The value of the environment variable as a string.
     """
     date_to_validate = os.getenv(env_var_name, "")
+
+    if not date_to_validate:
+        return date_to_validate
+
     pattern = "%Y-%m-%d"
     try:
         datetime.datetime.strptime(date_to_validate, pattern)
