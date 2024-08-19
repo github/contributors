@@ -1,10 +1,10 @@
 ---
-name: 'Contributors Action'
-author: 'github'
-description: 'A GitHub Action to report out contributors and contributions to a repository or organization'
+name: "Contributors Action"
+author: "github"
+description: "A GitHub Action to report out contributors and contributions to a repository or organization"
 runs:
-  using: 'docker'
-  image: 'docker://ghcr.io/github/contributors:v1'
+  using: "docker"
+  image: "docker://ghcr.io/github/contributors:v1"
 branding:
-  icon: 'users'
-  color: 'green'
+  icon: "users"
+  color: "green"

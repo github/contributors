@@ -1,7 +1,5 @@
 {
   "threshold": 50,
-  "ignore": [
-    "test*"
-  ],
+  "ignore": ["test*"],
   "absolute": true
 }
