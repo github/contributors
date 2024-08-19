@@ -1,92 +1,92 @@
 ---
-  name: Release
+name: Release
 
-  on:
-    workflow_dispatch:
-    pull_request_target:
-      types: [ closed ]
-      branches: [ main ]
+on:
+  workflow_dispatch:
+  pull_request_target:
+    types: [closed]
+    branches: [main]
 
-  permissions:
-    contents: read
+permissions:
+  contents: read
 
-  jobs:
-    create_release:
-      # release if
-      # manual deployment OR
-      # merged to main and labelled with release labels
-      if: |
-        (github.event_name == 'workflow_dispatch') ||
-        (github.event.pull_request.merged == true &&
-        (contains(github.event.pull_request.labels.*.name, 'breaking') ||
-        contains(github.event.pull_request.labels.*.name, 'feature') ||
-        contains(github.event.pull_request.labels.*.name, 'vuln') ||
-        contains(github.event.pull_request.labels.*.name, 'release')))
-      outputs:
-        full-tag: ${{ steps.release-drafter.outputs.tag_name }}
-        short-tag: ${{ steps.get_tag_name.outputs.SHORT_TAG }}
-        body: ${{ steps.release-drafter.outputs.body }}
-      runs-on: ubuntu-latest
-      permissions:
-        contents: write
-        pull-requests: read
-      steps:
-        - uses: release-drafter/release-drafter@3f0f87098bd6b5c5b9a36d49c41d998ea58f9348
-          id: release-drafter
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            config-name: release-drafter.yml
-            publish: true
-        - name: Get the short tag
-          id: get_tag_name
-          run: |
-            short_tag=$(echo ${{ steps.release-drafter.outputs.tag_name }} | cut -d. -f1)
-            echo "SHORT_TAG=$short_tag" >> $GITHUB_OUTPUT
-    create_action_images:
-      needs: create_release
-      runs-on: ubuntu-latest
-      permissions:
-        packages: write
-      env:
-        REGISTRY: ghcr.io
-        IMAGE_NAME: ${{ github.repository }}
-      steps:
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db
-        - name: Log in to the Container registry
-          uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
-          with:
-            registry: ${{ env.REGISTRY }}
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
-        - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-        - name: Push Docker Image
-          if: ${{ success() }}
-          uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85
-          with:
-            context: .
-            file: ./Dockerfile
-            push: true
-            tags: |
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.create_release.outputs.full-tag }}
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.create_release.outputs.short-tag }}
-            platforms: linux/amd64
-            provenance: false
-            sbom: false
-    create_discussion:
-      needs: create_release
-      runs-on: ubuntu-latest
-      permissions:
-        discussions: write
-      steps:
-        - name: Create an announcement discussion for release
-          uses: abirismyname/create-discussion@6e6ef67e5eeb042343ef8b3d8d0f5d545cbdf024
-          env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            title: ${{ needs.create_release.outputs.full-tag }}
-            body: ${{ needs.create_release.outputs.body }}
-            repository-id: ${{ secrets.RELEASE_DISCUSSION_REPOSITORY_ID }}
-            category-id: ${{ secrets.RELEASE_DISCUSSION_CATEGORY_ID }}
+jobs:
+  create_release:
+    # release if
+    # manual deployment OR
+    # merged to main and labelled with release labels
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event.pull_request.merged == true &&
+      (contains(github.event.pull_request.labels.*.name, 'breaking') ||
+      contains(github.event.pull_request.labels.*.name, 'feature') ||
+      contains(github.event.pull_request.labels.*.name, 'vuln') ||
+      contains(github.event.pull_request.labels.*.name, 'release')))
+    outputs:
+      full-tag: ${{ steps.release-drafter.outputs.tag_name }}
+      short-tag: ${{ steps.get_tag_name.outputs.SHORT_TAG }}
+      body: ${{ steps.release-drafter.outputs.body }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - uses: release-drafter/release-drafter@3f0f87098bd6b5c5b9a36d49c41d998ea58f9348
+        id: release-drafter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          config-name: release-drafter.yml
+          publish: true
+      - name: Get the short tag
+        id: get_tag_name
+        run: |
+          short_tag=$(echo ${{ steps.release-drafter.outputs.tag_name }} | cut -d. -f1)
+          echo "SHORT_TAG=$short_tag" >> $GITHUB_OUTPUT
+  create_action_images:
+    needs: create_release
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db
+      - name: Log in to the Container registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Push Docker Image
+        if: ${{ success() }}
+        uses: docker/build-push-action@16ebe778df0e7752d2cfcbd924afdbbd89c1a755
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.create_release.outputs.full-tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.create_release.outputs.short-tag }}
+          platforms: linux/amd64
+          provenance: false
+          sbom: false
+  create_discussion:
+    needs: create_release
+    runs-on: ubuntu-latest
+    permissions:
+      discussions: write
+    steps:
+      - name: Create an announcement discussion for release
+        uses: abirismyname/create-discussion@6e6ef67e5eeb042343ef8b3d8d0f5d545cbdf024
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          title: ${{ needs.create_release.outputs.full-tag }}
+          body: ${{ needs.create_release.outputs.body }}
+          repository-id: ${{ secrets.RELEASE_DISCUSSION_REPOSITORY_ID }}
+          category-id: ${{ secrets.RELEASE_DISCUSSION_CATEGORY_ID }}

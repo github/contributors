@@ -62,29 +62,29 @@ This action can be configured to authenticate with GitHub App Installation or Pe
 
 ##### GitHub App Installation
 
-| field                         | required | default | description |
-|-------------------------------|----------|---------|-------------|
-| `GH_APP_ID`                   | True     | `""`    | GitHub Application ID. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details. |
-| `GH_APP_INSTALLATION_ID`      | True     | `""`    | GitHub Application Installation ID. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details. |
-| `GH_APP_PRIVATE_KEY`          | True     | `""`    | GitHub Application Private Key. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details. |
+| field                    | required | default | description                                                                                                                                                                                             |
+| ------------------------ | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GH_APP_ID`              | True     | `""`    | GitHub Application ID. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details.              |
+| `GH_APP_INSTALLATION_ID` | True     | `""`    | GitHub Application Installation ID. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details. |
+| `GH_APP_PRIVATE_KEY`     | True     | `""`    | GitHub Application Private Key. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details.     |
 
 ##### Personal Access Token (PAT)
 
-| field                         | required | default | description |
-|-------------------------------|----------|---------|-------------|
-| `GH_TOKEN`                    | True     | `""`    | The GitHub Token used to scan the repository. Must have read access to all repository you are interested in scanning. |
+| field      | required | default | description                                                                                                           |
+| ---------- | -------- | ------- | --------------------------------------------------------------------------------------------------------------------- |
+| `GH_TOKEN` | True     | `""`    | The GitHub Token used to scan the repository. Must have read access to all repository you are interested in scanning. |
 
 #### Other Configuration Options
 
-| field                     | required | default  | description |
-|---------------------------|----------|----------|-------------|
-| `GH_ENTERPRISE_URL`       | False    |   ""    | The `GH_ENTERPRISE_URL` is used to connect to an enterprise server instance of GitHub. github.com users should not enter anything here. |
-| `ORGANIZATION`            | Required to have `ORGANIZATION` or `REPOSITORY` |         | The name of the GitHub organization which you want the contributor information of all repos from. ie. github.com/github would be `github` |
-| `REPOSITORY`              | Required to have `ORGANIZATION` or `REPOSITORY` |         | The name of the repository and organization which you want the contributor information from. ie. `github/contributors` or a comma separated list of multiple repositories `github/contributor,super-linter/super-linter` |
-| `START_DATE`              | False    |   Beginning of time      | The date from which you want to start gathering contributor information. ie. Aug 1st, 2023 would be `2023-08-01`. |
-| `END_DATE`                | False    |   Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02`  |
-| `SPONSOR_INFO`            | False    |   False      | If you want to include sponsor information in the output. This will include the sponsor count and the sponsor URL. This will impact action performance. ie. SPONSOR_INFO = "False" or SPONSOR_INFO = "True" |
-| `LINK_TO_PROFILE`         | False    |   True      | If you want to link usernames to their GitHub profiles in the output. ie. LINK_TO_PROFILE = "True" or LINK_TO_PROFILE = "False" |
+| field               | required                                        | default           | description                                                                                                                                                                                                              |
+| ------------------- | ----------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `GH_ENTERPRISE_URL` | False                                           | ""                | The `GH_ENTERPRISE_URL` is used to connect to an enterprise server instance of GitHub. github.com users should not enter anything here.                                                                                  |
+| `ORGANIZATION`      | Required to have `ORGANIZATION` or `REPOSITORY` |                   | The name of the GitHub organization which you want the contributor information of all repos from. ie. github.com/github would be `github`                                                                                |
+| `REPOSITORY`        | Required to have `ORGANIZATION` or `REPOSITORY` |                   | The name of the repository and organization which you want the contributor information from. ie. `github/contributors` or a comma separated list of multiple repositories `github/contributor,super-linter/super-linter` |
+| `START_DATE`        | False                                           | Beginning of time | The date from which you want to start gathering contributor information. ie. Aug 1st, 2023 would be `2023-08-01`.                                                                                                        |
+| `END_DATE`          | False                                           | Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02`                                                                       |
+| `SPONSOR_INFO`      | False                                           | False             | If you want to include sponsor information in the output. This will include the sponsor count and the sponsor URL. This will impact action performance. ie. SPONSOR_INFO = "False" or SPONSOR_INFO = "True"              |
+| `LINK_TO_PROFILE`   | False                                           | True              | If you want to link usernames to their GitHub profiles in the output. ie. LINK_TO_PROFILE = "True" or LINK_TO_PROFILE = "False"                                                                                          |
 
 **Note**: If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date.
 
@@ -99,7 +99,7 @@ name: Monthly contributor report
 on:
   workflow_dispatch:
   schedule:
-    - cron: '3 2 1 * *'
+    - cron: "3 2 1 * *"
 
 permissions:
   contents: read
@@ -117,14 +117,14 @@ jobs:
         run: |
           # Calculate the first day of the previous month
           start_date=$(date -d "last month" +%Y-%m-01)
-  
+
           # Calculate the last day of the previous month
           end_date=$(date -d "$start_date +1 month -1 day" +%Y-%m-%d)
-  
+
           #Set an environment variable with the date range
           echo "START_DATE=$start_date" >> "$GITHUB_ENV"
           echo "END_DATE=$end_date" >> "$GITHUB_ENV"
-  
+
       - name: Run contributor action
         uses: github/contributors@v1
         env:
@@ -133,7 +133,7 @@ jobs:
           END_DATE: ${{ env.END_DATE }}
           ORGANIZATION: <YOUR_ORGANIZATION_GOES_HERE>
           SPONSOR_INFO: "true"
-  
+
       - name: Create issue
         uses: peter-evans/create-issue-from-file@v5
         with:
@@ -148,16 +148,16 @@ jobs:
 ```markdown
 # Contributors
 
-- Date range for contributor list:  2021-01-01 to 2023-10-10
+- Date range for contributor list: 2021-01-01 to 2023-10-10
 - Organization: super-linter
 
 | Total Contributors | Total Contributions | % new contributors |
-| --- | --- | --- |
-| 1 | 143 | 0% |
+| ------------------ | ------------------- | ------------------ |
+| 1                  | 143                 | 0%                 |
 
-| Username | Contribution Count | New Contributor | Commits |
-| --- | --- | --- | --- |
-| @zkoppert | 143 | False | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-01-01&until=2023-10-10) |
+| Username  | Contribution Count | New Contributor | Commits                                                                                                                             |
+| --------- | ------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| @zkoppert | 143                | False           | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-01-01&until=2023-10-10) |
 ```
 
 ## Example Markdown output with no dates supplied
@@ -168,12 +168,12 @@ jobs:
 - Organization: super-linter
 
 | Total Contributors | Total Contributions | % new contributors |
-| --- | --- | --- |
-| 1 | 1913 | 0% |
+| ------------------ | ------------------- | ------------------ |
+| 1                  | 1913                | 0%                 |
 
-| Username | Contribution Count | New Contributor | Sponsor URL | Commits |
-| --- | --- | --- | --- | --- |
-| @zkoppert | 1913 | False | [Sponsor Link](https://github.com/sponsors/zkoppert) | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-09-01&until=2023-09-30) |
+| Username  | Contribution Count | New Contributor | Sponsor URL                                          | Commits                                                                                                                             |
+| --------- | ------------------ | --------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| @zkoppert | 1913               | False           | [Sponsor Link](https://github.com/sponsors/zkoppert) | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-09-01&until=2023-09-30) |
 ```
 
 ## Local usage without Docker
