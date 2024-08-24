@@ -161,12 +161,15 @@ def get_contributor_table(
         total_contributions (int): The total number of contributions made by all of the contributors.
 
     """
-    columns = ["Username", "Contribution Count"]
+    columns = ["Username", "All Time Contribution Count"]
     if start_date and end_date:
         columns += ["New Contributor"]
     if sponsor_info == "true":
         columns += ["Sponsor URL"]
-    columns += ["Commits"]
+    if start_date and end_date:
+        columns += [f"Commits between {start_date} and {end_date}"]
+    else:
+        columns += ["All Commits"]
 
     headers = "| " + " | ".join(columns) + " |\n"
     headers += "| " + " | ".join(["---"] * len(columns)) + " |\n"
