@@ -60,7 +60,7 @@ class TestMarkdown(unittest.TestCase):
             "| Total Contributors | Total Contributions | % New Contributors |\n| --- | --- | --- |\n| 2 | 300 | 50.0% |\n\n"
         )
         mock_file().write.assert_any_call(
-            "| Username | Contribution Count | New Contributor | Commits |\n"
+            "| Username | All Time Contribution Count | New Contributor | Commits between 2023-01-01 and 2023-01-02 |\n"
             "| --- | --- | --- | --- |\n"
             "| @user1 | 100 | False | commit url |\n"
             "| @user2 | 200 | True | commit url2 |\n"
@@ -114,7 +114,7 @@ class TestMarkdown(unittest.TestCase):
             "| Total Contributors | Total Contributions | % New Contributors |\n| --- | --- | --- |\n| 2 | 300 | 50.0% |\n\n"
         )
         mock_file().write.assert_any_call(
-            "| Username | Contribution Count | New Contributor | Sponsor URL | Commits |\n"
+            "| Username | All Time Contribution Count | New Contributor | Sponsor URL | Commits between 2023-01-01 and 2023-01-02 |\n"
             "| --- | --- | --- | --- | --- |\n"
             "| @user1 | 100 | False | [Sponsor Link](sponsor_url_1) | commit url |\n"
             "| @user2 | 200 | True | not sponsorable | commit url2 |\n"
@@ -168,7 +168,7 @@ class TestMarkdown(unittest.TestCase):
             "| Total Contributors | Total Contributions | % New Contributors |\n| --- | --- | --- |\n| 2 | 300 | 50.0% |\n\n"
         )
         mock_file().write.assert_any_call(
-            "| Username | Contribution Count | New Contributor | Commits |\n"
+            "| Username | All Time Contribution Count | New Contributor | Commits between 2023-01-01 and 2023-01-02 |\n"
             "| --- | --- | --- | --- |\n"
             "| user1 | 100 | False | commit url |\n"
             "| user2 | 200 | True | commit url2 |\n"

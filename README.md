@@ -155,9 +155,9 @@ jobs:
 | ------------------ | ------------------- | ------------------ |
 | 1                  | 143                 | 0%                 |
 
-| Username  | Contribution Count | New Contributor | Commits                                                                                                                             |
-| --------- | ------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| @zkoppert | 143                | False           | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-01-01&until=2023-10-10) |
+| Username  | All Time Contribution Count | New Contributor | Commits between 2021-01-01 and 2023-10-10                                                                                           |
+| --------- | --------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| @zkoppert | 143                         | False           | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-01-01&until=2023-10-10) |
 ```
 
 ## Example Markdown output with no dates supplied
@@ -171,9 +171,9 @@ jobs:
 | ------------------ | ------------------- | ------------------ |
 | 1                  | 1913                | 0%                 |
 
-| Username  | Contribution Count | New Contributor | Sponsor URL                                          | Commits                                                                                                                             |
-| --------- | ------------------ | --------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| @zkoppert | 1913               | False           | [Sponsor Link](https://github.com/sponsors/zkoppert) | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-09-01&until=2023-09-30) |
+| Username  | All Time Contribution Count | New Contributor | Sponsor URL                                          | Commits between 2021-09-01 and 2023-09-30                                                                                           |
+| --------- | --------------------------- | --------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| @zkoppert | 1913                        | False           | [Sponsor Link](https://github.com/sponsors/zkoppert) | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-09-01&until=2023-09-30) |
 ```
 
 ## Local usage without Docker
