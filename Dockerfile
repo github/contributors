@@ -1,6 +1,6 @@
 #checkov:skip=CKV_DOCKER_2
 #checkov:skip=CKV_DOCKER_3
-FROM python:3.12-slim@sha256:59c7332a4a24373861c4a5f0eec2c92b87e3efeb8ddef011744ef9a751b1d11c
+FROM python:3.12-slim@sha256:c24c34b502635f1f7c4e99dc09a2cbd85d480b7dcfd077198c6b5af138906390
 LABEL com.github.actions.name="contributors" \
     com.github.actions.description="GitHub Action that given an organization or repository, produces information about the contributors over the specified time period." \
     com.github.actions.icon="users" \
