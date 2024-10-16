@@ -60,7 +60,7 @@ def is_new_contributor(username: str, returning_contributors: list) -> bool:
     return True
 
 
-def merge_contributors(contributors: list) -> list:
+def merge_contributors(contributors: list[list[ContributorStats]]) -> list[ContributorStats]:
     """
     Merge contributors with the same username from multiple repositories.
 
@@ -78,19 +78,12 @@ def merge_contributors(contributors: list) -> list:
                 for merged_contributor in merged_contributors:
                     if merged_contributor.username == contributor.username:
                         # Merge the contribution counts via addition
-                        merged_contributor.contribution_count += (
-                            contributor.contribution_count
-                        )
+                        merged_contributor.contribution_count += contributor.contribution_count
                         # Merge the commit urls via concatenation
-                        merged_contributor.commit_url = (
-                            merged_contributor.commit_url
-                            + ", "
-                            + contributor.commit_url
-                        )
+                        merged_contributor.commit_url = merged_contributor.commit_url + ", " + contributor.commit_url
                         # Merge the new_contributor attribute via OR
                         merged_contributor.new_contributor = (
-                            merged_contributor.new_contributor
-                            or contributor.new_contributor
+                            merged_contributor.new_contributor or contributor.new_contributor
                         )
 
             else:
@@ -140,8 +133,6 @@ def get_sponsor_information(contributors: list, token: str) -> list:
 
         # if the user has a sponsor page, add it to the contributor object
         if data["repositoryOwner"]["hasSponsorsListing"]:
-            contributor.sponsor_info = (
-                f"https://github.com/sponsors/{contributor.username}"
-            )
+            contributor.sponsor_info = f"https://github.com/sponsors/{contributor.username}"
 
     return contributors

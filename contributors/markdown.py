@@ -51,19 +51,13 @@ def write_to_markdown(
     )
 
     # Put together the summary table including # of new contributions, # of new contributors, % new contributors, % returning contributors
-    summary_table = get_summary_table(
-        collaborators, start_date, end_date, total_contributions
-    )
+    summary_table = get_summary_table(collaborators, start_date, end_date, total_contributions)
 
     # Write the markdown file
-    write_markdown_file(
-        filename, start_date, end_date, organization, repository, table, summary_table
-    )
+    write_markdown_file(filename, start_date, end_date, organization, repository, table, summary_table)
 
 
-def write_markdown_file(
-    filename, start_date, end_date, organization, repository, table, summary_table
-):
+def write_markdown_file(filename, start_date, end_date, organization, repository, table, summary_table):
     """
     This function writes all the tables and data to a markdown file with tables to organizae the information.
 
@@ -83,20 +77,18 @@ def write_markdown_file(
     with open(filename, "w", encoding="utf-8") as markdown_file:
         markdown_file.write("# Contributors\n\n")
         if start_date and end_date:
-            markdown_file.write(
-                f"- Date range for contributor list:  {start_date} to {end_date}\n"
-            )
+            markdown_file.write(f"- Date range for contributor list:  {start_date} to {end_date}\n")
         if organization:
             markdown_file.write(f"- Organization: {organization}\n")
         if repository:
             markdown_file.write(f"- Repository: {repository}\n")
         markdown_file.write("\n")
         markdown_file.write(summary_table)
-        if len(table) == 1 and 'Independent' in table:
-            markdown_file.write(table['Independent'])
+        if len(table) == 1 and "Independent" in table:
+            markdown_file.write(table["Independent"])
         else:
             for key, t in table.items():
-                org_title = f"## [{key}](https://github.com/{key})\n" if not key == 'Independent' else f"## {key} \n"
+                org_title = f"## [{key}](https://github.com/{key})\n" if not key == "Independent" else f"## {key} \n"
                 markdown_file.write(org_title)
                 markdown_file.write(t)
         markdown_file.write(
@@ -123,9 +115,7 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
         summary_table = "| Total Contributors | Total Contributions | % New Contributors |\n| --- | --- | --- |\n"
         if len(collaborators) > 0:
             new_contributors_percentage = round(
-                (len([x for x in collaborators if x.new_contributor is True]))
-                / len(collaborators)
-                * 100,
+                (len([x for x in collaborators if x.new_contributor is True])) / len(collaborators) * 100,
                 2,
             )
         else:
@@ -141,9 +131,7 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
         )
     else:
         summary_table = "| Total Contributors | Total Contributions |\n| --- | --- |\n"
-        summary_table += (
-            "| " + str(len(collaborators)) + " | " + str(total_contributions) + " |\n\n"
-        )
+        summary_table += "| " + str(len(collaborators)) + " | " + str(total_contributions) + " |\n\n"
 
     return summary_table
 
@@ -226,18 +214,17 @@ def get_contributor_table(
         row += f" {commit_urls} |\n"
 
         added_to_org: bool = False
-        print(username, collaborator.organisations)
+
         for org in collaborator.organisations or []:
-            if org in show_organisations_list:
+            if org in show_organisations_list or "all" in show_organisations_list:
                 organisation_contributors[org].append(row)
                 added_to_org = True
+                break
 
         if not added_to_org:
             organisation_contributors["Independent"].append(row)
 
-    tables = {
-        org: headers + "".join(rows) for org, rows in organisation_contributors.items()
-    }
+    tables = {org: headers + "".join(rows) for org, rows in organisation_contributors.items()}
 
     # table += row
     return tables, total_contributions

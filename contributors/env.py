@@ -65,22 +65,34 @@ def validate_date_format(env_var_name: str) -> str:
     try:
         datetime.datetime.strptime(date_to_validate, pattern)
     except ValueError as exc:
-        raise ValueError(
-            f"{env_var_name} environment variable not in the format YYYY-MM-DD"
-        ) from exc
+        raise ValueError(f"{env_var_name} environment variable not in the format YYYY-MM-DD") from exc
     return date_to_validate
 
 
 @dataclass
-class env:
+class EnvironmentConfig:
+    """
+    Environment Configuration
+    """
+
     organization: str
     repositories_list: list[str]
+    gh_app_id: int | None
+    gh_app_installation_id: int | None
+    gh_app_private_key_bytes: bytes
+    token: str
+    ghe: str
+    start_date: str
+    end_date: str
+    sponsor_info: str
+    link_to_profile: str
+    show_organisations_list: list[str]
+    filename: str = 'contributors'
+
 
 def get_env_vars(
     test: bool = False,
-) -> tuple[
-    str | None, list[str], int | None, int | None, bytes, str, str, str, str, bool, bool, list
-]:
+) -> EnvironmentConfig:
     """
     Get the environment variables for use in the action.
 
@@ -88,18 +100,31 @@ def get_env_vars(
         None
 
     Returns:
-        str: the organization to get contributor information for
-        List[str]: A list of the repositories to get contributor information for
-        int|None: the GitHub App ID to use for authentication
-        int|None: the GitHub App Installation ID to use for authentication
-        bytes: the GitHub App Private Key as bytes to use for authentication
-        str: the GitHub token to use for authentication
-        str: the GitHub Enterprise URL to use for authentication
-        str: the start date to get contributor information from
-        str: the end date to get contributor information to.
-        str: whether to get sponsor information on the contributor
-        str: whether to link username to Github profile in markdown output
-        list: organisations to show
+        EnvironmentConfig:
+            organization, str:
+                the organization to get contributor information for
+            repositories_list, List[str]:
+                A list of the repositories to get contributor information for
+            gh_app_id, int|None:
+                the GitHub App ID to use for authentication
+            gh_app_installation_id, int|None:
+                the GitHub App Installation ID to use for authentication
+            gh_app_private_key_bytes, bytes:
+                the GitHub App Private Key as bytes to use for authentication
+            token, str:
+                the GitHub token to use for authentication
+            ghe, str:
+                the GitHub Enterprise URL to use for authentication
+            start_date, str,
+                the start date to get contributor information from
+            end_date, str:
+                the end date to get contributor information to.
+            sponsor_info, str:
+                whether to get sponsor information on the contributor
+            link_to_profile, str:
+                whether to link username to Github profile in markdown output
+            show_organisations_list, list:
+                Organisations to show in order of preference
 
     """
 
@@ -111,29 +136,22 @@ def get_env_vars(
     repositories_str = os.getenv("REPOSITORY")
     # Either organization or repository must be set
     if not organization and not repositories_str:
-        raise ValueError(
-            "ORGANIZATION and REPOSITORY environment variables were not set. Please set one"
-        )
+        raise ValueError("ORGANIZATION and REPOSITORY environment variables were not set. Please set one")
 
     gh_app_id = get_int_env_var("GH_APP_ID")
     gh_app_private_key_bytes = os.environ.get("GH_APP_PRIVATE_KEY", "").encode("utf8")
     gh_app_installation_id = get_int_env_var("GH_APP_INSTALLATION_ID")
 
     if gh_app_id and (not gh_app_private_key_bytes or not gh_app_installation_id):
-        raise ValueError(
-            "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set"
-        )
+        raise ValueError("GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set")
 
     token = os.getenv("GH_TOKEN", "")
-    if (
-        not gh_app_id
-        and not gh_app_private_key_bytes
-        and not gh_app_installation_id
-        and not token
-    ):
+    if not gh_app_id and not gh_app_private_key_bytes and not gh_app_installation_id and not token:
         raise ValueError("GH_TOKEN environment variable not set")
 
     ghe = os.getenv("GH_ENTERPRISE_URL", default="").strip()
+    filename = os.getenv("CONTRIB_FILENAME", default="contributors").strip()
+
     show_organisations = os.getenv("SHOW_ORGANISATIONS", default="").strip()
 
     start_date = validate_date_format("START_DATE")
@@ -145,15 +163,13 @@ def get_env_vars(
     # Separate repositories_str into a list based on the comma separator
     repositories_list = []
     if repositories_str:
-        repositories_list = [
-            repository.strip() for repository in repositories_str.split(",")
-        ]
-        
+        repositories_list = [repository.strip() for repository in repositories_str.split(",")]
+
     show_organisations_list = []
     if show_organisations:
         show_organisations_list = [org.strip() for org in show_organisations.split(",")]
 
-    return (
+    return EnvironmentConfig(
         organization,
         repositories_list,
         gh_app_id,
@@ -166,4 +182,5 @@ def get_env_vars(
         sponsor_info,
         link_to_profile,
         show_organisations_list,
+        filename = filename,
     )

@@ -25,9 +25,7 @@ def auth_to_github(
     """
     if gh_app_id and gh_app_private_key_bytes and gh_app_installation_id:
         gh = github3.github.GitHub()
-        gh.login_as_app_installation(
-            gh_app_private_key_bytes, gh_app_id, gh_app_installation_id
-        )
+        gh.login_as_app_installation(gh_app_private_key_bytes, gh_app_id, gh_app_installation_id)
         github_connection = gh
     elif ghe and token:
         github_connection = github3.github.GitHubEnterprise(ghe, token=token)
