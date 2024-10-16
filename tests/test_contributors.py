@@ -3,8 +3,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from contributor_stats import ContributorStats
-from contributors import get_all_contributors, get_contributors
+from contributors.contributor_stats import ContributorStats
+from contributors.contributors import get_all_contributors, get_contributors
 
 
 class TestContributors(unittest.TestCase):

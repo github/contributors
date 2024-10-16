@@ -4,8 +4,8 @@ import json
 import os
 import unittest
 
-from contributor_stats import ContributorStats
-from json_writer import write_to_json
+from contributors.contributor_stats import ContributorStats
+from contributors.json_writer import write_to_json
 
 
 class TestWriteToJson(unittest.TestCase):

@@ -8,6 +8,7 @@ import os
 from os.path import dirname, join
 
 from dotenv import load_dotenv
+from dataclasses import dataclass
 
 
 def get_bool_env_var(env_var_name: str, default: bool = False) -> bool:
@@ -70,10 +71,15 @@ def validate_date_format(env_var_name: str) -> str:
     return date_to_validate
 
 
+@dataclass
+class env:
+    organization: str
+    repositories_list: list[str]
+
 def get_env_vars(
     test: bool = False,
 ) -> tuple[
-    str | None, list[str], int | None, int | None, bytes, str, str, str, str, bool, bool
+    str | None, list[str], int | None, int | None, bytes, str, str, str, str, bool, bool, list
 ]:
     """
     Get the environment variables for use in the action.
@@ -93,6 +99,7 @@ def get_env_vars(
         str: the end date to get contributor information to.
         str: whether to get sponsor information on the contributor
         str: whether to link username to Github profile in markdown output
+        list: organisations to show
 
     """
 
@@ -127,6 +134,7 @@ def get_env_vars(
         raise ValueError("GH_TOKEN environment variable not set")
 
     ghe = os.getenv("GH_ENTERPRISE_URL", default="").strip()
+    show_organisations = os.getenv("SHOW_ORGANISATIONS", default="").strip()
 
     start_date = validate_date_format("START_DATE")
     end_date = validate_date_format("END_DATE")
@@ -140,6 +148,10 @@ def get_env_vars(
         repositories_list = [
             repository.strip() for repository in repositories_str.split(",")
         ]
+        
+    show_organisations_list = []
+    if show_organisations:
+        show_organisations_list = [org.strip() for org in show_organisations.split(",")]
 
     return (
         organization,
@@ -153,4 +165,5 @@ def get_env_vars(
         end_date,
         sponsor_info,
         link_to_profile,
+        show_organisations_list,
     )

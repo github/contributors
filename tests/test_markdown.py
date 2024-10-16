@@ -3,8 +3,8 @@
 import unittest
 from unittest.mock import mock_open, patch
 
-import contributor_stats
-from markdown import write_to_markdown
+from contributors import contributor_stats
+from contributors.markdown import write_to_markdown
 
 
 class TestMarkdown(unittest.TestCase):

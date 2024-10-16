@@ -4,7 +4,7 @@ import os
 import unittest
 from unittest.mock import patch
 
-import env
+from contributors import env
 
 
 class TestEnv(unittest.TestCase):

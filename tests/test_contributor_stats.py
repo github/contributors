@@ -2,7 +2,11 @@
 
 import unittest
 
-from contributor_stats import ContributorStats, is_new_contributor, merge_contributors
+from contributors.contributor_stats import (
+    ContributorStats,
+    is_new_contributor,
+    merge_contributors,
+)
 
 
 class TestContributorStats(unittest.TestCase):

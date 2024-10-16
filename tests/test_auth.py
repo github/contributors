@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-import auth
+from contributors import auth
 import github3.github
 
 

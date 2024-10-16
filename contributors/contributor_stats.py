@@ -15,8 +15,10 @@
 from typing import List
 
 import requests
+from dataclasses import dataclass, field
 
 
+@dataclass
 class ContributorStats:
     """
     A class to represent a contributor_stats object correlating to a single contributors stats.
@@ -31,47 +33,14 @@ class ContributorStats:
 
     """
 
-    def __new__(cls, *args, **kwargs):  # pylint: disable=unused-argument
-        """Create a new contributor_stats object"""
-        return super().__new__(cls)
+    username: str
+    avatar_url: str
+    contribution_count: int
+    commit_url: str
+    sponsor_info: str
+    organisations: list[str] = field(default_factory=list)
 
-    def __init__(
-        self,
-        username: str,
-        new_contributor: bool,
-        avatar_url: str,
-        contribution_count: int,
-        commit_url: str,
-        sponsor_info: str,
-    ):
-        """Initialize the contributor_stats object"""
-        new_contributor = False
-        self.username = username
-        self.new_contributor = new_contributor
-        self.avatar_url = avatar_url
-        self.contribution_count = contribution_count
-        self.commit_url = commit_url
-        self.sponsor_info = sponsor_info
-
-    def __repr__(self) -> str:
-        """Return the representation of the contributor_stats object"""
-        return (
-            f"contributor_stats(username={self.username}, "
-            f"new_contributor={self.new_contributor}, "
-            f"avatar_url={self.avatar_url}, "
-            f"contribution_count={self.contribution_count}, commit_url={self.commit_url})"
-            f"sponsor_info={self.sponsor_info})"
-        )
-
-    def __eq__(self, other) -> bool:
-        """Check if two contributor_stats objects are equal"""
-        return (
-            self.username == other.username
-            and self.new_contributor == other.new_contributor
-            and self.avatar_url == other.avatar_url
-            and self.contribution_count == other.contribution_count
-            and self.commit_url == other.commit_url
-        )
+    new_contributor: bool = False
 
 
 def is_new_contributor(username: str, returning_contributors: list) -> bool:

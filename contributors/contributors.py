@@ -3,11 +3,15 @@
 
 from typing import List
 
-import auth
-import contributor_stats
-import env
-import json_writer
-import markdown
+import github3.repos
+import github3.users
+import github3
+
+from . import auth
+from . import contributor_stats
+from . import env
+from . import json_writer
+from . import markdown
 
 
 def main():
@@ -26,10 +30,11 @@ def main():
         end_date,
         sponsor_info,
         link_to_profile,
+        show_organisations_list,
     ) = env.get_env_vars()
 
     # Auth to GitHub.com
-    github_connection = auth.auth_to_github(
+    github_connection: github3.GitHub = auth.auth_to_github(
         gh_app_id, gh_app_installation_id, gh_app_private_key_bytes, token, ghe
     )
 
@@ -72,6 +77,7 @@ def main():
         repository_list,
         sponsor_info,
         link_to_profile,
+        show_organisations_list,
     )
     json_writer.write_to_json(
         filename="contributors.json",
@@ -90,7 +96,7 @@ def get_all_contributors(
     repository_list: List[str],
     start_date: str,
     end_date: str,
-    github_connection: object,
+    github_connection: github3.GitHub,
 ):
     """
     Get all contributors from the organization or repository
@@ -129,7 +135,7 @@ def get_all_contributors(
 
 
 def get_contributors(
-    repo: object,
+    repo: github3.repos.Repository,
     start_date: str,
     end_date: str,
 ):
@@ -172,12 +178,13 @@ def get_contributors(
                     f"https://github.com/{repo.full_name}/commits?author={user.login}"
                 )
             contributor = contributor_stats.ContributorStats(
-                user.login,
-                False,
-                user.avatar_url,
-                user.contributions_count,
-                commit_url,
-                "",
+                username=user.login,
+                new_contributor=False,
+                avatar_url=user.avatar_url,
+                contribution_count=user.contributions_count,
+                commit_url=commit_url,
+                sponsor_info="",
+                organisations=list(map(lambda x: x.url.split('/')[-1], user.organizations())),
             )
             contributors.append(contributor)
     except Exception as e:
@@ -186,7 +193,3 @@ def get_contributors(
         return None
 
     return contributors
-
-
-if __name__ == "__main__":
-    main()
