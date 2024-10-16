@@ -30,8 +30,8 @@ jobs:
           end_date=$(date -d "$start_date +1 month -1 day" +%Y-%m-%d)
 
           #Set an environment variable with the date range
-          echo "START_DATE=$start_date" >> "$GITHUB_ENV"
-          echo "END_DATE=$end_date" >> "$GITHUB_ENV"
+          # echo "START_DATE=$start_date" >> "$GITHUB_ENV"
+          # echo "END_DATE=$end_date" >> "$GITHUB_ENV"
 
       - name: Install dependencies
         run: |
