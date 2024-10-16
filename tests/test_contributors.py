@@ -57,9 +57,7 @@ class TestContributors(unittest.TestCase):
             ),
         ]
 
-        result = get_all_contributors(
-            "org", "", "2022-01-01", "2022-12-31", mock_github_connection
-        )
+        result = get_all_contributors("org", "", "2022-01-01", "2022-12-31", mock_github_connection)
 
         self.assertEqual(
             result,
@@ -95,9 +93,7 @@ class TestContributors(unittest.TestCase):
             )
         ]
 
-        result = get_all_contributors(
-            "", ["owner/repo"], "2022-01-01", "2022-12-31", mock_github_connection
-        )
+        result = get_all_contributors("", ["owner/repo"], "2022-01-01", "2022-12-31", mock_github_connection)
 
         self.assertEqual(
             result,
@@ -112,9 +108,7 @@ class TestContributors(unittest.TestCase):
                 ),
             ],
         )
-        mock_get_contributors.assert_called_once_with(
-            "repo", "2022-01-01", "2022-12-31"
-        )
+        mock_get_contributors.assert_called_once_with("repo", "2022-01-01", "2022-12-31")
 
     @patch("contributors.contributor_stats.ContributorStats")
     def test_get_contributors_skip_users_with_no_commits(self, mock_contributor_stats):

@@ -51,31 +51,19 @@ class TestEnv(unittest.TestCase):
         Test the get_env_vars function when all environment variables are set correctly.
         """
 
-        (
-            organization,
-            repository_list,
-            gh_app_id,
-            gh_app_installation_id,
-            gh_app_private_key_bytes,
-            token,
-            ghe,
-            start_date,
-            end_date,
-            sponsor_info,
-            link_to_profile,
-        ) = env.get_env_vars()
+        environment = env.get_env_vars()
 
-        self.assertEqual(organization, "org")
-        self.assertEqual(repository_list, ["repo", "repo2"])
-        self.assertIsNone(gh_app_id)
-        self.assertIsNone(gh_app_installation_id)
-        self.assertEqual(gh_app_private_key_bytes, b"")
-        self.assertEqual(token, "token")
-        self.assertEqual(ghe, "")
-        self.assertEqual(start_date, "2022-01-01")
-        self.assertEqual(end_date, "2022-12-31")
-        self.assertFalse(sponsor_info)
-        self.assertTrue(link_to_profile)
+        self.assertEqual(environment.organization, "org")
+        self.assertEqual(environment.repositories_list, ["repo", "repo2"])
+        self.assertIsNone(environment.gh_app_id)
+        self.assertIsNone(environment.gh_app_installation_id)
+        self.assertEqual(environment.gh_app_private_key_bytes, b"")
+        self.assertEqual(environment.token, "token")
+        self.assertEqual(environment.ghe, "")
+        self.assertEqual(environment.start_date, "2022-01-01")
+        self.assertEqual(environment.end_date, "2022-12-31")
+        self.assertFalse(environment.sponsor_info)
+        self.assertTrue(environment.link_to_profile)
 
     @patch.dict(
         os.environ,
@@ -159,31 +147,19 @@ class TestEnv(unittest.TestCase):
         and start_date and end_date are not set.
         """
 
-        (
-            organization,
-            repository_list,
-            gh_app_id,
-            gh_app_installation_id,
-            gh_app_private_key_bytes,
-            token,
-            ghe,
-            start_date,
-            end_date,
-            sponsor_info,
-            link_to_profile,
-        ) = env.get_env_vars()
+        environment = env.get_env_vars()
 
-        self.assertEqual(organization, "org")
-        self.assertEqual(repository_list, ["repo", "repo2"])
-        self.assertIsNone(gh_app_id)
-        self.assertIsNone(gh_app_installation_id)
-        self.assertEqual(gh_app_private_key_bytes, b"")
-        self.assertEqual(token, "token")
-        self.assertEqual(ghe, "")
-        self.assertEqual(start_date, "")
-        self.assertEqual(end_date, "")
-        self.assertFalse(sponsor_info)
-        self.assertTrue(link_to_profile)
+        self.assertEqual(environment.organization, "org")
+        self.assertEqual(environment.repositories_list, ["repo", "repo2"])
+        self.assertIsNone(environment.gh_app_id)
+        self.assertIsNone(environment.gh_app_installation_id)
+        self.assertEqual(environment.gh_app_private_key_bytes, b"")
+        self.assertEqual(environment.token, "token")
+        self.assertEqual(environment.ghe, "")
+        self.assertEqual(environment.start_date, "")
+        self.assertEqual(environment.end_date, "")
+        self.assertFalse(environment.sponsor_info)
+        self.assertTrue(environment.link_to_profile)
 
 
 if __name__ == "__main__":

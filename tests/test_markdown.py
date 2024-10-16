@@ -49,13 +49,12 @@ class TestMarkdown(unittest.TestCase):
             "org/repo",
             "false",
             "true",
+            [],
         )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
         mock_file().write.assert_any_call("# Contributors\n\n")
-        mock_file().write.assert_any_call(
-            "- Date range for contributor list:  2023-01-01 to 2023-01-02\n"
-        )
+        mock_file().write.assert_any_call("- Date range for contributor list:  2023-01-01 to 2023-01-02\n")
         mock_file().write.assert_any_call(
             "| Total Contributors | Total Contributions | % New Contributors |\n| --- | --- | --- |\n| 2 | 300 | 50.0% |\n\n"
         )
@@ -103,13 +102,12 @@ class TestMarkdown(unittest.TestCase):
             "org/repo",
             "true",
             "true",
+            []
         )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
         mock_file().write.assert_any_call("# Contributors\n\n")
-        mock_file().write.assert_any_call(
-            "- Date range for contributor list:  2023-01-01 to 2023-01-02\n"
-        )
+        mock_file().write.assert_any_call("- Date range for contributor list:  2023-01-01 to 2023-01-02\n")
         mock_file().write.assert_any_call(
             "| Total Contributors | Total Contributions | % New Contributors |\n| --- | --- | --- |\n| 2 | 300 | 50.0% |\n\n"
         )
@@ -157,13 +155,12 @@ class TestMarkdown(unittest.TestCase):
             "org/repo",
             "false",
             "false",
+            []
         )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
         mock_file().write.assert_any_call("# Contributors\n\n")
-        mock_file().write.assert_any_call(
-            "- Date range for contributor list:  2023-01-01 to 2023-01-02\n"
-        )
+        mock_file().write.assert_any_call("- Date range for contributor list:  2023-01-01 to 2023-01-02\n")
         mock_file().write.assert_any_call(
             "| Total Contributors | Total Contributions | % New Contributors |\n| --- | --- | --- |\n| 2 | 300 | 50.0% |\n\n"
         )
