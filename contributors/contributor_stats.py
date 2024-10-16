@@ -34,13 +34,13 @@ class ContributorStats:
     """
 
     username: str
+    new_contributor: bool
     avatar_url: str
     contribution_count: int
     commit_url: str
     sponsor_info: str
     organisations: list[str] = field(default_factory=list)
 
-    new_contributor: bool = False
 
 
 def is_new_contributor(username: str, returning_contributors: list) -> bool:
