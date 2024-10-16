@@ -14,7 +14,7 @@ Similar actions to help you recognize contributors by putting them into a `READM
 ## Example use cases
 
 - As a maintainer, you may want to acknowledge contributors from various organisations in a discussion post
-
+- A repository wants to track contributions from organisations
 
 ## Support
 
@@ -80,8 +80,8 @@ This action can be configured to authenticate with GitHub App Installation or Pe
 | `END_DATE`          | False                                           | Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02`                                                                       |
 | `SPONSOR_INFO`      | False                                           | False             | If you want to include sponsor information in the output. This will include the sponsor count and the sponsor URL. This will impact action performance. ie. SPONSOR_INFO = "False" or SPONSOR_INFO = "True"              |
 | `LINK_TO_PROFILE`   | False                                           | True              | If you want to link usernames to their GitHub profiles in the output. ie. LINK_TO_PROFILE = "True" or LINK_TO_PROFILE = "False"                                                                                          |
-
-**Note**: If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date.
+| `SHOW_ORGANISATIONS`   | False                                           | []              | Organisations to show in the contributors table. Will be evaluated in order, and a user only added to only the first one they are a part of. Any contributors with no organisation will be shown in independent. Set to 'all' to show all organisations. 
+| `CONTRIB_FILENAME`   | False                                           | "contibutors"              | Filename to add contributors to. Will create both an 'md', and 'json' file with contents.
 
 **Performance Note:** Using start and end dates will reduce speed of the action by approximately 63X. ie without dates if the action takes 1.7 seconds, it will take 1 minute and 47 seconds.
 
