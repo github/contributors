@@ -1,29 +1,24 @@
-# Contributors action
+# Contributors sorted by Organisation action
 
-[![Python package](https://github.com/github/contributors/actions/workflows/python-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/python-ci.yml)
-[![Docker Image CI](https://github.com/github/contributors/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/docker-ci.yml)
-[![CodeQL](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql)[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/github/contributors/badge)](https://scorecard.dev/viewer/?uri=github.com/github/contributors)
+[![Python package](https://github.com/hcookie/contributors/actions/workflows/python-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/python-ci.yml)
+[![Docker Image CI](https://github.com/hcookie/contributors/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/docker-ci.yml)
+[![CodeQL](https://github.com/hcookie/contributors/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql)[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/github/contributors/badge)](https://scorecard.dev/viewer/?uri=github.com/github/contributors)
 
-This is a GitHub Action that given an organization or specified repositories, produces information about the [contributors](https://chaoss.community/kb/metric-contributors/) over the specified time period.
+This is a GitHub Action that given an organization or specified repositories, produces information about the [contributors](https://chaoss.community/kb/metric-contributors/) sorted by organisation.
 
 Similar actions to help you recognize contributors by putting them into a `README` or `CONTRIBUTORS.md` include:
 
 - [contributor-list](https://github.com/marketplace/actions/contribute-list)
-
-This action was developed by the GitHub OSPO for our own use and developed in a way that we could open source it that it might be useful to you as well! If you want to know more about how we use it, reach out in an issue in this repository.
+- [contributors](https://github.com/github/contributors)
 
 ## Example use cases
 
-- As a maintainer, you may want to acknowledge recent contributors in a discussion post
-- As an OSPO or maintainer, you may want to know who candidates are for new maintainers
+- As a maintainer, you may want to acknowledge contributors from various organisations in a discussion post
+
 
 ## Support
 
-If you need support using this project or have questions about it, please [open up an issue in this repository](https://github.com/github/contributors/issues). Requests made directly to GitHub staff or support team will be redirected here to open an issue. GitHub SLA's and support/services contracts do not apply to this repository.
-
-### OSPO GitHub Actions as a Whole
-
-All feedback regarding our GitHub Actions, as a whole, should be communicated through [issues on our github-ospo repository](https://github.com/github/github-ospo/issues/new).
+If you need support using this project or have questions about it, please [open up an issue in this repository](https://github.com/github/contributors/issues). 
 
 ## What is a contributor?
 
