@@ -69,7 +69,7 @@ def get_github_app_installation_token(
         str: the GitHub App token
     """
     jwt_headers = github3.apps.create_jwt_headers(gh_app_private_key_bytes, gh_app_id)
-    api_endpoint = f"{ghe}/api/v3" if ghe else "api.github.com"
+    api_endpoint = f"{ghe}/api/v3" if ghe else "https://api.github.com"
     url = f"{api_endpoint}/app/installations/{gh_app_installation_id}/access_tokens"
 
     try:
