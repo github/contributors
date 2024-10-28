@@ -25,7 +25,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31")
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31", "")
 
         mock_contributor_stats.assert_called_once_with(
             "user",
@@ -56,9 +56,10 @@ class TestContributors(unittest.TestCase):
                 "sponsor_url_1",
             ),
         ]
+        ghe = ""
 
         result = get_all_contributors(
-            "org", "", "2022-01-01", "2022-12-31", mock_github_connection
+            "org", "", "2022-01-01", "2022-12-31", mock_github_connection, ghe
         )
 
         self.assertEqual(
@@ -74,8 +75,8 @@ class TestContributors(unittest.TestCase):
                 ),
             ],
         )
-        mock_get_contributors.assert_any_call("repo1", "2022-01-01", "2022-12-31")
-        mock_get_contributors.assert_any_call("repo2", "2022-01-01", "2022-12-31")
+        mock_get_contributors.assert_any_call("repo1", "2022-01-01", "2022-12-31", ghe)
+        mock_get_contributors.assert_any_call("repo2", "2022-01-01", "2022-12-31", ghe)
 
     @patch("contributors.get_contributors")
     def test_get_all_contributors_with_repository(self, mock_get_contributors):
@@ -94,9 +95,10 @@ class TestContributors(unittest.TestCase):
                 "sponsor_url_2",
             )
         ]
+        ghe = ""
 
         result = get_all_contributors(
-            "", ["owner/repo"], "2022-01-01", "2022-12-31", mock_github_connection
+            "", ["owner/repo"], "2022-01-01", "2022-12-31", mock_github_connection, ghe
         )
 
         self.assertEqual(
@@ -113,7 +115,7 @@ class TestContributors(unittest.TestCase):
             ],
         )
         mock_get_contributors.assert_called_once_with(
-            "repo", "2022-01-01", "2022-12-31"
+            "repo", "2022-01-01", "2022-12-31", ghe
         )
 
     @patch("contributors.contributor_stats.ContributorStats")
@@ -134,8 +136,9 @@ class TestContributors(unittest.TestCase):
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
         mock_repo.get_commits.side_effect = StopIteration
+        ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31")
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
 
         # Note that only user is returned and user2 is not returned here because there were no commits in the date range
         mock_contributor_stats.assert_called_once_with(
@@ -144,6 +147,55 @@ class TestContributors(unittest.TestCase):
             "https://avatars.githubusercontent.com/u/12345678?v=4",
             100,
             "https://github.com/owner/repo/commits?author=user&since=2022-01-01&until=2022-12-31",
+            "",
+        )
+
+    @patch("contributors.contributor_stats.ContributorStats")
+    def test_get_contributors_skip_bot(self, mock_contributor_stats):
+        """
+        Test if the get_contributors function skips the bot user.
+        """
+        mock_repo = MagicMock()
+        mock_user = MagicMock()
+        mock_user.login = "[bot]"
+        mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
+        mock_user.contributions_count = 100
+
+        mock_repo.contributors.return_value = [mock_user]
+        mock_repo.full_name = "owner/repo"
+        mock_repo.get_commits.side_effect = StopIteration
+        ghe = ""
+
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
+
+        # Note that only user is returned and user2 is not returned here because there were no commits in the date range
+        mock_contributor_stats.isEmpty()
+
+    @patch("contributors.contributor_stats.ContributorStats")
+    def test_get_contributors_no_commit_end_date(self, mock_contributor_stats):
+        """
+        Test the get_contributors does the search of commits only with start date
+        """
+        mock_repo = MagicMock()
+        mock_user = MagicMock()
+        mock_user.login = "user"
+        mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
+        mock_user.contributions_count = 100
+
+        mock_repo.contributors.return_value = [mock_user]
+        mock_repo.full_name = "owner/repo"
+        mock_repo.get_commits.side_effect = StopIteration
+        ghe = ""
+
+        get_contributors(mock_repo, "2022-01-01", "", ghe)
+
+        # Note that only user is returned and user2 is not returned here because there were no commits in the date range
+        mock_contributor_stats.assert_called_once_with(
+            "user",
+            False,
+            "https://avatars.githubusercontent.com/u/12345678?v=4",
+            100,
+            "https://github.com/owner/repo/commits?author=user",
             "",
         )
 

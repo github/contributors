@@ -38,11 +38,19 @@ Find out more in the [GitHub API documentation](https://docs.github.com/en/rest/
 1. Create a repository to host this GitHub Action or select an existing repository.
 1. Select a best fit workflow file from the [examples below](#example-workflows).
 1. Copy that example into your repository (from step 1) and into the proper directory for GitHub Actions: `.github/workflows/` directory with the file extension `.yml` (ie. `.github/workflows/contributors.yml`)
-1. Edit the values (`ORGANIZATION`, `REPOSITORY`, `START_DATE`, `END_DATE`) from the sample workflow with your information.
-   - If no start and end date are supplied, the action will consider the entire repository history and be unable to determine if contributors are new or returning.
-   - If running on a whole organization then no repository is needed.
-   - If running the action on just one repository or a list of repositories, then no organization is needed.
-1. Also edit the value for `GH_ENTERPRISE_URL` if you are using a GitHub Server and not using github.com. For github.com users, don't put anything in here.
+1. Edit the values below from the sample workflow with your information:
+
+   - `ORGANIZATION`
+   - `REPOSITORY`
+   - `START_DATE`
+   - `END_DATE`
+
+   If no **start and end date** are supplied, the action will consider the entire repository history and be unable to determine if contributors are new or returning.
+   If running on a whole **organization** then no repository is needed.  
+   If running the action on just **one repository** or a **list of repositories**, then no organization is needed.
+
+1. Also edit the value for `GH_ENTERPRISE_URL` if you are using a GitHub Server and not using github.com.  
+   For github.com users, leave it empty.
 1. If you are running this action on an organization or repository other than the one where the workflow file is going to be, then update the value of `GH_TOKEN`.
    - Do this by creating a [GitHub API token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) with permissions to read the repository/organization and write issues.
    - Then take the value of the API token you just created, and [create a repository secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets) where the name of the secret is `GH_TOKEN` and the value of the secret the API token.
@@ -62,11 +70,12 @@ This action can be configured to authenticate with GitHub App Installation or Pe
 
 ##### GitHub App Installation
 
-| field                    | required | default | description                                                                                                                                                                                             |
-| ------------------------ | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GH_APP_ID`              | True     | `""`    | GitHub Application ID. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details.              |
-| `GH_APP_INSTALLATION_ID` | True     | `""`    | GitHub Application Installation ID. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details. |
-| `GH_APP_PRIVATE_KEY`     | True     | `""`    | GitHub Application Private Key. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details.     |
+| field                        | required | default | description                                                                                                                                                                                             |
+| ---------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GH_APP_ID`                  | True     | `""`    | GitHub Application ID. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details.              |
+| `GH_APP_INSTALLATION_ID`     | True     | `""`    | GitHub Application Installation ID. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details. |
+| `GH_APP_PRIVATE_KEY`         | True     | `""`    | GitHub Application Private Key. See [documentation](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/about-authentication-with-a-github-app) for more details.     |
+| `GITHUB_APP_ENTERPRISE_ONLY` | False    | false   | Set this input to `true` if your app is created in GHE and communicates with GHE.                                                                                                                       |
 
 ##### Personal Access Token (PAT)
 
@@ -129,6 +138,62 @@ jobs:
         uses: github/contributors@v1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          START_DATE: ${{ env.START_DATE }}
+          END_DATE: ${{ env.END_DATE }}
+          ORGANIZATION: <YOUR_ORGANIZATION_GOES_HERE>
+          SPONSOR_INFO: "true"
+
+      - name: Create issue
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: Monthly contributor report
+          token: ${{ secrets.GITHUB_TOKEN }}
+          content-filepath: ./contributors.md
+          assignees: <YOUR_GITHUB_HANDLE_HERE>
+```
+
+#### Using GitHub app
+
+```yaml
+name: Monthly contributor report
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "3 2 1 * *"
+
+permissions:
+  contents: read
+
+jobs:
+  contributor_report:
+    name: contributor report
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Get dates for last month
+        shell: bash
+        run: |
+          # Calculate the first day of the previous month
+          start_date=$(date -d "last month" +%Y-%m-01)
+
+          # Calculate the last day of the previous month
+          end_date=$(date -d "$start_date +1 month -1 day" +%Y-%m-%d)
+
+          #Set an environment variable with the date range
+          echo "START_DATE=$start_date" >> "$GITHUB_ENV"
+          echo "END_DATE=$end_date" >> "$GITHUB_ENV"
+
+      - name: Run contributor action
+        uses: github/contributors@v1
+        env:
+          GH_APP_ID: ${{ secrets.GH_APP_ID }}
+          GH_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
+          GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          # GITHUB_APP_ENTERPRISE_ONLY: True --> Set to true when created GHE App needs to communicate with GHE api
+          GH_ENTERPRISE_URL: ${{ github.server_url }}
+          # GH_TOKEN: ${{ steps.app-token.outputs.token }} --> the token input is not used if the github app inputs are set
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
           ORGANIZATION: <YOUR_ORGANIZATION_GOES_HERE>

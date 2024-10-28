@@ -20,6 +20,7 @@ class TestEnv(unittest.TestCase):
             "GH_ENTERPRISE_URL",
             "GH_APP_INSTALLATION_ID",
             "GH_APP_PRIVATE_KEY",
+            "GITHUB_APP_ENTERPRISE_ONLY",
             "GH_TOKEN",
             "ORGANIZATION",
             "REPOSITORY",
@@ -56,7 +57,8 @@ class TestEnv(unittest.TestCase):
             repository_list,
             gh_app_id,
             gh_app_installation_id,
-            gh_app_private_key_bytes,
+            gh_app_private_key,
+            gh_app_enterprise_only,
             token,
             ghe,
             start_date,
@@ -69,7 +71,8 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(repository_list, ["repo", "repo2"])
         self.assertIsNone(gh_app_id)
         self.assertIsNone(gh_app_installation_id)
-        self.assertEqual(gh_app_private_key_bytes, b"")
+        self.assertEqual(gh_app_private_key, b"")
+        self.assertFalse(gh_app_enterprise_only)
         self.assertEqual(token, "token")
         self.assertEqual(ghe, "")
         self.assertEqual(start_date, "2022-01-01")
@@ -164,7 +167,8 @@ class TestEnv(unittest.TestCase):
             repository_list,
             gh_app_id,
             gh_app_installation_id,
-            gh_app_private_key_bytes,
+            gh_app_private_key,
+            gh_app_enterprise_only,
             token,
             ghe,
             start_date,
@@ -177,13 +181,46 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(repository_list, ["repo", "repo2"])
         self.assertIsNone(gh_app_id)
         self.assertIsNone(gh_app_installation_id)
-        self.assertEqual(gh_app_private_key_bytes, b"")
+        self.assertEqual(gh_app_private_key, b"")
+        self.assertFalse(gh_app_enterprise_only)
         self.assertEqual(token, "token")
         self.assertEqual(ghe, "")
         self.assertEqual(start_date, "")
         self.assertEqual(end_date, "")
         self.assertFalse(sponsor_info)
         self.assertTrue(link_to_profile)
+
+    @patch.dict(os.environ, {})
+    def test_get_env_vars_missing_org_or_repo(self):
+        """Test that an error is raised if required environment variables are not set"""
+        with self.assertRaises(ValueError) as cm:
+            env.get_env_vars()
+        the_exception = cm.exception
+        self.assertEqual(
+            str(the_exception),
+            "ORGANIZATION and REPOSITORY environment variables were not set. Please set one",
+        )
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "my_organization",
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_auth_with_github_app_installation_missing_inputs(self):
+        """Test that an error is raised there are missing inputs for the gh app"""
+        with self.assertRaises(ValueError) as context_manager:
+            env.get_env_vars()
+        the_exception = context_manager.exception
+        self.assertEqual(
+            str(the_exception),
+            "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set",
+        )
 
 
 if __name__ == "__main__":
