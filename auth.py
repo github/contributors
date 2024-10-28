@@ -76,6 +76,6 @@ def get_github_app_installation_token(
         response = requests.post(url, headers=jwt_headers, json=None, timeout=5)
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
-        print(f"Request failed: {e}")
+        print(f"Request to get GitHub App Installation Token failed: {e}")
         return None
     return response.json().get("token")
