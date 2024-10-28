@@ -153,10 +153,12 @@ def get_sponsor_information(contributors: list, token: str, ghe: str) -> list:
         variables = {"username": contributor.username}
 
         # Send the GraphQL request
-        api_endpoint = f"{ghe}/api/v3" if ghe else "https://api.github.com"
+        api_endpoint = (
+            f"{ghe}/api/v3".removeprefix("https://") if ghe else "api.github.com"
+        )
         headers = {"Authorization": f"Bearer {token}"}
         response = requests.post(
-            f"{api_endpoint}/graphql",
+            f"https://{api_endpoint}/graphql",
             json={"query": query, "variables": variables},
             headers=headers,
             timeout=60,
