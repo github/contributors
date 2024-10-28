@@ -11,6 +11,7 @@ def write_to_markdown(
     repository,
     sponsor_info,
     link_to_profile,
+    ghe,
 ):
     """
     This function writes a list of collaborators to a markdown file in table format.
@@ -40,6 +41,7 @@ def write_to_markdown(
         repository,
         sponsor_info,
         link_to_profile,
+        ghe,
     )
 
     # Put together the summary table including # of new contributions, # of new contributors, % new contributors, % returning contributors
@@ -134,6 +136,7 @@ def get_contributor_table(
     repository,
     sponsor_info,
     link_to_profile,
+    ghe,
 ):
     """
     This function returns a string containing a markdown table of the contributors and the total contribution count.
@@ -182,7 +185,10 @@ def get_contributor_table(
             for url in commit_url_list:
                 url = url.strip()
                 # get the organization and repository name from the url ie. org1/repo2 from https://github.com/org1/repo2/commits?author-zkoppert
-                org_repo_link_name = url.split("/commits")[0].split("github.com/")[1]
+                api_endpoint = ghe.removeprefix("https://") if ghe else "github.com"
+                org_repo_link_name = url.split("/commits")[0].split(f"{api_endpoint}/")[
+                    1
+                ]
                 url = f"[{org_repo_link_name}]({url})"
                 commit_urls += f"{url}, "
         new_contributor = collaborator.new_contributor

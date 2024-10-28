@@ -82,6 +82,7 @@ def main():
         repository_list,
         sponsor_info,
         link_to_profile,
+        ghe,
     )
     json_writer.write_to_json(
         filename="contributors.json",

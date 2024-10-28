@@ -39,6 +39,7 @@ class TestMarkdown(unittest.TestCase):
             person1,
             person2,
         ]
+        ghe = ""
 
         write_to_markdown(
             collaborators,
@@ -49,6 +50,7 @@ class TestMarkdown(unittest.TestCase):
             "org/repo",
             "false",
             "true",
+            ghe,
         )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
@@ -93,6 +95,7 @@ class TestMarkdown(unittest.TestCase):
             person1,
             person2,
         ]
+        ghe = ""
 
         write_to_markdown(
             collaborators,
@@ -103,6 +106,7 @@ class TestMarkdown(unittest.TestCase):
             "org/repo",
             "true",
             "true",
+            ghe,
         )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
@@ -147,6 +151,7 @@ class TestMarkdown(unittest.TestCase):
             person1,
             person2,
         ]
+        ghe = ""
 
         write_to_markdown(
             collaborators,
@@ -157,6 +162,7 @@ class TestMarkdown(unittest.TestCase):
             "org/repo",
             "false",
             "false",
+            ghe,
         )
 
         mock_file.assert_called_once_with("filename", "w", encoding="utf-8")
