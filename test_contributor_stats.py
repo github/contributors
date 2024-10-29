@@ -159,8 +159,6 @@ class TestContributorStats(unittest.TestCase):
 
         self.assertFalse(result)
 
-
-class TestSponsorInfo(unittest.TestCase):
     @patch("requests.post")
     def test_fetch_sponsor_info(self, mock_post):
         # Mock response data
