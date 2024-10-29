@@ -185,10 +185,8 @@ def get_contributor_table(
             for url in commit_url_list:
                 url = url.strip()
                 # get the organization and repository name from the url ie. org1/repo2 from https://github.com/org1/repo2/commits?author-zkoppert
-                api_endpoint = ghe.removeprefix("https://") if ghe else "github.com"
-                org_repo_link_name = url.split("/commits")[0].split(f"{api_endpoint}/")[
-                    1
-                ]
+                endpoint = ghe.removeprefix("https://") if ghe else "github.com"
+                org_repo_link_name = url.split("/commits")[0].split(f"{endpoint}/")[1]
                 url = f"[{org_repo_link_name}]({url})"
                 commit_urls += f"{url}, "
         new_contributor = collaborator.new_contributor

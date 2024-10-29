@@ -153,12 +153,10 @@ def get_sponsor_information(contributors: list, token: str, ghe: str) -> list:
         variables = {"username": contributor.username}
 
         # Send the GraphQL request
-        api_endpoint = (
-            f"{ghe}/api/v3".removeprefix("https://") if ghe else "api.github.com"
-        )
+        api_endpoint = f"{ghe}/api/v3" if ghe else "https://api.github.com"
         headers = {"Authorization": f"Bearer {token}"}
         response = requests.post(
-            f"https://{api_endpoint}/graphql",
+            f"{api_endpoint}/graphql",
             json={"query": query, "variables": variables},
             headers=headers,
             timeout=60,
@@ -170,10 +168,9 @@ def get_sponsor_information(contributors: list, token: str, ghe: str) -> list:
 
         data = response.json()["data"]
 
+        endpoint = ghe if ghe else "https://github.com"
         # if the user has a sponsor page, add it to the contributor object
         if data["repositoryOwner"]["hasSponsorsListing"]:
-            contributor.sponsor_info = (
-                f"https://{api_endpoint}/sponsors/{contributor.username}"
-            )
+            contributor.sponsor_info = f"{endpoint}/sponsors/{contributor.username}"
 
     return contributors

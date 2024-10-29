@@ -173,11 +173,11 @@ def get_contributors(repo: object, start_date: str, end_date: str, ghe: str):
                     continue
 
             # Store the contributor information in a ContributorStats object
-            api_endpoint = ghe.removeprefix("https://") if ghe else "github.com"
+            endpoint = ghe if ghe else "https://github.com"
             if start_date and end_date:
-                commit_url = f"https://{api_endpoint}/{repo.full_name}/commits?author={user.login}&since={start_date}&until={end_date}"
+                commit_url = f"{endpoint}/{repo.full_name}/commits?author={user.login}&since={start_date}&until={end_date}"
             else:
-                commit_url = f"https://{api_endpoint}/{repo.full_name}/commits?author={user.login}"
+                commit_url = f"{endpoint}/{repo.full_name}/commits?author={user.login}"
             contributor = contributor_stats.ContributorStats(
                 user.login,
                 False,
