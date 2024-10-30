@@ -19,7 +19,8 @@ def main():
         repository_list,
         gh_app_id,
         gh_app_installation_id,
-        gh_app_private_key_bytes,
+        gh_app_private_key,
+        gh_app_enterprise_only,
         token,
         ghe,
         start_date,
@@ -30,16 +31,22 @@ def main():
 
     # Auth to GitHub.com
     github_connection = auth.auth_to_github(
-        gh_app_id, gh_app_installation_id, gh_app_private_key_bytes, token, ghe
+        token,
+        gh_app_id,
+        gh_app_installation_id,
+        gh_app_private_key,
+        ghe,
+        gh_app_enterprise_only,
     )
+
+    if not token and gh_app_id and gh_app_installation_id and gh_app_private_key:
+        token = auth.get_github_app_installation_token(
+            ghe, gh_app_id, gh_app_private_key, gh_app_installation_id
+        )
 
     # Get the contributors
     contributors = get_all_contributors(
-        organization,
-        repository_list,
-        start_date,
-        end_date,
-        github_connection,
+        organization, repository_list, start_date, end_date, github_connection, ghe
     )
 
     # Check for new contributor if user provided start_date and end_date
@@ -52,6 +59,7 @@ def main():
             start_date="2008-02-29",  # GitHub was founded on 2008-02-29
             end_date=start_date,
             github_connection=github_connection,
+            ghe=ghe,
         )
         for contributor in contributors:
             contributor.new_contributor = contributor_stats.is_new_contributor(
@@ -60,7 +68,9 @@ def main():
 
     # Get sponsor information on the contributor
     if sponsor_info == "true":
-        contributors = contributor_stats.get_sponsor_information(contributors, token)
+        contributors = contributor_stats.get_sponsor_information(
+            contributors, token, ghe
+        )
     # Output the contributors information
     # print(contributors)
     markdown.write_to_markdown(
@@ -72,6 +82,7 @@ def main():
         repository_list,
         sponsor_info,
         link_to_profile,
+        ghe,
     )
     json_writer.write_to_json(
         filename="contributors.json",
@@ -91,6 +102,7 @@ def get_all_contributors(
     start_date: str,
     end_date: str,
     github_connection: object,
+    ghe: str,
 ):
     """
     Get all contributors from the organization or repository
@@ -118,7 +130,7 @@ def get_all_contributors(
     all_contributors = []
     if repos:
         for repo in repos:
-            repo_contributors = get_contributors(repo, start_date, end_date)
+            repo_contributors = get_contributors(repo, start_date, end_date, ghe)
             if repo_contributors:
                 all_contributors.append(repo_contributors)
 
@@ -128,11 +140,7 @@ def get_all_contributors(
     return all_contributors
 
 
-def get_contributors(
-    repo: object,
-    start_date: str,
-    end_date: str,
-):
+def get_contributors(repo: object, start_date: str, end_date: str, ghe: str):
     """
     Get contributors from a single repository and filter by start end dates if present.
 
@@ -165,12 +173,11 @@ def get_contributors(
                     continue
 
             # Store the contributor information in a ContributorStats object
+            endpoint = ghe if ghe else "https://github.com"
             if start_date and end_date:
-                commit_url = f"https://github.com/{repo.full_name}/commits?author={user.login}&since={start_date}&until={end_date}"
+                commit_url = f"{endpoint}/{repo.full_name}/commits?author={user.login}&since={start_date}&until={end_date}"
             else:
-                commit_url = (
-                    f"https://github.com/{repo.full_name}/commits?author={user.login}"
-                )
+                commit_url = f"{endpoint}/{repo.full_name}/commits?author={user.login}"
             contributor = contributor_stats.ContributorStats(
                 user.login,
                 False,
@@ -181,7 +188,7 @@ def get_contributors(
             )
             contributors.append(contributor)
     except Exception as e:
-        print("Error getting contributors for repository: " + repo.full_name)
+        print(f"Error getting contributors for repository: {repo.full_name}")
         print(e)
         return None
 

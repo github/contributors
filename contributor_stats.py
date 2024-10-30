@@ -114,9 +114,7 @@ def merge_contributors(contributors: list) -> list:
                         )
                         # Merge the commit urls via concatenation
                         merged_contributor.commit_url = (
-                            merged_contributor.commit_url
-                            + ", "
-                            + contributor.commit_url
+                            f"{merged_contributor.commit_url}, {contributor.commit_url}"
                         )
                         # Merge the new_contributor attribute via OR
                         merged_contributor.new_contributor = (
@@ -130,7 +128,7 @@ def merge_contributors(contributors: list) -> list:
     return merged_contributors
 
 
-def get_sponsor_information(contributors: list, token: str) -> list:
+def get_sponsor_information(contributors: list, token: str, ghe: str) -> list:
     """
     Get the sponsor information for each contributor
 
@@ -155,9 +153,10 @@ def get_sponsor_information(contributors: list, token: str) -> list:
         variables = {"username": contributor.username}
 
         # Send the GraphQL request
+        api_endpoint = f"{ghe}/api/v3" if ghe else "https://api.github.com"
         headers = {"Authorization": f"Bearer {token}"}
         response = requests.post(
-            "https://api.github.com/graphql",
+            f"{api_endpoint}/graphql",
             json={"query": query, "variables": variables},
             headers=headers,
             timeout=60,
@@ -169,10 +168,9 @@ def get_sponsor_information(contributors: list, token: str) -> list:
 
         data = response.json()["data"]
 
+        endpoint = ghe if ghe else "https://github.com"
         # if the user has a sponsor page, add it to the contributor object
         if data["repositoryOwner"]["hasSponsorsListing"]:
-            contributor.sponsor_info = (
-                f"https://github.com/sponsors/{contributor.username}"
-            )
+            contributor.sponsor_info = f"{endpoint}/sponsors/{contributor.username}"
 
     return contributors

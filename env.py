@@ -73,7 +73,18 @@ def validate_date_format(env_var_name: str) -> str:
 def get_env_vars(
     test: bool = False,
 ) -> tuple[
-    str | None, list[str], int | None, int | None, bytes, str, str, str, str, bool, bool
+    str | None,
+    list[str],
+    int | None,
+    int | None,
+    bytes,
+    bool,
+    str,
+    str,
+    str,
+    str,
+    bool,
+    bool,
 ]:
     """
     Get the environment variables for use in the action.
@@ -82,18 +93,18 @@ def get_env_vars(
         None
 
     Returns:
-        str: the organization to get contributor information for
-        List[str]: A list of the repositories to get contributor information for
-        int|None: the GitHub App ID to use for authentication
-        int|None: the GitHub App Installation ID to use for authentication
-        bytes: the GitHub App Private Key as bytes to use for authentication
-        str: the GitHub token to use for authentication
-        str: the GitHub Enterprise URL to use for authentication
-        str: the start date to get contributor information from
-        str: the end date to get contributor information to.
-        str: whether to get sponsor information on the contributor
-        str: whether to link username to Github profile in markdown output
-
+        organization (str): the organization to get contributor information for
+        repository_list (list[str]): A list of the repositories to get contributor information for
+        gh_app_id (int | None): The GitHub App ID to use for authentication
+        gh_app_installation_id (int | None): The GitHub App Installation ID to use for authentication
+        gh_app_private_key_bytes (bytes): The GitHub App Private Key as bytes to use for authentication
+        gh_app_enterprise_only (bool): Set this to true if the GH APP is created on GHE and needs to communicate with GHE api only
+        token (str): The GitHub token to use for authentication
+        ghe (str): The GitHub Enterprise URL to use for authentication
+        start_date (str): The start date to get contributor information from
+        end_date (str): The end date to get contributor information to.
+        sponsor_info (str): Whether to get sponsor information on the contributor
+        link_to_profile (str): Whether to link username to Github profile in markdown output
     """
 
     if not test:
@@ -111,6 +122,7 @@ def get_env_vars(
     gh_app_id = get_int_env_var("GH_APP_ID")
     gh_app_private_key_bytes = os.environ.get("GH_APP_PRIVATE_KEY", "").encode("utf8")
     gh_app_installation_id = get_int_env_var("GH_APP_INSTALLATION_ID")
+    gh_app_enterprise_only = get_bool_env_var("GITHUB_APP_ENTERPRISE_ONLY")
 
     if gh_app_id and (not gh_app_private_key_bytes or not gh_app_installation_id):
         raise ValueError(
@@ -147,6 +159,7 @@ def get_env_vars(
         gh_app_id,
         gh_app_installation_id,
         gh_app_private_key_bytes,
+        gh_app_enterprise_only,
         token,
         ghe,
         start_date,
