@@ -161,6 +161,9 @@ class TestContributorStats(unittest.TestCase):
 
     @patch("requests.post")
     def test_fetch_sponsor_info(self, mock_post):
+        """
+        Test the get_sponsor_information function.
+        """
         # Mock response data
         mock_response = MagicMock()
         mock_response.status_code = 200
