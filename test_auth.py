@@ -3,8 +3,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-import requests
 import auth
+import requests
 
 
 class TestAuth(unittest.TestCase):
@@ -102,7 +102,7 @@ class TestAuth(unittest.TestCase):
         mock_post.side_effect = requests.exceptions.RequestException("Request failed")
 
         # Call the function with test data
-        result = get_github_app_installation_token(
+        result = auth.get_github_app_installation_token(
             ghe="https://api.github.com",
             gh_app_id=12345,
             gh_app_private_key_bytes=b"private_key",
@@ -120,13 +120,14 @@ class TestAuth(unittest.TestCase):
         """
         mock_login.return_value = None
         with self.assertRaises(ValueError) as context_manager:
-            auth_to_github("not_a_valid_token", "", "", b"", "", False)
+            auth.auth_to_github("not_a_valid_token", "", "", b"", "", False)
 
         the_exception = context_manager.exception
         self.assertEqual(
             str(the_exception),
             "Unable to authenticate to GitHub",
         )
+
 
 if __name__ == "__main__":
     unittest.main()
