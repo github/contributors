@@ -1,4 +1,4 @@
-""" This module contains a function that writes data to a JSON file. """
+"""This module contains a function that writes data to a JSON file."""
 
 import json
 

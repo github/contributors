@@ -1,4 +1,4 @@
-""" Test the write_to_json function in json_writer.py. """
+"""Test the write_to_json function in json_writer.py."""
 
 import json
 import os
