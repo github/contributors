@@ -49,7 +49,7 @@ class TestMarkdown(unittest.TestCase):
             None,
             "org/repo",
             "false",
-            "true",
+            True,
             ghe,
         )
 
@@ -105,7 +105,7 @@ class TestMarkdown(unittest.TestCase):
             None,
             "org/repo",
             "true",
-            "true",
+            True,
             ghe,
         )
 
@@ -161,7 +161,7 @@ class TestMarkdown(unittest.TestCase):
             None,
             "org/repo",
             "false",
-            "false",
+            False,
             ghe,
         )
 
