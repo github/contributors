@@ -191,7 +191,9 @@ def get_contributor_table(
                 commit_urls += f"{url}, "
         new_contributor = collaborator.new_contributor
 
-        row = f"| {'' if link_to_profile == 'false' else '@'}{username} | {contribution_count} |"
+        row = (
+            f"| {'' if not link_to_profile else '@'}{username} | {contribution_count} |"
+        )
         if "New Contributor" in columns:
             row += f" {new_contributor} |"
         if "Sponsor URL" in columns:
