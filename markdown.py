@@ -191,9 +191,9 @@ def get_contributor_table(
                 commit_urls += f"{url}, "
         new_contributor = collaborator.new_contributor
 
-        row = (
-            f"| {'' if not link_to_profile else '@'}{username} | {contribution_count} |"
-        )
+        # Determine prefix for username: hyperlink if link_to_profile equals 'true' (string or bool)
+        prefix = '@' if str(link_to_profile).strip().lower() == "true" else ''
+        row = f"| {prefix}{username} | {contribution_count} |"
         if "New Contributor" in columns:
             row += f" {new_contributor} |"
         if "Sponsor URL" in columns:
