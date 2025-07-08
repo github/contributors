@@ -192,7 +192,7 @@ def get_contributor_table(
         new_contributor = collaborator.new_contributor
 
         # Determine prefix for username: hyperlink if link_to_profile equals 'true' (string or bool)
-        prefix = '@' if str(link_to_profile).strip().lower() == "true" else ''
+        prefix = "@" if str(link_to_profile).strip().lower() == "true" else ""
         row = f"| {prefix}{username} | {contribution_count} |"
         if "New Contributor" in columns:
             row += f" {new_contributor} |"
