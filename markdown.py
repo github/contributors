@@ -159,7 +159,8 @@ def get_contributor_table(
     columns = ["Username", "All Time Contribution Count"]
     if start_date and end_date:
         columns += ["New Contributor"]
-    if sponsor_info == "true":
+    # Add Sponsor URL column if sponsor_info is True
+    if sponsor_info:
         columns += ["Sponsor URL"]
     if start_date and end_date:
         columns += [f"Commits between {start_date} and {end_date}"]
@@ -191,8 +192,8 @@ def get_contributor_table(
                 commit_urls += f"{url}, "
         new_contributor = collaborator.new_contributor
 
-        # Determine prefix for username: hyperlink if link_to_profile equals 'true' (string or bool)
-        prefix = "@" if str(link_to_profile).strip().lower() == "true" else ""
+        # Determine prefix for username based on boolean link_to_profile
+        prefix = "@" if link_to_profile else ""
         row = f"| {prefix}{username} | {contribution_count} |"
         if "New Contributor" in columns:
             row += f" {new_contributor} |"

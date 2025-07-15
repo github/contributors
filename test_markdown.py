@@ -48,7 +48,7 @@ class TestMarkdown(unittest.TestCase):
             "2023-01-02",
             None,
             "org/repo",
-            "false",
+            False,
             True,
             ghe,
         )
@@ -104,7 +104,7 @@ class TestMarkdown(unittest.TestCase):
             "2023-01-02",
             None,
             "org/repo",
-            "true",
+            True,
             True,
             ghe,
         )
@@ -160,7 +160,7 @@ class TestMarkdown(unittest.TestCase):
             "2023-01-02",
             None,
             "org/repo",
-            "false",
+            False,
             False,
             ghe,
         )
@@ -216,8 +216,8 @@ class TestMarkdown(unittest.TestCase):
             "2023-01-02",
             None,
             "org/repo",
-            "false",
-            "false",
+            False,
+            False,
             ghe,
         )
 
