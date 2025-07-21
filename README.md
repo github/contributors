@@ -39,7 +39,6 @@ Find out more in the [GitHub API documentation](https://docs.github.com/en/rest/
 1. Select a best fit workflow file from the [examples below](#example-workflows).
 1. Copy that example into your repository (from step 1) and into the proper directory for GitHub Actions: `.github/workflows/` directory with the file extension `.yml` (ie. `.github/workflows/contributors.yml`)
 1. Edit the values below from the sample workflow with your information:
-
    - `ORGANIZATION`
    - `REPOSITORY`
    - `START_DATE`
