@@ -16,8 +16,9 @@ class TestMarkdown(unittest.TestCase):
         "markdown.os.environ.get", return_value=None
     )  # Mock GITHUB_STEP_SUMMARY to None
     @patch("builtins.open", new_callable=mock_open)
-    # pylint: disable=unused-argument
-    def test_write_to_markdown(self, mock_file, mock_env_get):
+    def test_write_to_markdown(
+        self, mock_file, mock_env_get
+    ):  # pylint: disable=unused-argument
         """
         Test the write_to_markdown function.
         """
@@ -78,8 +79,9 @@ class TestMarkdown(unittest.TestCase):
         "markdown.os.environ.get", return_value=None
     )  # Mock GITHUB_STEP_SUMMARY to None
     @patch("builtins.open", new_callable=mock_open)
-    # pylint: disable=unused-argument
-    def test_write_to_markdown_with_sponsors(self, mock_file, mock_env_get):
+    def test_write_to_markdown_with_sponsors(
+        self, mock_file, mock_env_get
+    ):  # pylint: disable=unused-argument
         """
         Test the write_to_markdown function with sponsors info turned on.
         """
@@ -140,8 +142,9 @@ class TestMarkdown(unittest.TestCase):
         "markdown.os.environ.get", return_value=None
     )  # Mock GITHUB_STEP_SUMMARY to None
     @patch("builtins.open", new_callable=mock_open)
-    # pylint: disable=unused-argument
-    def test_write_to_markdown_without_link_to_profile(self, mock_file, mock_env_get):
+    def test_write_to_markdown_without_link_to_profile(
+        self, mock_file, mock_env_get
+    ):  # pylint: disable=unused-argument
         """
         Test the write_to_markdown function with link to profile turned off.
         """
@@ -200,8 +203,9 @@ class TestMarkdown(unittest.TestCase):
 
     @patch("markdown.os.environ.get", return_value="/tmp/step_summary")
     @patch("builtins.open", new_callable=mock_open)
-    # pylint: disable=unused-argument
-    def test_write_to_github_summary(self, mock_file, mock_env_get):
+    def test_write_to_github_summary(
+        self, mock_file, mock_env_get
+    ):  # pylint: disable=unused-argument
         """
         Test that markdown content is written to GitHub Step Summary when environment variable is set.
         """

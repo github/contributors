@@ -142,8 +142,7 @@ def generate_markdown_content(
     content = "# Contributors\n\n"
     if start_date and end_date:
         content += (
-            f"- Date range for contributor list:  {start_date} to "
-            f"{end_date}\n"
+            f"- Date range for contributor list:  {start_date} to " f"{end_date}\n"
         )
     if organization:
         content += f"- Organization: {organization}\n"
@@ -199,9 +198,7 @@ def write_markdown_file(
         markdown_file.write(content)
 
 
-def get_summary_table(
-    collaborators, start_date, end_date, total_contributions
-):
+def get_summary_table(collaborators, start_date, end_date, total_contributions):
     """
     This function returns a string containing a markdown table of the summary statistics.
 
@@ -229,9 +226,7 @@ def get_summary_table(
             new_contributors_percentage = 0
         summary_table += f"| {str(len(collaborators))} | {str(total_contributions)} | {str(new_contributors_percentage)}% |\n\n"
     else:
-        summary_table = (
-            "| Total Contributors | Total Contributions |\n| --- | --- |\n"
-        )
+        summary_table = "| Total Contributors | Total Contributions |\n| --- | --- |\n"
         summary_table += (
             f"| {str(len(collaborators))}  | {str(total_contributions)}  |\n\n"
         )
@@ -296,17 +291,15 @@ def get_contributor_table(
             for url in commit_url_list:
                 url = url.strip()
                 # get the organization and repository name from the url ie. org1/repo2 from https://github.com/org1/repo2/commits?author-zkoppert
-                endpoint = (
-                    ghe.removeprefix("https://") if ghe else "github.com"
-                )
-                org_repo_link_name = url.split("/commits")[0].split(
-                    f"{endpoint}/"
-                )[1]
+                endpoint = ghe.removeprefix("https://") if ghe else "github.com"
+                org_repo_link_name = url.split("/commits")[0].split(f"{endpoint}/")[1]
                 url = f"[{org_repo_link_name}]({url})"
                 commit_urls += f"{url}, "
         new_contributor = collaborator.new_contributor
 
-        row = f"| {'' if not link_to_profile else '@'}{username} | {contribution_count} |"
+        row = (
+            f"| {'' if not link_to_profile else '@'}{username} | {contribution_count} |"
+        )
         if "New Contributor" in columns:
             row += f" {new_contributor} |"
         if "Sponsor URL" in columns:
