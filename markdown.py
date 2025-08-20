@@ -17,18 +17,27 @@ def write_to_markdown(
 ):
     """
     This function writes a list of collaborators to a markdown file in table format.
-    Each collaborator is represented as a dictionary with keys 'username', 'contribution_count', 'new_contributor', and 'commits'.
+    Each collaborator is represented as a dictionary with keys 'username',
+    'contribution_count', 'new_contributor', and 'commits'.
 
     Args:
-        collaborators (list): A list of dictionaries, where each dictionary represents a collaborator.
-                              Each dictionary should have the keys 'username', 'contribution_count', and 'commits'.
-        filename (str): The path of the markdown file to which the table will be written.
-        start_date (str): The start date of the date range for the contributor list.
+        collaborators (list): A list of dictionaries, where each dictionary
+                              represents a collaborator. Each dictionary should
+                              have the keys 'username', 'contribution_count',
+                              and 'commits'.
+        filename (str): The path of the markdown file to which the table will
+                        be written.
+        start_date (str): The start date of the date range for the contributor
+                          list.
         end_date (str): The end date of the date range for the contributor list.
-        organization (str): The organization for which the contributors are being listed.
-        repository (str): The repository for which the contributors are being listed.
-        sponsor_info (str): True if the user wants the sponsor_url shown in the report
-        link_to_profile (str): True if the user wants the username linked to Github profile in the report
+        organization (str): The organization for which the contributors are
+                            being listed.
+        repository (str): The repository for which the contributors are being
+                          listed.
+        sponsor_info (str): True if the user wants the sponsor_url shown in
+                            the report
+        link_to_profile (str): True if the user wants the username linked to
+                               Github profile in the report
 
     Returns:
         None
@@ -46,14 +55,21 @@ def write_to_markdown(
         ghe,
     )
 
-    # Put together the summary table including # of new contributions, # of new contributors, % new contributors, % returning contributors
+    # Put together the summary table including # of new contributions,
+    # # of new contributors, % new contributors, % returning contributors
     summary_table = get_summary_table(
         collaborators, start_date, end_date, total_contributions
     )
 
     # Write the markdown file
     write_markdown_file(
-        filename, start_date, end_date, organization, repository, table, summary_table
+        filename,
+        start_date,
+        end_date,
+        organization,
+        repository,
+        table,
+        summary_table,
     )
 
     # Also write to GitHub Actions Step Summary if available
@@ -69,21 +85,32 @@ def write_to_github_summary(
     Write markdown content to GitHub Actions Step Summary.
 
     Args:
-        start_date (str): The start date of the date range for the contributor list.
+        start_date (str): The start date of the date range for the contributor
+                          list.
         end_date (str): The end date of the date range for the contributor list.
-        organization (str): The organization for which the contributors are being listed.
-        repository (str): The repository for which the contributors are being listed.
-        table (str): A string containing a markdown table of the contributors and the total contribution count.
-        summary_table (str): A string containing a markdown table of the summary statistics.
+        organization (str): The organization for which the contributors are
+                            being listed.
+        repository (str): The repository for which the contributors are being
+                          listed.
+        table (str): A string containing a markdown table of the contributors
+                     and the total contribution count.
+        summary_table (str): A string containing a markdown table of the
+                             summary statistics.
 
     Returns:
         None
     """
-    # Only write to GitHub Step Summary if we're running in a GitHub Actions environment
+    # Only write to GitHub Step Summary if we're running in a GitHub Actions
+    # environment
     github_step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if github_step_summary:
         content = generate_markdown_content(
-            start_date, end_date, organization, repository, table, summary_table
+            start_date,
+            end_date,
+            organization,
+            repository,
+            table,
+            summary_table,
         )
         with open(github_step_summary, "a", encoding="utf-8") as summary_file:
             summary_file.write(content)
@@ -96,12 +123,17 @@ def generate_markdown_content(
     This function generates markdown content as a string.
 
     Args:
-        start_date (str): The start date of the date range for the contributor list.
+        start_date (str): The start date of the date range for the contributor
+                          list.
         end_date (str): The end date of the date range for the contributor list.
-        organization (str): The organization for which the contributors are being listed.
-        repository (str): The repository for which the contributors are being listed.
-        table (str): A string containing a markdown table of the contributors and the total contribution count.
-        summary_table (str): A string containing a markdown table of the summary statistics.
+        organization (str): The organization for which the contributors are
+                            being listed.
+        repository (str): The repository for which the contributors are being
+                          listed.
+        table (str): A string containing a markdown table of the contributors
+                     and the total contribution count.
+        summary_table (str): A string containing a markdown table of the
+                             summary statistics.
 
     Returns:
         str: The complete markdown content as a string.
@@ -109,7 +141,10 @@ def generate_markdown_content(
     """
     content = "# Contributors\n\n"
     if start_date and end_date:
-        content += f"- Date range for contributor list:  {start_date} to {end_date}\n"
+        content += (
+            f"- Date range for contributor list:  {start_date} to "
+            f"{end_date}\n"
+        )
     if organization:
         content += f"- Organization: {organization}\n"
     if repository:
@@ -117,24 +152,41 @@ def generate_markdown_content(
     content += "\n"
     content += summary_table
     content += table
-    content += "\n _this file was generated by the [Contributors GitHub Action](https://github.com/github/contributors)_\n"
+    content += (
+        "\n _this file was generated by the "
+        "[Contributors GitHub Action]"
+        "(https://github.com/github/contributors)_\n"
+    )
     return content
 
 
 def write_markdown_file(
-    filename, start_date, end_date, organization, repository, table, summary_table
+    filename,
+    start_date,
+    end_date,
+    organization,
+    repository,
+    table,
+    summary_table,
 ):
     """
-    This function writes all the tables and data to a markdown file with tables to organizae the information.
+    This function writes all the tables and data to a markdown file with
+    tables to organize the information.
 
     Args:
-        filename (str): The path of the markdown file to which the table will be written.
-        start_date (str): The start date of the date range for the contributor list.
+        filename (str): The path of the markdown file to which the table will
+                        be written.
+        start_date (str): The start date of the date range for the contributor
+                          list.
         end_date (str): The end date of the date range for the contributor list.
-        organization (str): The organization for which the contributors are being listed.
-        repository (str): The repository for which the contributors are being listed.
-        table (str): A string containing a markdown table of the contributors and the total contribution count.
-        summary_table (str): A string containing a markdown table of the summary statistics.
+        organization (str): The organization for which the contributors are
+                            being listed.
+        repository (str): The repository for which the contributors are being
+                          listed.
+        table (str): A string containing a markdown table of the contributors
+                     and the total contribution count.
+        summary_table (str): A string containing a markdown table of the
+                             summary statistics.
 
     Returns:
         None
@@ -147,7 +199,9 @@ def write_markdown_file(
         markdown_file.write(content)
 
 
-def get_summary_table(collaborators, start_date, end_date, total_contributions):
+def get_summary_table(
+    collaborators, start_date, end_date, total_contributions
+):
     """
     This function returns a string containing a markdown table of the summary statistics.
 
@@ -175,7 +229,9 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
             new_contributors_percentage = 0
         summary_table += f"| {str(len(collaborators))} | {str(total_contributions)} | {str(new_contributors_percentage)}% |\n\n"
     else:
-        summary_table = "| Total Contributors | Total Contributions |\n| --- | --- |\n"
+        summary_table = (
+            "| Total Contributors | Total Contributions |\n| --- | --- |\n"
+        )
         summary_table += (
             f"| {str(len(collaborators))}  | {str(total_contributions)}  |\n\n"
         )
@@ -240,15 +296,17 @@ def get_contributor_table(
             for url in commit_url_list:
                 url = url.strip()
                 # get the organization and repository name from the url ie. org1/repo2 from https://github.com/org1/repo2/commits?author-zkoppert
-                endpoint = ghe.removeprefix("https://") if ghe else "github.com"
-                org_repo_link_name = url.split("/commits")[0].split(f"{endpoint}/")[1]
+                endpoint = (
+                    ghe.removeprefix("https://") if ghe else "github.com"
+                )
+                org_repo_link_name = url.split("/commits")[0].split(
+                    f"{endpoint}/"
+                )[1]
                 url = f"[{org_repo_link_name}]({url})"
                 commit_urls += f"{url}, "
         new_contributor = collaborator.new_contributor
 
-        row = (
-            f"| {'' if not link_to_profile else '@'}{username} | {contribution_count} |"
-        )
+        row = f"| {'' if not link_to_profile else '@'}{username} | {contribution_count} |"
         if "New Contributor" in columns:
             row += f" {new_contributor} |"
         if "Sponsor URL" in columns:
