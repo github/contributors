@@ -12,7 +12,9 @@ class TestMarkdown(unittest.TestCase):
     Test case for the markdown module.
     """
 
-    @patch("markdown.os.environ.get", return_value=None)  # Mock GITHUB_STEP_SUMMARY to None
+    @patch(
+        "markdown.os.environ.get", return_value=None
+    )  # Mock GITHUB_STEP_SUMMARY to None
     @patch("builtins.open", new_callable=mock_open)
     def test_write_to_markdown(self, mock_file, mock_env_get):
         """
@@ -71,7 +73,9 @@ class TestMarkdown(unittest.TestCase):
         )
         mock_file().write.assert_called_once_with(expected_content)
 
-    @patch("markdown.os.environ.get", return_value=None)  # Mock GITHUB_STEP_SUMMARY to None
+    @patch(
+        "markdown.os.environ.get", return_value=None
+    )  # Mock GITHUB_STEP_SUMMARY to None
     @patch("builtins.open", new_callable=mock_open)
     def test_write_to_markdown_with_sponsors(self, mock_file, mock_env_get):
         """
@@ -130,7 +134,9 @@ class TestMarkdown(unittest.TestCase):
         )
         mock_file().write.assert_called_once_with(expected_content)
 
-    @patch("markdown.os.environ.get", return_value=None)  # Mock GITHUB_STEP_SUMMARY to None
+    @patch(
+        "markdown.os.environ.get", return_value=None
+    )  # Mock GITHUB_STEP_SUMMARY to None
     @patch("builtins.open", new_callable=mock_open)
     def test_write_to_markdown_without_link_to_profile(self, mock_file, mock_env_get):
         """
@@ -233,12 +239,12 @@ class TestMarkdown(unittest.TestCase):
 
         # Verify that open was called twice - once for the markdown file and once for the step summary
         self.assertEqual(mock_file.call_count, 2)
-        
+
         # Verify the first call is for the markdown file
         first_call = mock_file.call_args_list[0]
         self.assertEqual(first_call[0], ("filename", "w"))
         self.assertEqual(first_call[1]["encoding"], "utf-8")
-        
+
         # Verify the second call is for the step summary file
         second_call = mock_file.call_args_list[1]
         self.assertEqual(second_call[0], ("/tmp/step_summary", "a"))
