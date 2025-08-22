@@ -38,6 +38,7 @@ def write_to_markdown(
                             the report
         link_to_profile (str): True if the user wants the username linked to
                                Github profile in the report
+        ghe (str): The GitHub Enterprise instance URL, if applicable.
 
     Returns:
         None
