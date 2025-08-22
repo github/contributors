@@ -62,41 +62,24 @@ def write_to_markdown(
         collaborators, start_date, end_date, total_contributions
     )
 
-    # Write the markdown file
-    write_markdown_file(
-        filename,
-        start_date,
-        end_date,
-        organization,
-        repository,
-        table,
-        summary_table,
-    )
-
-    # Also write to GitHub Actions Step Summary if available
-    write_to_github_summary(
+    # Generate the markdown content once
+    content = generate_markdown_content(
         start_date, end_date, organization, repository, table, summary_table
     )
 
+    # Write the markdown file
+    write_markdown_file(filename, content)
 
-def write_to_github_summary(
-    start_date, end_date, organization, repository, table, summary_table
-):
+    # Also write to GitHub Actions Step Summary if available
+    write_to_github_summary(content)
+
+
+def write_to_github_summary(content):
     """
     Write markdown content to GitHub Actions Step Summary.
 
     Args:
-        start_date (str): The start date of the date range for the contributor
-                          list.
-        end_date (str): The end date of the date range for the contributor list.
-        organization (str): The organization for which the contributors are
-                            being listed.
-        repository (str): The repository for which the contributors are being
-                          listed.
-        table (str): A string containing a markdown table of the contributors
-                     and the total contribution count.
-        summary_table (str): A string containing a markdown table of the
-                             summary statistics.
+        content (str): The pre-generated markdown content to write.
 
     Returns:
         None
@@ -105,14 +88,6 @@ def write_to_github_summary(
     # environment
     github_step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if github_step_summary:
-        content = generate_markdown_content(
-            start_date,
-            end_date,
-            organization,
-            repository,
-            table,
-            summary_table,
-        )
         with open(github_step_summary, "a", encoding="utf-8") as summary_file:
             summary_file.write(content)
 
@@ -158,41 +133,19 @@ def generate_markdown_content(
     return content
 
 
-def write_markdown_file(
-    filename,
-    start_date,
-    end_date,
-    organization,
-    repository,
-    table,
-    summary_table,
-):
+def write_markdown_file(filename, content):
     """
-    This function writes all the tables and data to a markdown file with
-    tables to organize the information.
+    This function writes the pre-generated markdown content to a file.
 
     Args:
-        filename (str): The path of the markdown file to which the table will
+        filename (str): The path of the markdown file to which the content will
                         be written.
-        start_date (str): The start date of the date range for the contributor
-                          list.
-        end_date (str): The end date of the date range for the contributor list.
-        organization (str): The organization for which the contributors are
-                            being listed.
-        repository (str): The repository for which the contributors are being
-                          listed.
-        table (str): A string containing a markdown table of the contributors
-                     and the total contribution count.
-        summary_table (str): A string containing a markdown table of the
-                             summary statistics.
+        content (str): The pre-generated markdown content to write.
 
     Returns:
         None
 
     """
-    content = generate_markdown_content(
-        start_date, end_date, organization, repository, table, summary_table
-    )
     with open(filename, "w", encoding="utf-8") as markdown_file:
         markdown_file.write(content)
 
