@@ -142,7 +142,7 @@ def generate_markdown_content(
     content = "# Contributors\n\n"
     if start_date and end_date:
         content += (
-            f"- Date range for contributor list:  {start_date} to " f"{end_date}\n"
+            f"- Date range for contributor list:  {start_date} to {end_date}\n"
         )
     if organization:
         content += f"- Organization: {organization}\n"
