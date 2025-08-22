@@ -240,6 +240,12 @@ jobs:
 | @zkoppert | 1913                        | False           | [Sponsor Link](https://github.com/sponsors/zkoppert) | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-09-01&until=2023-09-30) |
 ```
 
+## GitHub Actions Job Summary
+
+When running as a GitHub Action, the contributors report is automatically displayed in the [GitHub Actions Job Summary](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary). This provides immediate visibility of the results directly in the workflow run interface without needing to check separate files or issues.
+
+The job summary contains the same markdown content that is written to the `contributors.md` file, making it easy to view contributor information right in the GitHub Actions UI.
+
 ## Local usage without Docker
 
 1. Make sure you have at least Python3.11 installed
