@@ -16,7 +16,8 @@ def write_to_markdown(
     ghe,
 ):
     """
-    This function writes a list of collaborators to a markdown file in table format.
+    This function writes a list of collaborators to a markdown file in table format
+    and optionally to GitHub Actions Job Summary if running in a GitHub Actions environment.
     Each collaborator is represented as a dictionary with keys 'username',
     'contribution_count', 'new_contributor', and 'commits'.
 
