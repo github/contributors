@@ -1,0 +1,3 @@
+rules:
+  dangerous-triggers: # to allow pull_request_target for auto-labelling fork pull requests
+    disable: true
