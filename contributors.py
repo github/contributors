@@ -270,7 +270,7 @@ def get_coauthor_contributors(
     Get contributors who were co-authors on commits in the repository.
 
     Args:
-        repo (object): The repository object from github3.py
+        repo (object): The repository object
         start_date (str): The start date of the date range for the contributor list.
         end_date (str): The end date of the date range for the contributor list.
         ghe (str): The GitHub Enterprise URL
