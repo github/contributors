@@ -147,7 +147,7 @@ def get_env_vars(
 
     sponsor_info = get_bool_env_var("SPONSOR_INFO", False)
     link_to_profile = get_bool_env_var("LINK_TO_PROFILE", False)
-    acknowledge_coauthors = get_bool_env_var("ACKNOWLEDGE_COAUTHORS", False)
+    acknowledge_coauthors = get_bool_env_var("ACKNOWLEDGE_COAUTHORS", True)
 
     # Separate repositories_str into a list based on the comma separator
     repositories_list = []
