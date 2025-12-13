@@ -256,14 +256,14 @@ Co-authored-by: Bob <bob@users.noreply.github.com>
 
     def test_get_coauthors_from_message_with_regular_email(self):
         """
-        Test that regular emails are not extracted as co-authors.
+        Test that regular emails are extracted as co-authors.
         """
         message = """Fix bug
 
 Co-authored-by: John Doe <john@example.com>
 """
         result = get_coauthors_from_message(message)
-        self.assertEqual(result, [])
+        self.assertEqual(result, ["john@example.com"])
 
     def test_get_coauthors_from_message_case_insensitive(self):
         """
@@ -291,6 +291,19 @@ CO-AUTHORED-BY: Jane Doe <janedoe@users.noreply.github.com>
         message = "Fix bug in login system"
         result = get_coauthors_from_message(message)
         self.assertEqual(result, [])
+
+    def test_get_coauthors_from_message_mixed_email_types(self):
+        """
+        Test extracting co-authors with both GitHub noreply and regular emails.
+        """
+        message = """Feature implementation
+
+Co-authored-by: Alice <alice@users.noreply.github.com>
+Co-authored-by: Bob <bob@example.com>
+Co-authored-by: Charlie <12345+charlie@users.noreply.github.com>
+"""
+        result = get_coauthors_from_message(message)
+        self.assertEqual(result, ["alice", "bob@example.com", "charlie"])
 
     def test_get_coauthor_contributors(self):
         """

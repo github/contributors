@@ -156,32 +156,37 @@ def get_all_contributors(
 
 def get_coauthors_from_message(commit_message: str) -> List[str]:
     """
-    Extract co-author usernames from a commit message.
+    Extract co-author identifiers from a commit message.
 
     Co-authored-by trailers follow the format:
     Co-authored-by: Name <email>
-    Or with a GitHub username:
-    Co-authored-by: Name <username@users.noreply.github.com>
+
+    For GitHub noreply emails (username@users.noreply.github.com), extracts the username.
+    For other emails, extracts the full email address.
 
     Args:
         commit_message (str): The commit message to parse
 
     Returns:
-        List[str]: List of GitHub usernames extracted from co-author trailers
+        List[str]: List of co-author identifiers (GitHub usernames or email addresses)
     """
     # Match Co-authored-by trailers - case insensitive
     # Format: Co-authored-by: Name <email>
     pattern = r"Co-authored-by:\s*[^<]*<([^>]+)>"
     matches = re.findall(pattern, commit_message, re.IGNORECASE)
 
-    usernames = []
+    identifiers = []
     for email in matches:
         # Check if it's a GitHub noreply email format: username@users.noreply.github.com
         noreply_pattern = r"^(\d+\+)?([^@]+)@users\.noreply\.github\.com$"
         noreply_match = re.match(noreply_pattern, email)
         if noreply_match:
-            usernames.append(noreply_match.group(2))
-    return usernames
+            # For GitHub noreply emails, extract just the username
+            identifiers.append(noreply_match.group(2))
+        else:
+            # For other emails, use the full email address
+            identifiers.append(email)
+    return identifiers
 
 
 def get_contributors(
