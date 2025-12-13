@@ -112,7 +112,7 @@ def get_all_contributors(
     end_date: str,
     github_connection: object,
     ghe: str,
-    acknowledge_coauthors: bool = False,
+    acknowledge_coauthors: bool,
 ):
     """
     Get all contributors from the organization or repository
@@ -189,7 +189,7 @@ def get_contributors(
     start_date: str,
     end_date: str,
     ghe: str,
-    acknowledge_coauthors: bool = False,
+    acknowledge_coauthors: bool,
 ):
     """
     Get contributors from a single repository and filter by start end dates if present.

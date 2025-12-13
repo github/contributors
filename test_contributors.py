@@ -30,7 +30,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31", "")
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31", "", False)
 
         mock_contributor_stats.assert_called_once_with(
             "user",
@@ -64,7 +64,7 @@ class TestContributors(unittest.TestCase):
         ghe = ""
 
         result = get_all_contributors(
-            "org", "", "2022-01-01", "2022-12-31", mock_github_connection, ghe
+            "org", "", "2022-01-01", "2022-12-31", mock_github_connection, ghe, False
         )
 
         self.assertEqual(
@@ -107,7 +107,13 @@ class TestContributors(unittest.TestCase):
         ghe = ""
 
         result = get_all_contributors(
-            "", ["owner/repo"], "2022-01-01", "2022-12-31", mock_github_connection, ghe
+            "",
+            ["owner/repo"],
+            "2022-01-01",
+            "2022-12-31",
+            mock_github_connection,
+            ghe,
+            False,
         )
 
         self.assertEqual(
@@ -147,7 +153,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.get_commits.side_effect = StopIteration
         ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe, False)
 
         # Note that only user is returned and user2 is not returned here because there were no commits in the date range
         mock_contributor_stats.assert_called_once_with(
@@ -175,7 +181,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.get_commits.side_effect = StopIteration
         ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe, False)
 
         # Note that only user is returned and user2 is not returned here because there were no commits in the date range
         mock_contributor_stats.isEmpty()
@@ -196,7 +202,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.get_commits.side_effect = StopIteration
         ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "", ghe)
+        get_contributors(mock_repo, "2022-01-01", "", ghe, False)
 
         # Note that only user is returned and user2 is not returned here because there were no commits in the date range
         mock_contributor_stats.assert_called_once_with(
