@@ -257,10 +257,8 @@ class TestEnv(unittest.TestCase):
     def test_get_env_vars_equal_start_and_end_date(self):
         """Test that equal START_DATE and END_DATE are allowed"""
         result = env.get_env_vars()
-        start_date = result[8]
-        end_date = result[9]
-        self.assertEqual(start_date, "2024-01-01")
-        self.assertEqual(end_date, "2024-01-01")
+        self.assertEqual(result[8], "2024-01-01")  # start_date
+        self.assertEqual(result[9], "2024-01-01")  # end_date
 
     @patch.dict(
         os.environ,
@@ -276,10 +274,8 @@ class TestEnv(unittest.TestCase):
     def test_get_env_vars_valid_date_range(self):
         """Test that valid date range (START_DATE before END_DATE) is accepted"""
         result = env.get_env_vars()
-        start_date = result[8]
-        end_date = result[9]
-        self.assertEqual(start_date, "2024-01-01")
-        self.assertEqual(end_date, "2025-01-01")
+        self.assertEqual(result[8], "2024-01-01")  # start_date
+        self.assertEqual(result[9], "2025-01-01")  # end_date
 
 
 if __name__ == "__main__":
