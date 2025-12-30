@@ -70,6 +70,31 @@ def validate_date_format(env_var_name: str) -> str:
     return date_to_validate
 
 
+def validate_date_range(start_date: str, end_date: str) -> None:
+    """Validate that start_date is before or equal to end_date.
+
+    Does nothing if either date is not set.
+
+    Args:
+        start_date: The start date string in YYYY-MM-DD format.
+        end_date: The end date string in YYYY-MM-DD format.
+
+    Raises:
+        ValueError: If end_date is before start_date.
+    """
+    if not start_date or not end_date:
+        return
+
+    pattern = "%Y-%m-%d"
+    start_dt = datetime.datetime.strptime(start_date, pattern)
+    end_dt = datetime.datetime.strptime(end_date, pattern)
+
+    if end_dt < start_dt:
+        raise ValueError(
+            f"END_DATE ('{end_date}') must be on or after START_DATE ('{start_date}')"
+        )
+
+
 def get_env_vars(
     test: bool = False,
 ) -> tuple[
@@ -142,6 +167,7 @@ def get_env_vars(
 
     start_date = validate_date_format("START_DATE")
     end_date = validate_date_format("END_DATE")
+    validate_date_range(start_date, end_date)
 
     sponsor_info = get_bool_env_var("SPONSOR_INFO", False)
     link_to_profile = get_bool_env_var("LINK_TO_PROFILE", False)
