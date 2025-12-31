@@ -30,7 +30,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31", "", False)
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31", "", False, None)
 
         mock_contributor_stats.assert_called_once_with(
             "user",
@@ -81,10 +81,10 @@ class TestContributors(unittest.TestCase):
             ],
         )
         mock_get_contributors.assert_any_call(
-            "repo1", "2022-01-01", "2022-12-31", ghe, False
+            "repo1", "2022-01-01", "2022-12-31", ghe, False, mock_github_connection
         )
         mock_get_contributors.assert_any_call(
-            "repo2", "2022-01-01", "2022-12-31", ghe, False
+            "repo2", "2022-01-01", "2022-12-31", ghe, False, mock_github_connection
         )
 
     @patch("contributors.get_contributors")
@@ -130,7 +130,7 @@ class TestContributors(unittest.TestCase):
             ],
         )
         mock_get_contributors.assert_called_once_with(
-            "repo", "2022-01-01", "2022-12-31", ghe, False
+            "repo", "2022-01-01", "2022-12-31", ghe, False, mock_github_connection
         )
 
     @patch("contributors.contributor_stats.ContributorStats")
@@ -153,7 +153,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.get_commits.side_effect = StopIteration
         ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe, False)
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe, False, None)
 
         # Note that only user is returned and user2 is not returned here because there were no commits in the date range
         mock_contributor_stats.assert_called_once_with(
@@ -181,7 +181,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.get_commits.side_effect = StopIteration
         ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe, False)
+        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe, False, None)
 
         # Note that only user is returned and user2 is not returned here because there were no commits in the date range
         mock_contributor_stats.isEmpty()
@@ -202,7 +202,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.get_commits.side_effect = StopIteration
         ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "", ghe, False)
+        get_contributors(mock_repo, "2022-01-01", "", ghe, False, None)
 
         # Note that only user is returned and user2 is not returned here because there were no commits in the date range
         mock_contributor_stats.assert_called_once_with(
@@ -228,7 +228,7 @@ class TestCoauthorFunctions(unittest.TestCase):
 
 Co-authored-by: John Doe <johndoe@users.noreply.github.com>
 """
-        result = get_coauthors_from_message(message)
+        result = get_coauthors_from_message(message, None)
         self.assertEqual(result, ["johndoe"])
 
     def test_get_coauthors_from_message_with_noreply_email_with_id(self):
@@ -239,7 +239,7 @@ Co-authored-by: John Doe <johndoe@users.noreply.github.com>
 
 Co-authored-by: John Doe <12345678+johndoe@users.noreply.github.com>
 """
-        result = get_coauthors_from_message(message)
+        result = get_coauthors_from_message(message, None)
         self.assertEqual(result, ["johndoe"])
 
     def test_get_coauthors_from_message_multiple_coauthors(self):
@@ -251,7 +251,7 @@ Co-authored-by: John Doe <12345678+johndoe@users.noreply.github.com>
 Co-authored-by: Alice <alice@users.noreply.github.com>
 Co-authored-by: Bob <bob@users.noreply.github.com>
 """
-        result = get_coauthors_from_message(message)
+        result = get_coauthors_from_message(message, None)
         self.assertEqual(result, ["alice", "bob"])
 
     def test_get_coauthors_from_message_with_regular_email(self):
@@ -262,7 +262,7 @@ Co-authored-by: Bob <bob@users.noreply.github.com>
 
 Co-authored-by: John Doe <john@example.com>
 """
-        result = get_coauthors_from_message(message)
+        result = get_coauthors_from_message(message, None)
         self.assertEqual(result, ["john@example.com"])
 
     def test_get_coauthors_from_message_case_insensitive(self):
@@ -274,14 +274,14 @@ Co-authored-by: John Doe <john@example.com>
 co-authored-by: John Doe <johndoe@users.noreply.github.com>
 CO-AUTHORED-BY: Jane Doe <janedoe@users.noreply.github.com>
 """
-        result = get_coauthors_from_message(message)
+        result = get_coauthors_from_message(message, None)
         self.assertEqual(result, ["johndoe", "janedoe"])
 
     def test_get_coauthors_from_message_empty_message(self):
         """
         Test extracting co-authors from an empty commit message.
         """
-        result = get_coauthors_from_message("")
+        result = get_coauthors_from_message("", None)
         self.assertEqual(result, [])
 
     def test_get_coauthors_from_message_no_coauthors(self):
@@ -289,7 +289,7 @@ CO-AUTHORED-BY: Jane Doe <janedoe@users.noreply.github.com>
         Test extracting co-authors from a commit message without co-authors.
         """
         message = "Fix bug in login system"
-        result = get_coauthors_from_message(message)
+        result = get_coauthors_from_message(message, None)
         self.assertEqual(result, [])
 
     def test_get_coauthors_from_message_mixed_email_types(self):
@@ -302,7 +302,7 @@ Co-authored-by: Alice <alice@users.noreply.github.com>
 Co-authored-by: Bob <bob@example.com>
 Co-authored-by: Charlie <12345+charlie@users.noreply.github.com>
 """
-        result = get_coauthors_from_message(message)
+        result = get_coauthors_from_message(message, None)
         self.assertEqual(result, ["alice", "bob@example.com", "charlie"])
 
     def test_get_coauthor_contributors(self):
@@ -327,9 +327,8 @@ Co-authored-by: Bob <bob@users.noreply.github.com>
 
         mock_repo.commits.return_value = [mock_commit1, mock_commit2]
 
-        existing_usernames = set()
         result = get_coauthor_contributors(
-            mock_repo, "2022-01-01", "2022-12-31", "", existing_usernames
+            mock_repo, "2022-01-01", "2022-12-31", "", None
         )
 
         # Alice should have count 2, Bob should have count 1
@@ -345,9 +344,9 @@ Co-authored-by: Bob <bob@users.noreply.github.com>
             elif contributor.username == "bob":
                 self.assertEqual(contributor.contribution_count, 1)
 
-    def test_get_coauthor_contributors_excludes_existing(self):
+    def test_get_coauthor_contributors_includes_all(self):
         """
-        Test that get_coauthor_contributors excludes already existing contributors.
+        Test that get_coauthor_contributors includes all co-authors, even if they are already main contributors.
         """
         mock_repo = MagicMock()
         mock_repo.full_name = "owner/repo"
@@ -361,15 +360,16 @@ Co-authored-by: Bob <bob@users.noreply.github.com>
 
         mock_repo.commits.return_value = [mock_commit]
 
-        # Alice is already a contributor
-        existing_usernames = {"alice"}
+        # Alice is already a main contributor, but should still be included in co-author results
         result = get_coauthor_contributors(
-            mock_repo, "2022-01-01", "2022-12-31", "", existing_usernames
+            mock_repo, "2022-01-01", "2022-12-31", "", None
         )
 
-        # Only Bob should be in the result
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0].username, "bob")
+        # Both Alice and Bob should be in the result
+        self.assertEqual(len(result), 2)
+        usernames = {c.username for c in result}
+        self.assertIn("alice", usernames)
+        self.assertIn("bob", usernames)
 
     @patch("contributors.get_coauthor_contributors")
     def test_get_contributors_with_acknowledge_coauthors(
@@ -397,7 +397,12 @@ Co-authored-by: Bob <bob@users.noreply.github.com>
         mock_get_coauthor_contributors.return_value = [mock_coauthor]
 
         result = get_contributors(
-            mock_repo, "2022-01-01", "2022-12-31", "", acknowledge_coauthors=True
+            mock_repo,
+            "2022-01-01",
+            "2022-12-31",
+            "",
+            acknowledge_coauthors=True,
+            github_connection=None,
         )
 
         # Verify that get_coauthor_contributors was called

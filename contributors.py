@@ -143,7 +143,12 @@ def get_all_contributors(
     if repos:
         for repo in repos:
             repo_contributors = get_contributors(
-                repo, start_date, end_date, ghe, acknowledge_coauthors
+                repo,
+                start_date,
+                end_date,
+                ghe,
+                acknowledge_coauthors,
+                github_connection,
             )
             if repo_contributors:
                 all_contributors.append(repo_contributors)
@@ -154,7 +159,9 @@ def get_all_contributors(
     return all_contributors
 
 
-def get_coauthors_from_message(commit_message: str) -> List[str]:
+def get_coauthors_from_message(
+    commit_message: str, github_connection: object = None
+) -> List[str]:
     """
     Extract co-author identifiers from a commit message.
 
@@ -162,10 +169,12 @@ def get_coauthors_from_message(commit_message: str) -> List[str]:
     Co-authored-by: Name <email>
 
     For GitHub noreply emails (username@users.noreply.github.com), extracts the username.
-    For other emails, extracts the full email address.
+    For @github.com emails, extracts the username (part before @).
+    For other emails, uses GitHub Search Users API to find the username, or falls back to email.
 
     Args:
         commit_message (str): The commit message to parse
+        github_connection (object): The authenticated GitHub connection object from PyGithub
 
     Returns:
         List[str]: List of co-author identifiers (GitHub usernames or email addresses)
@@ -183,9 +192,28 @@ def get_coauthors_from_message(commit_message: str) -> List[str]:
         if noreply_match:
             # For GitHub noreply emails, extract just the username
             identifiers.append(noreply_match.group(2))
+        elif email.endswith("@github.com"):
+            # For @github.com emails, extract the username (part before @)
+            username = email.split("@")[0]
+            identifiers.append(username)
         else:
-            # For other emails, use the full email address
-            identifiers.append(email)
+            # For other emails, try to find GitHub username using Search Users API
+            if github_connection:
+                try:
+                    # Search for users by email
+                    search_result = github_connection.search_users(f"email:{email}")
+                    if search_result.totalCount > 0:
+                        # Use the first matching user's login
+                        identifiers.append(search_result[0].login)
+                    else:
+                        # If no user found, fall back to email address
+                        identifiers.append(email)
+                except Exception:
+                    # If API call fails, fall back to email address
+                    identifiers.append(email)
+            else:
+                # If no GitHub connection available, use the full email address
+                identifiers.append(email)
     return identifiers
 
 
@@ -195,6 +223,7 @@ def get_contributors(
     end_date: str,
     ghe: str,
     acknowledge_coauthors: bool,
+    github_connection: object,
 ):
     """
     Get contributors from a single repository and filter by start end dates if present.
@@ -205,6 +234,7 @@ def get_contributors(
         end_date (str): The end date of the date range for the contributor list.
         ghe (str): The GitHub Enterprise URL to use for authentication
         acknowledge_coauthors (bool): Whether to acknowledge co-authors from commit messages
+        github_connection (object): The authenticated GitHub connection object from PyGithub
 
     Returns:
         contributors (list): A list of ContributorStats objects
@@ -252,7 +282,11 @@ def get_contributors(
         # Get co-authors from commit messages if enabled
         if acknowledge_coauthors:
             coauthor_contributors = get_coauthor_contributors(
-                repo, start_date, end_date, ghe, contributor_usernames
+                repo,
+                start_date,
+                end_date,
+                ghe,
+                github_connection,
             )
             contributors.extend(coauthor_contributors)
 
@@ -269,7 +303,7 @@ def get_coauthor_contributors(
     start_date: str,
     end_date: str,
     ghe: str,
-    existing_usernames: set,
+    github_connection: object,
 ) -> List[contributor_stats.ContributorStats]:
     """
     Get contributors who were co-authors on commits in the repository.
@@ -279,7 +313,7 @@ def get_coauthor_contributors(
         start_date (str): The start date of the date range for the contributor list.
         end_date (str): The end date of the date range for the contributor list.
         ghe (str): The GitHub Enterprise URL
-        existing_usernames (set): Set of usernames already added as contributors
+        github_connection (object): The authenticated GitHub connection object from PyGithub
 
     Returns:
         List[ContributorStats]: A list of ContributorStats objects for co-authors
@@ -301,10 +335,9 @@ def get_coauthor_contributors(
                 continue
 
             # Extract co-authors from commit message
-            coauthors = get_coauthors_from_message(commit_message)
+            coauthors = get_coauthors_from_message(commit_message, github_connection)
             for username in coauthors:
-                if username not in existing_usernames:
-                    coauthor_counts[username] = coauthor_counts.get(username, 0) + 1
+                coauthor_counts[username] = coauthor_counts.get(username, 0) + 1
 
     except Exception as e:
         print(f"Error getting co-authors for repository: {repo.full_name}")
