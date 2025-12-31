@@ -71,7 +71,7 @@ def validate_date_format(env_var_name: str) -> str:
 
 
 def validate_date_range(start_date: str, end_date: str) -> None:
-    """Validate that start_date is before or equal to end_date.
+    """Validate that start_date is before end_date.
 
     Does nothing if either date is not set.
 
@@ -80,15 +80,15 @@ def validate_date_range(start_date: str, end_date: str) -> None:
         end_date: The end date string in YYYY-MM-DD format.
 
     Raises:
-        ValueError: If end_date is before start_date.
+        ValueError: If end_date is before or equal to start_date.
     """
     if not start_date or not end_date:
         return
 
     # YYYY-MM-DD format allows direct string comparison
-    if end_date < start_date:
+    if end_date <= start_date:
         raise ValueError(
-            f"END_DATE ('{end_date}') must be on or after START_DATE ('{start_date}')"
+            f"END_DATE ('{end_date}') must be after START_DATE ('{start_date}')"
         )
 
 

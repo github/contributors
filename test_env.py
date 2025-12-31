@@ -240,7 +240,7 @@ class TestEnv(unittest.TestCase):
         the_exception = cm.exception
         self.assertEqual(
             str(the_exception),
-            "END_DATE ('2024-01-01') must be on or after START_DATE ('2025-01-01')",
+            "END_DATE ('2024-01-01') must be after START_DATE ('2025-01-01')",
         )
 
     @patch.dict(
@@ -255,10 +255,14 @@ class TestEnv(unittest.TestCase):
         clear=True,
     )
     def test_get_env_vars_equal_start_and_end_date(self):
-        """Test that equal START_DATE and END_DATE are allowed"""
-        result = env.get_env_vars()
-        self.assertEqual(result[8], "2024-01-01")  # start_date
-        self.assertEqual(result[9], "2024-01-01")  # end_date
+        """Test that an error is raised when START_DATE equals END_DATE"""
+        with self.assertRaises(ValueError) as cm:
+            env.get_env_vars()
+        the_exception = cm.exception
+        self.assertEqual(
+            str(the_exception),
+            "END_DATE ('2024-01-01') must be after START_DATE ('2024-01-01')",
+        )
 
     @patch.dict(
         os.environ,
