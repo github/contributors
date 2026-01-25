@@ -119,6 +119,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+    env:
+      OUTPUT_FILENAME: contributors.md
 
     steps:
       - name: Get dates for last month
@@ -148,7 +150,7 @@ jobs:
         with:
           title: Monthly contributor report
           token: ${{ secrets.GITHUB_TOKEN }}
-          content-filepath: ./contributors.md
+          content-filepath: ./${{ env.OUTPUT_FILENAME }}
           assignees: <YOUR_GITHUB_HANDLE_HERE>
 ```
 
@@ -170,6 +172,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+    env:
+      OUTPUT_FILENAME: contributors.md
 
     steps:
       - name: Get dates for last month
@@ -204,7 +208,7 @@ jobs:
         with:
           title: Monthly contributor report
           token: ${{ secrets.GITHUB_TOKEN }}
-          content-filepath: ./contributors.md
+          content-filepath: ./${{ env.OUTPUT_FILENAME }}
           assignees: <YOUR_GITHUB_HANDLE_HERE>
 ```
 
