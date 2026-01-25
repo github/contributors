@@ -133,7 +133,7 @@ def get_env_vars(
         token (str): The GitHub token to use for authentication
         ghe (str): The GitHub Enterprise URL to use for authentication
         start_date (str): The start date to get contributor information from
-        end_date (str): The end date to get contributor information to.
+        end_date (str): The end date to get contributor information to
         sponsor_info (str): Whether to get sponsor information on the contributor
         link_to_profile (str): Whether to link username to Github profile in markdown output
         output_filename (str): The output filename for the markdown report
