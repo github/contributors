@@ -27,6 +27,7 @@ def main():
         end_date,
         sponsor_info,
         link_to_profile,
+        output_filename,
     ) = env.get_env_vars()
 
     # Auth to GitHub.com
@@ -75,7 +76,7 @@ def main():
     # print(contributors)
     markdown.write_to_markdown(
         contributors,
-        "contributors.md",
+        output_filename,
         start_date,
         end_date,
         organization,
