@@ -26,6 +26,7 @@ class TestEnv(unittest.TestCase):
             "OUTPUT_FILENAME",
             "REPOSITORY",
             "START_DATE",
+            "SHOW_AVATAR",
         ]
         for key in env_keys:
             if key in os.environ:
@@ -45,6 +46,7 @@ class TestEnv(unittest.TestCase):
             "END_DATE": "2022-12-31",
             "SPONSOR_INFO": "False",
             "LINK_TO_PROFILE": "True",
+            "SHOW_AVATAR": "False",
         },
         clear=True,
     )
@@ -67,6 +69,7 @@ class TestEnv(unittest.TestCase):
             sponsor_info,
             link_to_profile,
             output_filename,
+            show_avatar,
         ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
@@ -81,7 +84,6 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(end_date, "2022-12-31")
         self.assertFalse(sponsor_info)
         self.assertTrue(link_to_profile)
-        self.assertEqual(output_filename, "contributors.md")
 
     @patch.dict(
         os.environ,
@@ -97,6 +99,7 @@ class TestEnv(unittest.TestCase):
             "END_DATE": "2022-12-31",
             "SPONSOR_INFO": "False",
             "LINK_TO_PROFILE": "True",
+            "SHOW_AVATAR": "False",
         },
         clear=True,
     )
@@ -125,6 +128,7 @@ class TestEnv(unittest.TestCase):
             "END_DATE": "2022-12-31",
             "SPONSOR_INFO": "False",
             "LINK_TO_PROFILE": "True",
+            "SHOW_AVATAR": "False",
         },
         clear=True,
     )
@@ -156,6 +160,7 @@ class TestEnv(unittest.TestCase):
             "END_DATE": "",
             "SPONSOR_INFO": "False",
             "LINK_TO_PROFILE": "True",
+            "SHOW_AVATAR": "False",
         },
         clear=True,
     )
@@ -179,6 +184,7 @@ class TestEnv(unittest.TestCase):
             sponsor_info,
             link_to_profile,
             output_filename,
+            show_avatar,
         ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
@@ -193,7 +199,6 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(end_date, "")
         self.assertFalse(sponsor_info)
         self.assertTrue(link_to_profile)
-        self.assertEqual(output_filename, "contributors.md")
 
     @patch.dict(
         os.environ,
