@@ -27,6 +27,7 @@ def main():
         end_date,
         sponsor_info,
         link_to_profile,
+        show_avatar,
     ) = env.get_env_vars()
 
     # Auth to GitHub.com
@@ -83,6 +84,7 @@ def main():
         sponsor_info,
         link_to_profile,
         ghe,
+        show_avatar=show_avatar,
     )
     json_writer.write_to_json(
         filename="contributors.json",

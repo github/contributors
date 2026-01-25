@@ -4,6 +4,12 @@
 import os
 
 
+def _is_truthy(value) -> bool:
+    if isinstance(value, str):
+        return value.strip().lower() == "true"
+    return value is True
+
+
 def write_to_markdown(
     collaborators,
     filename,
@@ -14,6 +20,7 @@ def write_to_markdown(
     sponsor_info,
     link_to_profile,
     ghe,
+    show_avatar=False,
 ):
     """
     This function writes a list of collaborators to a markdown file in table format
@@ -40,6 +47,8 @@ def write_to_markdown(
         link_to_profile (str): True if the user wants the username linked to
                                Github profile in the report
         ghe (str): The GitHub Enterprise instance URL, if applicable.
+        show_avatar (bool): True if the user wants to show profile images in
+                            the report
 
     Returns:
         None
@@ -55,6 +64,7 @@ def write_to_markdown(
         sponsor_info,
         link_to_profile,
         ghe,
+        show_avatar,
     )
 
     # Put together the summary table including # of new contributions,
@@ -196,6 +206,7 @@ def get_contributor_table(
     sponsor_info,
     link_to_profile,
     ghe,
+    show_avatar=False,
 ):
     """
     This function returns a string containing a markdown table of the contributors and the total contribution count.
@@ -209,16 +220,21 @@ def get_contributor_table(
         repository (str): The repository for which the contributors are being listed.
         sponsor_info (str): True if the user wants the sponsor_url shown in the report
         link_to_profile (str): True if the user wants the username linked to Github profile in the report
+        show_avatar (bool): True if the user wants to show profile images in the report
 
     Returns:
         table (str): A string containing a markdown table of the contributors and the total contribution count.
         total_contributions (int): The total number of contributions made by all of the contributors.
 
     """
+    sponsor_info = _is_truthy(sponsor_info)
+    show_avatar = _is_truthy(show_avatar)
     columns = ["Username", "All Time Contribution Count"]
+    if show_avatar:
+        columns.insert(0, "Avatar")
     if start_date and end_date:
         columns += ["New Contributor"]
-    if sponsor_info == "true":
+    if sponsor_info:
         columns += ["Sponsor URL"]
     if start_date and end_date:
         columns += [f"Commits between {start_date} and {end_date}"]
@@ -250,8 +266,16 @@ def get_contributor_table(
                 commit_urls += f"{url}, "
         new_contributor = collaborator.new_contributor
 
-        row = (
-            f"| {'' if not link_to_profile else '@'}{username} | {contribution_count} |"
+        row = "| "
+        if show_avatar:
+            avatar_cell = (
+                f'<img src="{collaborator.avatar_url}" width="32" height="32" />'
+                if collaborator.avatar_url
+                else ""
+            )
+            row += f"{avatar_cell} | "
+        row += (
+            f"{'' if not link_to_profile else '@'}{username} | {contribution_count} |"
         )
         if "New Contributor" in columns:
             row += f" {new_contributor} |"
