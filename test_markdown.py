@@ -38,7 +38,7 @@ class TestMarkdown(unittest.TestCase):
             "commit url2",
             "sponsor_url_2",
         )
-        # Set person2 as a new contributor since this cannot be set on initiatization of the object
+        # Set person2 as a new contributor since this cannot be set on initialization of the object
         person2.new_contributor = True
         collaborators = [
             person1,
@@ -104,7 +104,7 @@ class TestMarkdown(unittest.TestCase):
             "commit url2",
             "",
         )
-        # Set person2 as a new contributor since this cannot be set on initiatization of the object
+        # Set person2 as a new contributor since this cannot be set on initialization of the object
         person2.new_contributor = True
         collaborators = [
             person1,
@@ -170,7 +170,7 @@ class TestMarkdown(unittest.TestCase):
             "commit url2",
             "sponsor_url_2",
         )
-        # Set person2 as a new contributor since this cannot be set on initiatization of the object
+        # Set person2 as a new contributor since this cannot be set on initialization of the object
         person2.new_contributor = True
         collaborators = [
             person1,
@@ -239,7 +239,7 @@ class TestMarkdown(unittest.TestCase):
             "commit url2",
             "sponsor_url_2",
         )
-        # Set person2 as a new contributor since this cannot be set on initiatization of the object
+        # Set person2 as a new contributor since this cannot be set on initialization of the object
         person2.new_contributor = True
         collaborators = [
             person1,
@@ -304,7 +304,7 @@ class TestMarkdown(unittest.TestCase):
             "commit url2",
             "sponsor_url_2",
         )
-        # Set person2 as a new contributor since this cannot be set on initiatization of the object
+        # Set person2 as a new contributor since this cannot be set on initialization of the object
         person2.new_contributor = True
         collaborators = [
             person1,
@@ -365,7 +365,7 @@ class TestMarkdown(unittest.TestCase):
             "https://github.com/org3/repo3/commits?author=user2",
             "sponsor_url_2",
         )
-        # Set person2 as a new contributor since this cannot be set on initiatization of the object
+        # Set person2 as a new contributor since this cannot be set on initialization of the object
         person2.new_contributor = True
         collaborators = [
             person1,
