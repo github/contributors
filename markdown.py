@@ -47,7 +47,7 @@ def write_to_markdown(
         link_to_profile (str): True if the user wants the username linked to
                                Github profile in the report
         ghe (str): The GitHub Enterprise instance URL, if applicable.
-        show_avatar (bool): True if the user wants to show profile images in
+        show_avatar (str): True if the user wants to show profile images in
                             the report
 
     Returns:
@@ -220,7 +220,7 @@ def get_contributor_table(
         repository (str): The repository for which the contributors are being listed.
         sponsor_info (str): True if the user wants the sponsor_url shown in the report
         link_to_profile (str): True if the user wants the username linked to Github profile in the report
-        show_avatar (bool): True if the user wants to show profile images in the report
+        show_avatar (str): True if the user wants to show profile images in the report
 
     Returns:
         table (str): A string containing a markdown table of the contributors and the total contribution count.
@@ -229,6 +229,7 @@ def get_contributor_table(
     """
     sponsor_info = _is_truthy(sponsor_info)
     show_avatar = _is_truthy(show_avatar)
+    link_to_profile = _is_truthy(link_to_profile)
     columns = ["Username", "All Time Contribution Count"]
     if show_avatar:
         columns.insert(0, "Avatar")
