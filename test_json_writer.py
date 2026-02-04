@@ -24,6 +24,7 @@ class TestWriteToJson(unittest.TestCase):
             "contributors": [
                 {
                     "username": "test_user",
+                    "company": "@company",
                     "new_contributor": False,
                     "avatar_url": "https://test_url.com",
                     "contribution_count": 10,
@@ -38,6 +39,7 @@ class TestWriteToJson(unittest.TestCase):
         contributors = (
             ContributorStats(
                 username="test_user",
+                company="@company",
                 new_contributor=False,
                 avatar_url="https://test_url.com",
                 contribution_count=10,

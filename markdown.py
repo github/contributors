@@ -26,12 +26,12 @@ def write_to_markdown(
     This function writes a list of collaborators to a markdown file in table format
     and optionally to GitHub Actions Job Summary if running in a GitHub Actions environment.
     Each collaborator is represented as a dictionary with keys 'username',
-    'contribution_count', 'new_contributor', and 'commits'.
+    'company', 'contribution_count', 'new_contributor', and 'commits'.
 
     Args:
         collaborators (list): A list of dictionaries, where each dictionary
                               represents a collaborator. Each dictionary should
-                              have the keys 'username', 'contribution_count',
+                              have the keys 'username', 'company', 'contribution_count',
                               and 'commits'.
         filename (str): The path of the markdown file to which the table will
                         be written.
@@ -167,7 +167,7 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
 
     Args:
         collaborators (list): A list of dictionaries, where each dictionary represents a collaborator.
-                              Each dictionary should have the keys 'username', 'contribution_count', and 'commits'.
+                              Each dictionary should have the keys 'username', 'company', 'contribution_count', and 'commits'.
         start_date (str): The start date of the date range for the contributor list.
         end_date (str): The end date of the date range for the contributor list.
         total_contributions (int): The total number of contributions made by all of the contributors.
@@ -230,7 +230,7 @@ def get_contributor_table(
     sponsor_info = _is_truthy(sponsor_info)
     show_avatar = _is_truthy(show_avatar)
     link_to_profile = _is_truthy(link_to_profile)
-    columns = ["Username", "All Time Contribution Count"]
+    columns = ["Username", "Company", "All Time Contribution Count"]
     if show_avatar:
         columns.insert(0, "Avatar")
     if start_date and end_date:
@@ -252,6 +252,7 @@ def get_contributor_table(
         total_contributions += collaborator.contribution_count
         username = collaborator.username
         contribution_count = collaborator.contribution_count
+        company = collaborator.company.strip() if collaborator.company else "-"
         if repository:
             commit_urls = collaborator.commit_url
         if organization:
@@ -275,9 +276,7 @@ def get_contributor_table(
                 else ""
             )
             row += f"{avatar_cell} | "
-        row += (
-            f"{'' if not link_to_profile else '@'}{username} | {contribution_count} |"
-        )
+        row += f"{'' if not link_to_profile else '@'}{username} | {company} | {contribution_count} |"
         if "New Contributor" in columns:
             row += f" {new_contributor} |"
         if "Sponsor URL" in columns:
