@@ -249,7 +249,7 @@ jobs:
 
 When running as a GitHub Action, the contributors report is automatically displayed in the [GitHub Actions Job Summary](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary). This provides immediate visibility of the results directly in the workflow run interface without needing to check separate files or issues.
 
-The job summary contains the same markdown content that is written to the configured output file, making it easy to view contributor information right in the GitHub Actions UI.
+The job summary contains the same markdown content that is written to the configured output file (`contributors.md` by default), making it easy to view contributor information right in the GitHub Actions UI.
 
 ## Local usage without Docker
 
