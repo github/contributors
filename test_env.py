@@ -222,6 +222,65 @@ class TestEnv(unittest.TestCase):
             "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set",
         )
 
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo",
+            "GH_TOKEN": "token",
+            "START_DATE": "2025-01-01",
+            "END_DATE": "2024-01-01",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_end_date_before_start_date(self):
+        """Test that an error is raised when END_DATE is before START_DATE"""
+        with self.assertRaises(ValueError) as cm:
+            env.get_env_vars()
+        the_exception = cm.exception
+        self.assertEqual(
+            str(the_exception),
+            "END_DATE ('2024-01-01') must be after START_DATE ('2025-01-01')",
+        )
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo",
+            "GH_TOKEN": "token",
+            "START_DATE": "2024-01-01",
+            "END_DATE": "2024-01-01",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_equal_start_and_end_date(self):
+        """Test that an error is raised when START_DATE equals END_DATE"""
+        with self.assertRaises(ValueError) as cm:
+            env.get_env_vars()
+        the_exception = cm.exception
+        self.assertEqual(
+            str(the_exception),
+            "END_DATE ('2024-01-01') must be after START_DATE ('2024-01-01')",
+        )
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo",
+            "GH_TOKEN": "token",
+            "START_DATE": "2024-01-01",
+            "END_DATE": "2025-01-01",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_valid_date_range(self):
+        """Test that valid date range (START_DATE before END_DATE) is accepted"""
+        result = env.get_env_vars()
+        self.assertEqual(result[8], "2024-01-01")  # start_date
+        self.assertEqual(result[9], "2025-01-01")  # end_date
+
 
 if __name__ == "__main__":
     unittest.main()
