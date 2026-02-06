@@ -222,6 +222,17 @@ class TestEnv(unittest.TestCase):
             "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set",
         )
 
+    @patch.dict(
+        os.environ,
+        {
+            "TEST_INT": "not-a-number",
+        },
+        clear=True,
+    )
+    def test_get_int_env_var_invalid_value_returns_none(self):
+        """Test get_int_env_var returns None for invalid integer values."""
+        self.assertIsNone(env.get_int_env_var("TEST_INT"))
+
 
 if __name__ == "__main__":
     unittest.main()

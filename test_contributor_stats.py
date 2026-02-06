@@ -45,6 +45,17 @@ class TestContributorStats(unittest.TestCase):
             "commit_url5",
         )
 
+    def test_repr(self):
+        """Test the __repr__ method includes key fields."""
+        representation = repr(self.contributor)
+        self.assertIn("contributor_stats(username=zkoppert", representation)
+        self.assertIn("new_contributor=False", representation)
+        self.assertIn(
+            "avatar_url=https://avatars.githubusercontent.com/u/29484535?v=4",
+            representation,
+        )
+        self.assertIn("contribution_count=1261", representation)
+
     def test_merge_contributors(self):
         """
         Test the merge_contributors function.
@@ -213,6 +224,28 @@ class TestContributorStats(unittest.TestCase):
             headers={"Authorization": "Bearer token"},
             timeout=60,
         )
+
+    @patch("requests.post")
+    def test_fetch_sponsor_info_raises_on_error(self, mock_post):
+        """Test get_sponsor_information raises when the API response is invalid."""
+        mock_response = MagicMock()
+        mock_response.status_code = 500
+        mock_response.json.return_value = {"errors": [{"message": "fail"}]}
+        mock_post.return_value = mock_response
+
+        contributors = [
+            ContributorStats(
+                username="user1",
+                new_contributor=False,
+                avatar_url="https://avatars.githubusercontent.com/u/",
+                contribution_count="100",
+                commit_url="url1",
+                sponsor_info="",
+            ),
+        ]
+
+        with self.assertRaises(ValueError):
+            get_sponsor_information(contributors, token="token", ghe="")
 
 
 if __name__ == "__main__":
