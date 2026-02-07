@@ -178,8 +178,10 @@ def get_contributors(repo: object, start_date: str, end_date: str, ghe: str):
                 commit_url = f"{endpoint}/{repo.full_name}/commits?author={user.login}&since={start_date}&until={end_date}"
             else:
                 commit_url = f"{endpoint}/{repo.full_name}/commits?author={user.login}"
+            company = getattr(user, "company", "") or ""
             contributor = contributor_stats.ContributorStats(
                 user.login,
+                company,
                 False,
                 user.avatar_url,
                 user.contributions_count,

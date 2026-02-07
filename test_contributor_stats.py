@@ -22,6 +22,7 @@ class TestContributorStats(unittest.TestCase):
         """
         self.contributor = ContributorStats(
             "zkoppert",
+            "@github",
             False,
             "https://avatars.githubusercontent.com/u/29484535?v=4",
             1261,
@@ -34,6 +35,7 @@ class TestContributorStats(unittest.TestCase):
         Test the __init__ method of the ContributorStats class.
         """
         self.assertEqual(self.contributor.username, "zkoppert")
+        self.assertEqual(self.contributor.company, "@github")
         self.assertFalse(self.contributor.new_contributor)
         self.assertEqual(
             self.contributor.avatar_url,
@@ -51,6 +53,7 @@ class TestContributorStats(unittest.TestCase):
         """
         contributor1 = ContributorStats(
             "user1",
+            "@company1",
             False,
             "https://avatars.githubusercontent.com/u/29484535?v=4",
             100,
@@ -59,6 +62,7 @@ class TestContributorStats(unittest.TestCase):
         )
         contributor2 = ContributorStats(
             "user2",
+            "@company2",
             False,
             "https://avatars.githubusercontent.com/u/29484535?v=4",
             200,
@@ -67,6 +71,7 @@ class TestContributorStats(unittest.TestCase):
         )
         contributor3 = ContributorStats(
             "user1",
+            "@company1",
             False,
             "https://avatars.githubusercontent.com/u/29484535?v=4",
             150,
@@ -83,6 +88,7 @@ class TestContributorStats(unittest.TestCase):
         expected_result = [
             ContributorStats(
                 "user1",
+                "@company1",
                 False,
                 "https://avatars.githubusercontent.com/u/29484535?v=4",
                 250,
@@ -91,6 +97,7 @@ class TestContributorStats(unittest.TestCase):
             ),
             ContributorStats(
                 "user2",
+                "@company2",
                 False,
                 "https://avatars.githubusercontent.com/u/29484535?v=4",
                 200,
@@ -111,6 +118,7 @@ class TestContributorStats(unittest.TestCase):
         returning_contributors = [
             ContributorStats(
                 username="user1",
+                company="",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
                 contribution_count="100",
@@ -119,6 +127,7 @@ class TestContributorStats(unittest.TestCase):
             ),
             ContributorStats(
                 username="user2",
+                company="",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
                 contribution_count="200",
@@ -139,6 +148,7 @@ class TestContributorStats(unittest.TestCase):
         returning_contributors = [
             ContributorStats(
                 username="user1",
+                company="",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
                 contribution_count="100",
@@ -147,6 +157,7 @@ class TestContributorStats(unittest.TestCase):
             ),
             ContributorStats(
                 username="user2",
+                company="",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
                 contribution_count="200",
@@ -177,6 +188,7 @@ class TestContributorStats(unittest.TestCase):
         returning_contributors = [
             ContributorStats(
                 username=user,
+                company="",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
                 contribution_count="100",
