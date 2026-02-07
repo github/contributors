@@ -47,14 +47,15 @@ class TestContributorStats(unittest.TestCase):
 
     def test_repr(self):
         """Test the __repr__ method includes key fields."""
-        representation = repr(self.contributor)
-        self.assertIn("contributor_stats(username=zkoppert", representation)
-        self.assertIn("new_contributor=False", representation)
-        self.assertIn(
-            "avatar_url=https://avatars.githubusercontent.com/u/29484535?v=4",
-            representation,
+        expected = (
+            "contributor_stats(username=zkoppert, "
+            "new_contributor=False, "
+            "avatar_url=https://avatars.githubusercontent.com/u/29484535?v=4, "
+            "contribution_count=1261, "
+            "commit_url=commit_url5, "
+            "sponsor_info=)"
         )
-        self.assertIn("contribution_count=1261", representation)
+        self.assertEqual(repr(self.contributor), expected)
 
     def test_merge_contributors(self):
         """
