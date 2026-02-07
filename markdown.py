@@ -18,14 +18,13 @@ def write_to_markdown(
     """
     This function writes a list of collaborators to a markdown file in table format
     and optionally to GitHub Actions Job Summary if running in a GitHub Actions environment.
-    Each collaborator is represented as a dictionary with keys 'username',
-    'company', 'contribution_count', 'new_contributor', and 'commits'.
+    Each collaborator is represented as a ContributorStats object with fields
+    'username', 'company', 'contribution_count', 'new_contributor', and 'commit_url'.
 
     Args:
-        collaborators (list): A list of dictionaries, where each dictionary
-                              represents a collaborator. Each dictionary should
-                              have the keys 'username', 'company', 'contribution_count',
-                              and 'commits'.
+        collaborators (list): A list of ContributorStats objects. Each object should
+                              have the fields 'username', 'company', 'contribution_count',
+                              'new_contributor', and 'commit_url'.
         filename (str): The path of the markdown file to which the table will
                         be written.
         start_date (str): The start date of the date range for the contributor
@@ -156,8 +155,9 @@ def get_summary_table(collaborators, start_date, end_date, total_contributions):
     This function returns a string containing a markdown table of the summary statistics.
 
     Args:
-        collaborators (list): A list of dictionaries, where each dictionary represents a collaborator.
-                              Each dictionary should have the keys 'username', 'company', 'contribution_count', and 'commits'.
+        collaborators (list): A list of ContributorStats objects.
+                              Each object should have the fields 'username', 'company',
+                              'contribution_count', and 'new_contributor'.
         start_date (str): The start date of the date range for the contributor list.
         end_date (str): The end date of the date range for the contributor list.
         total_contributions (int): The total number of contributions made by all of the contributors.
@@ -201,8 +201,9 @@ def get_contributor_table(
     This function returns a string containing a markdown table of the contributors and the total contribution count.
 
     Args:
-        collaborators (list): A list of dictionaries, where each dictionary represents a collaborator.
-                              Each dictionary should have the keys 'username', 'contribution_count', and 'commits'.
+        collaborators (list): A list of ContributorStats objects.
+                              Each object should have the fields 'username', 'company',
+                              'contribution_count', 'commit_url', and 'new_contributor'.
         start_date (str): The start date of the date range for the contributor list.
         end_date (str): The end date of the date range for the contributor list.
         organization (str): The organization for which the contributors are being listed.
@@ -235,7 +236,7 @@ def get_contributor_table(
         total_contributions += collaborator.contribution_count
         username = collaborator.username
         contribution_count = collaborator.contribution_count
-        company = collaborator.company.strip() if collaborator.company else "-"
+        company = collaborator.company or "-"
         if repository:
             commit_urls = collaborator.commit_url
         if organization:
