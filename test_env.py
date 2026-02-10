@@ -277,9 +277,22 @@ class TestEnv(unittest.TestCase):
     )
     def test_get_env_vars_valid_date_range(self):
         """Test that valid date range (START_DATE before END_DATE) is accepted"""
-        result = env.get_env_vars()
-        self.assertEqual(result[8], "2024-01-01")  # start_date
-        self.assertEqual(result[9], "2025-01-01")  # end_date
+        (
+            _organization,
+            _repository_list,
+            _gh_app_id,
+            _gh_app_installation_id,
+            _gh_app_private_key,
+            _gh_app_enterprise_only,
+            _token,
+            _ghe,
+            start_date,
+            end_date,
+            _sponsor_info,
+            _link_to_profile,
+        ) = env.get_env_vars()
+        self.assertEqual(start_date, "2024-01-01")
+        self.assertEqual(end_date, "2025-01-01")
 
 
 if __name__ == "__main__":
