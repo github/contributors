@@ -85,8 +85,16 @@ def validate_date_range(start_date: str, end_date: str) -> None:
     if not start_date or not end_date:
         return
 
-    # YYYY-MM-DD format allows direct string comparison
-    if end_date <= start_date:
+    pattern = "%Y-%m-%d"
+    try:
+        start = datetime.datetime.strptime(start_date, pattern).date()
+        end = datetime.datetime.strptime(end_date, pattern).date()
+    except ValueError as exc:
+        raise ValueError(
+            "start_date and end_date must be in the format YYYY-MM-DD"
+        ) from exc
+
+    if end <= start:
         raise ValueError(
             f"END_DATE ('{end_date}') must be after START_DATE ('{start_date}')"
         )
