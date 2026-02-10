@@ -104,7 +104,7 @@ def merge_contributors(contributors: list) -> list:
     merged_contributors: List[ContributorStats] = []
     for contributor_list in contributors:
         for contributor in contributor_list:
-            # if the contributor is already in the merged list, merge their relavent attributes
+            # if the contributor is already in the merged list, merge their relevant attributes
             if contributor.username in [c.username for c in merged_contributors]:
                 for merged_contributor in merged_contributors:
                     if merged_contributor.username == contributor.username:
