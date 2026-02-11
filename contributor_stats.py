@@ -3,6 +3,7 @@
 # [
 #   {
 #     "username" : "zkoppert",
+#     "company" : "@github",
 #     "new_contributor" : "False",
 #     "avatar_url" : "https://avatars.githubusercontent.com/u/29484535?v=4",
 #     "contribution_count" : 1261,
@@ -23,6 +24,7 @@ class ContributorStats:
 
     Attributes:
         username (str): The username of the contributor
+        company (str): The company listed on the contributor's GitHub profile
         new_contributor (bool): Whether the contributor is new or returning
         avatar_url (str): The url of the contributor's avatar
         contribution_count (int): The number of contributions the contributor has made
@@ -38,6 +40,7 @@ class ContributorStats:
     def __init__(
         self,
         username: str,
+        company: str,
         new_contributor: bool,
         avatar_url: str,
         contribution_count: int,
@@ -47,6 +50,7 @@ class ContributorStats:
         """Initialize the contributor_stats object"""
         new_contributor = False
         self.username = username
+        self.company = company
         self.new_contributor = new_contributor
         self.avatar_url = avatar_url
         self.contribution_count = contribution_count
@@ -57,6 +61,7 @@ class ContributorStats:
         """Return the representation of the contributor_stats object"""
         return (
             f"contributor_stats(username={self.username}, "
+            f"company={self.company}, "
             f"new_contributor={self.new_contributor}, "
             f"avatar_url={self.avatar_url}, "
             f"contribution_count={self.contribution_count}, commit_url={self.commit_url})"
@@ -67,6 +72,7 @@ class ContributorStats:
         """Check if two contributor_stats objects are equal"""
         return (
             self.username == other.username
+            and self.company == other.company
             and self.new_contributor == other.new_contributor
             and self.avatar_url == other.avatar_url
             and self.contribution_count == other.contribution_count
@@ -121,6 +127,8 @@ def merge_contributors(contributors: list) -> list:
                             merged_contributor.new_contributor
                             or contributor.new_contributor
                         )
+                        if not merged_contributor.company and contributor.company:
+                            merged_contributor.company = contributor.company
 
             else:
                 merged_contributors.append(contributor)

@@ -22,6 +22,7 @@ class TestContributors(unittest.TestCase):
         mock_user.login = "user"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
         mock_user.contributions_count = 100
+        mock_user.company = "@company"
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
 
@@ -29,6 +30,7 @@ class TestContributors(unittest.TestCase):
 
         mock_contributor_stats.assert_called_once_with(
             "user",
+            "@company",
             False,
             "https://avatars.githubusercontent.com/u/12345678?v=4",
             100,
@@ -49,6 +51,7 @@ class TestContributors(unittest.TestCase):
         mock_get_contributors.return_value = [
             ContributorStats(
                 "user",
+                "@company",
                 False,
                 "https://avatars.githubusercontent.com/u/29484535?v=4",
                 100,
@@ -67,6 +70,7 @@ class TestContributors(unittest.TestCase):
             [
                 ContributorStats(
                     "user",
+                    "@company",
                     False,
                     "https://avatars.githubusercontent.com/u/29484535?v=4",
                     200,
@@ -88,6 +92,7 @@ class TestContributors(unittest.TestCase):
         mock_get_contributors.return_value = [
             ContributorStats(
                 "user",
+                "@company",
                 False,
                 "https://avatars.githubusercontent.com/u/29484535?v=4",
                 100,
@@ -106,6 +111,7 @@ class TestContributors(unittest.TestCase):
             [
                 ContributorStats(
                     "user",
+                    "@company",
                     False,
                     "https://avatars.githubusercontent.com/u/29484535?v=4",
                     100,
@@ -128,10 +134,12 @@ class TestContributors(unittest.TestCase):
         mock_user.login = "user"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
         mock_user.contributions_count = 100
+        mock_user.company = "@company"
         mock_user2 = MagicMock()
         mock_user2.login = "user2"
         mock_user2.avatar_url = "https://avatars.githubusercontent.com/u/12345679?v=4"
         mock_user2.contributions_count = 102
+        mock_user2.company = "@company2"
 
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
@@ -143,6 +151,7 @@ class TestContributors(unittest.TestCase):
         # Note that only user is returned and user2 is not returned here because there were no commits in the date range
         mock_contributor_stats.assert_called_once_with(
             "user",
+            "@company",
             False,
             "https://avatars.githubusercontent.com/u/12345678?v=4",
             100,
@@ -160,6 +169,7 @@ class TestContributors(unittest.TestCase):
         mock_user.login = "[bot]"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
         mock_user.contributions_count = 100
+        mock_user.company = "@company"
 
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
@@ -181,6 +191,7 @@ class TestContributors(unittest.TestCase):
         mock_user.login = "user"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
         mock_user.contributions_count = 100
+        mock_user.company = "@company"
 
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
@@ -192,6 +203,7 @@ class TestContributors(unittest.TestCase):
         # Note that only user is returned and user2 is not returned here because there were no commits in the date range
         mock_contributor_stats.assert_called_once_with(
             "user",
+            "@company",
             False,
             "https://avatars.githubusercontent.com/u/12345678?v=4",
             100,
