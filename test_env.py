@@ -294,6 +294,21 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(start_date, "2024-01-01")
         self.assertEqual(end_date, "2025-01-01")
 
+    @patch.dict(os.environ, {"TEST_INT": "12.34"}, clear=True)
+    def test_get_int_env_var_returns_none_for_invalid_int(self):
+        """Test that invalid integer env values return None."""
+        self.assertIsNone(env.get_int_env_var("TEST_INT"))
+
+    def test_validate_date_range_invalid_date_format_raises(self):
+        """Test that invalid date formats raise a ValueError."""
+        with self.assertRaises(ValueError) as cm:
+            env.validate_date_range("2024/01/01", "2024-02-01")
+        the_exception = cm.exception
+        self.assertEqual(
+            str(the_exception),
+            "start_date and end_date must be in the format YYYY-MM-DD",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
