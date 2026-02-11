@@ -115,6 +115,7 @@ def get_env_vars(
     str,
     bool,
     bool,
+    bool,
 ]:
     """
     Get the environment variables for use in the action.
@@ -135,6 +136,7 @@ def get_env_vars(
         end_date (str): The end date to get contributor information to.
         sponsor_info (str): Whether to get sponsor information on the contributor
         link_to_profile (str): Whether to link username to Github profile in markdown output
+        show_avatar (str): Whether to show contributor avatars in markdown output
     """
 
     if not test:
@@ -176,6 +178,7 @@ def get_env_vars(
 
     sponsor_info = get_bool_env_var("SPONSOR_INFO", False)
     link_to_profile = get_bool_env_var("LINK_TO_PROFILE", False)
+    show_avatar = get_bool_env_var("SHOW_AVATAR", False)
 
     # Separate repositories_str into a list based on the comma separator
     repositories_list = []
@@ -197,4 +200,5 @@ def get_env_vars(
         end_date,
         sponsor_info,
         link_to_profile,
+        show_avatar,
     )
