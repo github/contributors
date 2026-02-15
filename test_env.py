@@ -65,6 +65,7 @@ class TestEnv(unittest.TestCase):
             end_date,
             sponsor_info,
             link_to_profile,
+            acknowledge_coauthors,
         ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
@@ -79,6 +80,7 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(end_date, "2022-12-31")
         self.assertFalse(sponsor_info)
         self.assertTrue(link_to_profile)
+        self.assertTrue(acknowledge_coauthors)
 
     @patch.dict(
         os.environ,
@@ -175,6 +177,7 @@ class TestEnv(unittest.TestCase):
             end_date,
             sponsor_info,
             link_to_profile,
+            acknowledge_coauthors,
         ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
@@ -189,6 +192,7 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(end_date, "")
         self.assertFalse(sponsor_info)
         self.assertTrue(link_to_profile)
+        self.assertTrue(acknowledge_coauthors)
 
     @patch.dict(os.environ, {})
     def test_get_env_vars_missing_org_or_repo(self):
