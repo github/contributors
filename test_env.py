@@ -233,11 +233,11 @@ class TestEnv(unittest.TestCase):
 
         self.assertEqual(output_filename, "custom-report.md")
 
-    @patch.dict(os.environ, {})
+    @patch.dict(os.environ, {}, clear=True)
     def test_get_env_vars_missing_org_or_repo(self):
         """Test that an error is raised if required environment variables are not set"""
         with self.assertRaises(ValueError) as cm:
-            env.get_env_vars()
+            env.get_env_vars(test=True)
         the_exception = cm.exception
         self.assertEqual(
             str(the_exception),
@@ -333,6 +333,7 @@ class TestEnv(unittest.TestCase):
             end_date,
             _sponsor_info,
             _link_to_profile,
+            _output_filename,
         ) = env.get_env_vars()
         self.assertEqual(start_date, "2024-01-01")
         self.assertEqual(end_date, "2025-01-01")
