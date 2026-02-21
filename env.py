@@ -5,6 +5,7 @@ produces information about the contributors over the specified time period.
 
 import datetime
 import os
+import re
 from os.path import dirname, join
 
 from dotenv import load_dotenv
@@ -115,6 +116,7 @@ def get_env_vars(
     str,
     bool,
     bool,
+    str,
 ]:
     """
     Get the environment variables for use in the action.
@@ -132,9 +134,10 @@ def get_env_vars(
         token (str): The GitHub token to use for authentication
         ghe (str): The GitHub Enterprise URL to use for authentication
         start_date (str): The start date to get contributor information from
-        end_date (str): The end date to get contributor information to.
+        end_date (str): The end date to get contributor information to
         sponsor_info (str): Whether to get sponsor information on the contributor
         link_to_profile (str): Whether to link username to Github profile in markdown output
+        output_filename (str): The output filename for the markdown report
     """
 
     if not test:
@@ -176,6 +179,16 @@ def get_env_vars(
 
     sponsor_info = get_bool_env_var("SPONSOR_INFO", False)
     link_to_profile = get_bool_env_var("LINK_TO_PROFILE", False)
+    output_filename = os.getenv("OUTPUT_FILENAME", "").strip() or "contributors.md"
+    if not re.match(r"^[a-zA-Z0-9_\-\.]+$", output_filename):
+        raise ValueError(
+            "OUTPUT_FILENAME must contain only alphanumeric characters, "
+            "hyphens, underscores, and dots"
+        )
+    if output_filename != os.path.basename(output_filename):
+        raise ValueError(
+            "OUTPUT_FILENAME must be a simple filename without path separators"
+        )
 
     # Separate repositories_str into a list based on the comma separator
     repositories_list = []
@@ -197,4 +210,5 @@ def get_env_vars(
         end_date,
         sponsor_info,
         link_to_profile,
+        output_filename,
     )

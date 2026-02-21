@@ -23,6 +23,7 @@ class TestEnv(unittest.TestCase):
             "GITHUB_APP_ENTERPRISE_ONLY",
             "GH_TOKEN",
             "ORGANIZATION",
+            "OUTPUT_FILENAME",
             "REPOSITORY",
             "START_DATE",
         ]
@@ -65,6 +66,7 @@ class TestEnv(unittest.TestCase):
             end_date,
             sponsor_info,
             link_to_profile,
+            output_filename,
         ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
@@ -79,6 +81,7 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(end_date, "2022-12-31")
         self.assertFalse(sponsor_info)
         self.assertTrue(link_to_profile)
+        self.assertEqual(output_filename, "contributors.md")
 
     @patch.dict(
         os.environ,
@@ -175,6 +178,7 @@ class TestEnv(unittest.TestCase):
             end_date,
             sponsor_info,
             link_to_profile,
+            output_filename,
         ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
@@ -189,12 +193,107 @@ class TestEnv(unittest.TestCase):
         self.assertEqual(end_date, "")
         self.assertFalse(sponsor_info)
         self.assertTrue(link_to_profile)
+        self.assertEqual(output_filename, "contributors.md")
 
-    @patch.dict(os.environ, {})
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "token",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "",
+            "END_DATE": "",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+            "OUTPUT_FILENAME": "custom-report.md",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_custom_output_filename(self):
+        """Test that OUTPUT_FILENAME overrides the default output filename."""
+        (
+            _organization,
+            _repository_list,
+            _gh_app_id,
+            _gh_app_installation_id,
+            _gh_app_private_key,
+            _gh_app_enterprise_only,
+            _token,
+            _ghe,
+            _start_date,
+            _end_date,
+            _sponsor_info,
+            _link_to_profile,
+            output_filename,
+        ) = env.get_env_vars()
+
+        self.assertEqual(output_filename, "custom-report.md")
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "../../../etc/passwd",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_path_traversal_rejected(self):
+        """Test that OUTPUT_FILENAME rejects path traversal attempts."""
+        with self.assertRaises(ValueError):
+            env.get_env_vars()
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "/tmp/output.md",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_absolute_path_rejected(self):
+        """Test that OUTPUT_FILENAME rejects absolute paths."""
+        with self.assertRaises(ValueError):
+            env.get_env_vars()
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "reports/output.md",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_directory_separator_rejected(self):
+        """Test that OUTPUT_FILENAME rejects filenames with directory separators."""
+        with self.assertRaises(ValueError):
+            env.get_env_vars()
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "file;rm -rf /.md",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_special_chars_rejected(self):
+        """Test that OUTPUT_FILENAME rejects filenames with special characters."""
+        with self.assertRaises(ValueError):
+            env.get_env_vars()
+
+    @patch.dict(os.environ, {}, clear=True)
     def test_get_env_vars_missing_org_or_repo(self):
         """Test that an error is raised if required environment variables are not set"""
         with self.assertRaises(ValueError) as cm:
-            env.get_env_vars()
+            env.get_env_vars(test=True)
         the_exception = cm.exception
         self.assertEqual(
             str(the_exception),
@@ -290,6 +389,7 @@ class TestEnv(unittest.TestCase):
             end_date,
             _sponsor_info,
             _link_to_profile,
+            _output_filename,
         ) = env.get_env_vars()
         self.assertEqual(start_date, "2024-01-01")
         self.assertEqual(end_date, "2025-01-01")

@@ -94,6 +94,7 @@ This action can be configured to authenticate with GitHub App Installation or Pe
 | `END_DATE`          | False                                           | Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02`                                                                       |
 | `SPONSOR_INFO`      | False                                           | False             | If you want to include sponsor information in the output. This will include the sponsor count and the sponsor URL. This will impact action performance. ie. SPONSOR_INFO = "False" or SPONSOR_INFO = "True"              |
 | `LINK_TO_PROFILE`   | False                                           | True              | If you want to link usernames to their GitHub profiles in the output. ie. LINK_TO_PROFILE = "True" or LINK_TO_PROFILE = "False"                                                                                          |
+| `OUTPUT_FILENAME`   | False                                           | contributors.md   | The output filename for the markdown report. ie. OUTPUT_FILENAME = "my-report.md"                                                                                                                                        |
 
 **Note**: If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date.
 
@@ -119,6 +120,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+    env:
+      OUTPUT_FILENAME: contributors.md
 
     steps:
       - name: Get dates for last month
@@ -148,7 +151,7 @@ jobs:
         with:
           title: Monthly contributor report
           token: ${{ secrets.GITHUB_TOKEN }}
-          content-filepath: ./contributors.md
+          content-filepath: ./${{ env.OUTPUT_FILENAME }}
           assignees: <YOUR_GITHUB_HANDLE_HERE>
 ```
 
@@ -170,6 +173,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+    env:
+      OUTPUT_FILENAME: contributors.md
 
     steps:
       - name: Get dates for last month
@@ -204,7 +209,7 @@ jobs:
         with:
           title: Monthly contributor report
           token: ${{ secrets.GITHUB_TOKEN }}
-          content-filepath: ./contributors.md
+          content-filepath: ./${{ env.OUTPUT_FILENAME }}
           assignees: <YOUR_GITHUB_HANDLE_HERE>
 ```
 
@@ -245,7 +250,7 @@ jobs:
 
 When running as a GitHub Action, the contributors report is automatically displayed in the [GitHub Actions Job Summary](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary). This provides immediate visibility of the results directly in the workflow run interface without needing to check separate files or issues.
 
-The job summary contains the same markdown content that is written to the `contributors.md` file, making it easy to view contributor information right in the GitHub Actions UI.
+The job summary contains the same markdown content that is written to the configured output file (`contributors.md` by default), making it easy to view contributor information right in the GitHub Actions UI.
 
 ## Local usage without Docker
 
