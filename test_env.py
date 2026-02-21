@@ -233,6 +233,62 @@ class TestEnv(unittest.TestCase):
 
         self.assertEqual(output_filename, "custom-report.md")
 
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "../../../etc/passwd",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_path_traversal_rejected(self):
+        """Test that OUTPUT_FILENAME rejects path traversal attempts."""
+        with self.assertRaises(ValueError):
+            env.get_env_vars()
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "/tmp/output.md",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_absolute_path_rejected(self):
+        """Test that OUTPUT_FILENAME rejects absolute paths."""
+        with self.assertRaises(ValueError):
+            env.get_env_vars()
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "reports/output.md",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_directory_separator_rejected(self):
+        """Test that OUTPUT_FILENAME rejects filenames with directory separators."""
+        with self.assertRaises(ValueError):
+            env.get_env_vars()
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "file;rm -rf /.md",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_special_chars_rejected(self):
+        """Test that OUTPUT_FILENAME rejects filenames with special characters."""
+        with self.assertRaises(ValueError):
+            env.get_env_vars()
+
     @patch.dict(os.environ, {}, clear=True)
     def test_get_env_vars_missing_org_or_repo(self):
         """Test that an error is raised if required environment variables are not set"""
