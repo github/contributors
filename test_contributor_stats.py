@@ -45,6 +45,18 @@ class TestContributorStats(unittest.TestCase):
             "commit_url5",
         )
 
+    def test_repr(self):
+        """Test the __repr__ method includes key fields."""
+        expected = (
+            "contributor_stats(username=zkoppert, "
+            "new_contributor=False, "
+            "avatar_url=https://avatars.githubusercontent.com/u/29484535?v=4, "
+            "contribution_count=1261, "
+            "commit_url=commit_url5, "
+            "sponsor_info=)"
+        )
+        self.assertEqual(repr(self.contributor), expected)
+
     def test_merge_contributors(self):
         """
         Test the merge_contributors function.
@@ -113,7 +125,7 @@ class TestContributorStats(unittest.TestCase):
                 username="user1",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
-                contribution_count="100",
+                contribution_count=100,
                 commit_url="url1",
                 sponsor_info="",
             ),
@@ -121,7 +133,7 @@ class TestContributorStats(unittest.TestCase):
                 username="user2",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
-                contribution_count="200",
+                contribution_count=200,
                 commit_url="url2",
                 sponsor_info="",
             ),
@@ -141,7 +153,7 @@ class TestContributorStats(unittest.TestCase):
                 username="user1",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
-                contribution_count="100",
+                contribution_count=100,
                 commit_url="url1",
                 sponsor_info="",
             ),
@@ -149,7 +161,7 @@ class TestContributorStats(unittest.TestCase):
                 username="user2",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
-                contribution_count="200",
+                contribution_count=200,
                 commit_url="url2",
                 sponsor_info="",
             ),
@@ -179,7 +191,7 @@ class TestContributorStats(unittest.TestCase):
                 username=user,
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
-                contribution_count="100",
+                contribution_count=100,
                 commit_url="url1",
                 sponsor_info="",
             ),
@@ -213,6 +225,28 @@ class TestContributorStats(unittest.TestCase):
             headers={"Authorization": "Bearer token"},
             timeout=60,
         )
+
+    @patch("requests.post")
+    def test_fetch_sponsor_info_raises_on_error(self, mock_post):
+        """Test get_sponsor_information raises when the API response is invalid."""
+        mock_response = MagicMock()
+        mock_response.status_code = 500
+        mock_response.json.return_value = {"errors": [{"message": "fail"}]}
+        mock_post.return_value = mock_response
+
+        contributors = [
+            ContributorStats(
+                username="user1",
+                new_contributor=False,
+                avatar_url="https://avatars.githubusercontent.com/u/",
+                contribution_count=100,
+                commit_url="url1",
+                sponsor_info="",
+            ),
+        ]
+
+        with self.assertRaises(ValueError):
+            get_sponsor_information(contributors, token="token", ghe="")
 
 
 if __name__ == "__main__":

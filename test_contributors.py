@@ -1,10 +1,11 @@
 """This module contains the tests for the contributors.py module"""
 
+import runpy
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
 
+import contributors as contributors_module
 from contributor_stats import ContributorStats
-from contributors import get_all_contributors, get_contributors
 
 
 class TestContributors(unittest.TestCase):
@@ -24,9 +25,13 @@ class TestContributors(unittest.TestCase):
         mock_user.contributions_count = 100
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
+        mock_repo.commits.return_value = iter([object()])
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31", "")
+        contributors_module.get_contributors(mock_repo, "2022-01-01", "2022-12-31", "")
 
+        mock_repo.commits.assert_called_once_with(
+            author="user", since="2022-01-01", until="2022-12-31"
+        )
         mock_contributor_stats.assert_called_once_with(
             "user",
             False,
@@ -58,8 +63,8 @@ class TestContributors(unittest.TestCase):
         ]
         ghe = ""
 
-        result = get_all_contributors(
-            "org", "", "2022-01-01", "2022-12-31", mock_github_connection, ghe
+        result = contributors_module.get_all_contributors(
+            "org", [], "2022-01-01", "2022-12-31", mock_github_connection, ghe
         )
 
         self.assertEqual(
@@ -97,7 +102,7 @@ class TestContributors(unittest.TestCase):
         ]
         ghe = ""
 
-        result = get_all_contributors(
+        result = contributors_module.get_all_contributors(
             "", ["owner/repo"], "2022-01-01", "2022-12-31", mock_github_connection, ghe
         )
 
@@ -133,14 +138,22 @@ class TestContributors(unittest.TestCase):
         mock_user2.avatar_url = "https://avatars.githubusercontent.com/u/12345679?v=4"
         mock_user2.contributions_count = 102
 
-        mock_repo.contributors.return_value = [mock_user]
+        mock_repo.contributors.return_value = [mock_user, mock_user2]
         mock_repo.full_name = "owner/repo"
-        mock_repo.get_commits.side_effect = StopIteration
+        mock_repo.commits.side_effect = [
+            iter([object()]),  # user has commits in range
+            iter([]),  # user2 has no commits in range and should be skipped
+        ]
         ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
+        contributors_module.get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
 
-        # Note that only user is returned and user2 is not returned here because there were no commits in the date range
+        mock_repo.commits.assert_has_calls(
+            [
+                call(author="user", since="2022-01-01", until="2022-12-31"),
+                call(author="user2", since="2022-01-01", until="2022-12-31"),
+            ]
+        )
         mock_contributor_stats.assert_called_once_with(
             "user",
             False,
@@ -163,18 +176,18 @@ class TestContributors(unittest.TestCase):
 
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
-        mock_repo.get_commits.side_effect = StopIteration
         ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
+        contributors_module.get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
 
-        # Note that only user is returned and user2 is not returned here because there were no commits in the date range
-        mock_contributor_stats.isEmpty()
+        # Ensure that the bot user is skipped and ContributorStats is never instantiated
+        mock_repo.commits.assert_not_called()
+        mock_contributor_stats.assert_not_called()
 
     @patch("contributors.contributor_stats.ContributorStats")
     def test_get_contributors_no_commit_end_date(self, mock_contributor_stats):
         """
-        Test the get_contributors does the search of commits only with start date
+        Test get_contributors skips commit-range filtering when end_date is not set.
         """
         mock_repo = MagicMock()
         mock_user = MagicMock()
@@ -184,12 +197,11 @@ class TestContributors(unittest.TestCase):
 
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
-        mock_repo.get_commits.side_effect = StopIteration
         ghe = ""
 
-        get_contributors(mock_repo, "2022-01-01", "", ghe)
+        contributors_module.get_contributors(mock_repo, "2022-01-01", "", ghe)
 
-        # Note that only user is returned and user2 is not returned here because there were no commits in the date range
+        mock_repo.commits.assert_not_called()
         mock_contributor_stats.assert_called_once_with(
             "user",
             False,
@@ -198,6 +210,202 @@ class TestContributors(unittest.TestCase):
             "https://github.com/owner/repo/commits?author=user",
             "",
         )
+
+    def test_get_contributors_skips_when_no_commits_in_range(self):
+        """Test get_contributors skips users with no commits in the date range."""
+        mock_repo = MagicMock()
+        mock_user = MagicMock()
+        mock_user.login = "user"
+        mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
+        mock_user.contributions_count = 100
+        mock_repo.contributors.return_value = [mock_user]
+        mock_repo.full_name = "owner/repo"
+        mock_repo.commits.return_value = iter([])
+
+        result = contributors_module.get_contributors(
+            mock_repo, "2022-01-01", "2022-12-31", ""
+        )
+
+        self.assertEqual(result, [])
+
+    def test_get_contributors_handles_exception(self):
+        """Test get_contributors returns None when an exception is raised."""
+
+        class BoomIterable:  # pylint: disable=too-few-public-methods
+            """Iterable that raises an exception when iterated over."""
+
+            def __iter__(self):
+                raise RuntimeError("boom")
+
+        mock_repo = MagicMock()
+        mock_repo.full_name = "owner/repo"
+        mock_repo.contributors.return_value = BoomIterable()
+
+        with patch("builtins.print") as mock_print:
+            result = contributors_module.get_contributors(
+                mock_repo, "2022-01-01", "2022-12-31", ""
+            )
+
+        self.assertIsNone(result)
+        mock_print.assert_any_call(
+            "Error getting contributors for repository: owner/repo"
+        )
+        self.assertTrue(
+            any(
+                args and str(args[0]) == "boom" for args, _ in mock_print.call_args_list
+            )
+        )
+
+    def test_main_runs_under_main_guard(self):
+        """Test running contributors as a script executes main."""
+        mock_env = MagicMock()
+        mock_env.get_env_vars.return_value = (
+            "org",
+            [],
+            123,
+            456,
+            b"key",
+            False,
+            "",
+            "",
+            "2022-01-01",
+            "2022-12-31",
+            False,
+            False,
+        )
+
+        mock_auth = MagicMock()
+        mock_github = MagicMock()
+        mock_org = MagicMock()
+        mock_org.repositories.return_value = []
+        mock_github.organization.return_value = mock_org
+        mock_auth.auth_to_github.return_value = mock_github
+        mock_auth.get_github_app_installation_token.return_value = "token"
+
+        mock_markdown = MagicMock()
+        mock_json_writer = MagicMock()
+
+        with patch.dict(
+            "sys.modules",
+            {
+                "env": mock_env,
+                "auth": mock_auth,
+                "markdown": mock_markdown,
+                "json_writer": mock_json_writer,
+            },
+            clear=False,
+        ):
+            runpy.run_module("contributors", run_name="__main__")
+
+        mock_env.get_env_vars.assert_called_once()
+        mock_auth.auth_to_github.assert_called_once()
+        mock_auth.get_github_app_installation_token.assert_called_once_with(
+            "", 123, b"key", 456
+        )
+        mock_markdown.write_to_markdown.assert_called_once()
+        mock_json_writer.write_to_json.assert_called_once()
+
+    def test_main_sets_new_contributor_flag(self):
+        """Test main sets new_contributor when start/end dates are provided."""
+        contributor = ContributorStats(
+            "user1",
+            False,
+            "https://avatars.githubusercontent.com/u/1",
+            10,
+            "commit_url",
+            "",
+        )
+
+        with patch.object(
+            contributors_module.env, "get_env_vars"
+        ) as mock_get_env_vars, patch.object(
+            contributors_module.auth, "auth_to_github"
+        ) as mock_auth_to_github, patch.object(
+            contributors_module, "get_all_contributors"
+        ) as mock_get_all_contributors, patch.object(
+            contributors_module.contributor_stats,
+            "is_new_contributor",
+            return_value=True,
+        ) as mock_is_new, patch.object(
+            contributors_module.markdown, "write_to_markdown"
+        ), patch.object(
+            contributors_module.json_writer, "write_to_json"
+        ):
+            mock_get_env_vars.return_value = (
+                "org",
+                [],
+                None,
+                None,
+                b"",
+                False,
+                "token",
+                "",
+                "2022-01-01",
+                "2022-12-31",
+                False,
+                False,
+            )
+            mock_auth_to_github.return_value = MagicMock()
+            mock_get_all_contributors.side_effect = [[contributor], []]
+
+            contributors_module.main()
+
+        mock_is_new.assert_called_once_with("user1", [])
+        self.assertTrue(contributor.new_contributor)
+
+    def test_main_fetches_sponsor_info_when_enabled(self):
+        """Test main fetches sponsor information when sponsor_info is enabled."""
+        contributor = ContributorStats(
+            "user1",
+            False,
+            "https://avatars.githubusercontent.com/u/1",
+            10,
+            "commit_url",
+            "",
+        )
+        sponsored_contributor = ContributorStats(
+            "user1",
+            False,
+            "https://avatars.githubusercontent.com/u/1",
+            10,
+            "commit_url",
+            "https://github.com/sponsors/user1",
+        )
+
+        with patch.object(
+            contributors_module.env, "get_env_vars"
+        ) as mock_get_env_vars, patch.object(
+            contributors_module.auth, "auth_to_github"
+        ) as mock_auth_to_github, patch.object(
+            contributors_module, "get_all_contributors"
+        ) as mock_get_all_contributors, patch.object(
+            contributors_module.contributor_stats, "get_sponsor_information"
+        ) as mock_get_sponsor_information, patch.object(
+            contributors_module.markdown, "write_to_markdown"
+        ), patch.object(
+            contributors_module.json_writer, "write_to_json"
+        ):
+            mock_get_env_vars.return_value = (
+                "org",
+                [],
+                None,
+                None,
+                b"",
+                False,
+                "token",
+                "",
+                "",
+                "",
+                "true",
+                False,
+            )
+            mock_auth_to_github.return_value = MagicMock()
+            mock_get_all_contributors.return_value = [contributor]
+            mock_get_sponsor_information.return_value = [sponsored_contributor]
+
+            contributors_module.main()
+
+        mock_get_sponsor_information.assert_called_once_with([contributor], "token", "")
 
 
 if __name__ == "__main__":

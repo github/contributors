@@ -2,7 +2,8 @@
 
 [![Python package](https://github.com/github/contributors/actions/workflows/python-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/python-ci.yml)
 [![Docker Image CI](https://github.com/github/contributors/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/docker-ci.yml)
-[![CodeQL](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql)[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/github/contributors/badge)](https://scorecard.dev/viewer/?uri=github.com/github/contributors)
+[![CodeQL](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/github/contributors/badge)](https://scorecard.dev/viewer/?uri=github.com/github/contributors)
 
 This is a GitHub Action that given an organization or specified repositories, produces information about the [contributors](https://chaoss.community/kb/metric-contributors/) over the specified time period.
 

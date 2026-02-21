@@ -59,7 +59,8 @@ class ContributorStats:
             f"contributor_stats(username={self.username}, "
             f"new_contributor={self.new_contributor}, "
             f"avatar_url={self.avatar_url}, "
-            f"contribution_count={self.contribution_count}, commit_url={self.commit_url})"
+            f"contribution_count={self.contribution_count}, "
+            f"commit_url={self.commit_url}, "
             f"sponsor_info={self.sponsor_info})"
         )
 
