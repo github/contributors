@@ -1,3 +1,13 @@
+> [!IMPORTANT]
+> This repository has moved from `github/contributors` to `github-community-projects/contributors`.
+> Please update your git remote:
+>
+> ```shell
+> git remote set-url origin https://github.com/github-community-projects/contributors.git
+> ```
+>
+> Note: replace `origin` with the name of your remote if it's different.
+
 # Contributors action
 
 [![Python package](https://github.com/github-community-projects/contributors/actions/workflows/python-ci.yml/badge.svg)](https://github.com/github-community-projects/contributors/actions/workflows/python-ci.yml)
