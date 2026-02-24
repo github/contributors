@@ -2,7 +2,7 @@
 """This file contains the main() and other functions needed to get contributor information from the organization or repository"""
 
 import re
-from typing import List
+from typing import Dict, List, Optional
 
 import auth
 import contributor_stats
@@ -160,7 +160,9 @@ def get_all_contributors(
 
 
 def get_coauthors_from_message(
-    commit_message: str, github_connection: object = None
+    commit_message: str,
+    github_connection: object = None,
+    email_cache: Optional[Dict[str, str]] = None,
 ) -> List[str]:
     """
     Extract co-author identifiers from a commit message.
@@ -175,6 +177,8 @@ def get_coauthors_from_message(
     Args:
         commit_message (str): The commit message to parse
         github_connection (object): The authenticated GitHub connection object from PyGithub
+        email_cache (dict): Optional cache mapping emails to resolved usernames to avoid
+            redundant API calls
 
     Returns:
         List[str]: List of co-author identifiers (GitHub usernames or email addresses)
@@ -197,19 +201,26 @@ def get_coauthors_from_message(
             username = email.split("@")[0]
             identifiers.append(username)
         else:
-            # For other emails, try to find GitHub username using Search Users API
-            if github_connection:
+            # For other emails, check cache first, then try Search Users API
+            if email_cache is not None and email in email_cache:
+                identifiers.append(email_cache[email])
+            elif github_connection:
                 try:
                     # Search for users by email
                     search_result = github_connection.search_users(f"email:{email}")
                     if search_result.totalCount > 0:
                         # Use the first matching user's login
-                        identifiers.append(search_result[0].login)
+                        resolved = search_result[0].login
                     else:
                         # If no user found, fall back to email address
-                        identifiers.append(email)
+                        resolved = email
+                    if email_cache is not None:
+                        email_cache[email] = resolved
+                    identifiers.append(resolved)
                 except Exception:
                     # If API call fails, fall back to email address
+                    if email_cache is not None:
+                        email_cache[email] = email
                     identifiers.append(email)
             else:
                 # If no GitHub connection available, use the full email address
@@ -288,7 +299,11 @@ def get_contributors(
                 ghe,
                 github_connection,
             )
-            contributors.extend(coauthor_contributors)
+            # Only add co-authors not already in the contributor list for this repo
+            for coauthor in coauthor_contributors:
+                if coauthor.username not in contributor_usernames:
+                    contributors.append(coauthor)
+                    contributor_usernames.add(coauthor.username)
 
     except Exception as e:
         print(f"Error getting contributors for repository: {repo.full_name}")
@@ -320,6 +335,8 @@ def get_coauthor_contributors(
     """
     coauthor_counts: dict = {}  # username -> count
     endpoint = ghe if ghe else "https://github.com"
+    # cache email -> username lookups to avoid redundant API calls
+    email_cache: Dict[str, str] = {}
 
     try:
         # Get all commits in the date range
@@ -335,8 +352,13 @@ def get_coauthor_contributors(
                 continue
 
             # Extract co-authors from commit message
-            coauthors = get_coauthors_from_message(commit_message, github_connection)
+            coauthors = get_coauthors_from_message(
+                commit_message, github_connection, email_cache
+            )
             for username in coauthors:
+                # Skip bot accounts for consistency with regular contributor filtering
+                if "[bot]" in username.lower():
+                    continue
                 coauthor_counts[username] = coauthor_counts.get(username, 0) + 1
 
     except Exception as e:

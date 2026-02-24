@@ -344,6 +344,115 @@ Co-authored-by: Bob <bob@users.noreply.github.com>
             elif contributor.username == "bob":
                 self.assertEqual(contributor.contribution_count, 1)
 
+    def test_get_coauthors_from_message_with_github_com_email(self):
+        """
+        Test that @github.com emails extract the username (part before @).
+        """
+        message = """Fix bug
+
+Co-authored-by: John Doe <johndoe@github.com>
+"""
+        result = get_coauthors_from_message(message, None)
+        self.assertEqual(result, ["johndoe"])
+
+    def test_get_coauthors_from_message_search_api_success(self):
+        """
+        Test that the Search Users API is used to resolve a non-GitHub email to a username.
+        """
+        mock_github_connection = MagicMock()
+        mock_user = MagicMock()
+        mock_user.login = "johnsmith"
+        mock_github_connection.search_users.return_value.totalCount = 1
+        mock_github_connection.search_users.return_value.__getitem__ = MagicMock(
+            return_value=mock_user
+        )
+
+        message = """Fix bug
+
+Co-authored-by: John Smith <john@example.com>
+"""
+        result = get_coauthors_from_message(message, mock_github_connection)
+        self.assertEqual(result, ["johnsmith"])
+        mock_github_connection.search_users.assert_called_once_with(
+            "email:john@example.com"
+        )
+
+    def test_get_coauthors_from_message_search_api_not_found(self):
+        """
+        Test fallback to email address when Search Users API returns no results.
+        """
+        mock_github_connection = MagicMock()
+        mock_github_connection.search_users.return_value.totalCount = 0
+
+        message = """Fix bug
+
+Co-authored-by: Unknown User <unknown@example.com>
+"""
+        result = get_coauthors_from_message(message, mock_github_connection)
+        self.assertEqual(result, ["unknown@example.com"])
+
+    def test_get_coauthors_from_message_search_api_exception(self):
+        """
+        Test fallback to email address when Search Users API raises an exception.
+        """
+        mock_github_connection = MagicMock()
+        mock_github_connection.search_users.side_effect = Exception("API error")
+
+        message = """Fix bug
+
+Co-authored-by: John Doe <john@example.com>
+"""
+        result = get_coauthors_from_message(message, mock_github_connection)
+        self.assertEqual(result, ["john@example.com"])
+
+    def test_get_coauthors_from_message_email_cache_used(self):
+        """
+        Test that the email cache is used to avoid redundant API calls.
+        """
+        mock_github_connection = MagicMock()
+        mock_user = MagicMock()
+        mock_user.login = "cacheduser"
+        mock_github_connection.search_users.return_value.totalCount = 1
+        mock_github_connection.search_users.return_value.__getitem__ = MagicMock(
+            return_value=mock_user
+        )
+
+        email_cache = {}
+        message = """Fix bug
+
+Co-authored-by: Cached User <cached@example.com>
+Co-authored-by: Cached User <cached@example.com>
+"""
+        result = get_coauthors_from_message(
+            message, mock_github_connection, email_cache
+        )
+        # Both entries resolve to the same cached username
+        self.assertEqual(result, ["cacheduser", "cacheduser"])
+        # The Search Users API should only be called once (second lookup uses cache)
+        mock_github_connection.search_users.assert_called_once()
+
+    def test_get_coauthor_contributors_skips_bots(self):
+        """
+        Test that get_coauthor_contributors skips bot accounts.
+        """
+        mock_repo = MagicMock()
+        mock_repo.full_name = "owner/repo"
+
+        mock_commit = MagicMock()
+        mock_commit.commit.message = """Feature
+
+Co-authored-by: Some Bot <somebot[bot]@users.noreply.github.com>
+Co-authored-by: Alice <alice@users.noreply.github.com>
+"""
+
+        mock_repo.commits.return_value = [mock_commit]
+
+        result = get_coauthor_contributors(mock_repo, None, None, "", None)
+
+        # Only Alice should be in the result; the bot should be skipped
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].username, "alice")
+
     def test_get_coauthor_contributors_includes_all(self):
         """
         Test that get_coauthor_contributors includes all co-authors, even if they are already main contributors.
