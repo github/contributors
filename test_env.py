@@ -68,8 +68,8 @@ class TestEnv(unittest.TestCase):
             end_date,
             sponsor_info,
             link_to_profile,
-            output_filename,
-            show_avatar,
+            _output_filename,
+            _show_avatar,
         ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
@@ -183,8 +183,8 @@ class TestEnv(unittest.TestCase):
             end_date,
             sponsor_info,
             link_to_profile,
-            output_filename,
-            show_avatar,
+            _output_filename,
+            _show_avatar,
         ) = env.get_env_vars()
 
         self.assertEqual(organization, "org")
@@ -234,6 +234,7 @@ class TestEnv(unittest.TestCase):
             _sponsor_info,
             _link_to_profile,
             output_filename,
+            _show_avatar,
         ) = env.get_env_vars()
 
         self.assertEqual(output_filename, "custom-report.md")
@@ -291,6 +292,80 @@ class TestEnv(unittest.TestCase):
     )
     def test_get_env_vars_output_filename_special_chars_rejected(self):
         """Test that OUTPUT_FILENAME rejects filenames with special characters."""
+        with self.assertRaises(ValueError):
+            env.get_env_vars()
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_empty_defaults(self):
+        """Test that empty OUTPUT_FILENAME defaults to contributors.md."""
+        (
+            _organization,
+            _repository_list,
+            _gh_app_id,
+            _gh_app_installation_id,
+            _gh_app_private_key,
+            _gh_app_enterprise_only,
+            _token,
+            _ghe,
+            _start_date,
+            _end_date,
+            _sponsor_info,
+            _link_to_profile,
+            output_filename,
+            _show_avatar,
+        ) = env.get_env_vars()
+
+        self.assertEqual(output_filename, "contributors.md")
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "  ",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_whitespace_defaults(self):
+        """Test that whitespace OUTPUT_FILENAME defaults to contributors.md."""
+        (
+            _organization,
+            _repository_list,
+            _gh_app_id,
+            _gh_app_installation_id,
+            _gh_app_private_key,
+            _gh_app_enterprise_only,
+            _token,
+            _ghe,
+            _start_date,
+            _end_date,
+            _sponsor_info,
+            _link_to_profile,
+            output_filename,
+            _show_avatar,
+        ) = env.get_env_vars()
+
+        self.assertEqual(output_filename, "contributors.md")
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "GH_TOKEN": "token",
+            "OUTPUT_FILENAME": "bad@name.md",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_output_filename_invalid_chars_rejected(self):
+        """Test that OUTPUT_FILENAME rejects invalid characters."""
         with self.assertRaises(ValueError):
             env.get_env_vars()
 
@@ -395,6 +470,7 @@ class TestEnv(unittest.TestCase):
             _sponsor_info,
             _link_to_profile,
             _output_filename,
+            _show_avatar,
         ) = env.get_env_vars()
         self.assertEqual(start_date, "2024-01-01")
         self.assertEqual(end_date, "2025-01-01")

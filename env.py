@@ -101,6 +101,27 @@ def validate_date_range(start_date: str, end_date: str) -> None:
         )
 
 
+def validate_output_filename(output_filename: str) -> str:
+    """Validate OUTPUT_FILENAME and return a safe filename."""
+    if not output_filename:
+        return "contributors.md"
+
+    filename = output_filename.strip()
+    if not filename:
+        return "contributors.md"
+
+    if os.path.isabs(filename):
+        raise ValueError("OUTPUT_FILENAME must be a filename only, not a path")
+
+    if "/" in filename or "\\" in filename:
+        raise ValueError("OUTPUT_FILENAME must be a filename only, not a path")
+
+    if not re.fullmatch(r"[A-Za-z0-9._-]+", filename):
+        raise ValueError("OUTPUT_FILENAME contains invalid characters")
+
+    return filename
+
+
 def get_env_vars(
     test: bool = False,
 ) -> tuple[
@@ -179,6 +200,10 @@ def get_env_vars(
 
     sponsor_info = get_bool_env_var("SPONSOR_INFO", False)
     link_to_profile = get_bool_env_var("LINK_TO_PROFILE", False)
+    output_filename = validate_output_filename(
+        os.getenv("OUTPUT_FILENAME", "contributors.md")
+    )
+    show_avatar = get_bool_env_var("SHOW_AVATAR", False)
 
     # Separate repositories_str into a list based on the comma separator
     repositories_list = []
@@ -200,4 +225,6 @@ def get_env_vars(
         end_date,
         sponsor_info,
         link_to_profile,
+        output_filename,
+        show_avatar,
     )
