@@ -23,6 +23,7 @@ class TestContributors(unittest.TestCase):
         mock_user.login = "user"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
         mock_user.contributions_count = 100
+        mock_user.company = "@company"
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
         mock_repo.commits.return_value = iter([object()])
@@ -34,6 +35,7 @@ class TestContributors(unittest.TestCase):
         )
         mock_contributor_stats.assert_called_once_with(
             "user",
+            "@company",
             False,
             "https://avatars.githubusercontent.com/u/12345678?v=4",
             100,
@@ -54,6 +56,7 @@ class TestContributors(unittest.TestCase):
         mock_get_contributors.return_value = [
             ContributorStats(
                 "user",
+                "@company",
                 False,
                 "https://avatars.githubusercontent.com/u/29484535?v=4",
                 100,
@@ -72,6 +75,7 @@ class TestContributors(unittest.TestCase):
             [
                 ContributorStats(
                     "user",
+                    "@company",
                     False,
                     "https://avatars.githubusercontent.com/u/29484535?v=4",
                     200,
@@ -93,6 +97,7 @@ class TestContributors(unittest.TestCase):
         mock_get_contributors.return_value = [
             ContributorStats(
                 "user",
+                "@company",
                 False,
                 "https://avatars.githubusercontent.com/u/29484535?v=4",
                 100,
@@ -111,6 +116,7 @@ class TestContributors(unittest.TestCase):
             [
                 ContributorStats(
                     "user",
+                    "@company",
                     False,
                     "https://avatars.githubusercontent.com/u/29484535?v=4",
                     100,
@@ -133,10 +139,12 @@ class TestContributors(unittest.TestCase):
         mock_user.login = "user"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
         mock_user.contributions_count = 100
+        mock_user.company = "@company"
         mock_user2 = MagicMock()
         mock_user2.login = "user2"
         mock_user2.avatar_url = "https://avatars.githubusercontent.com/u/12345679?v=4"
         mock_user2.contributions_count = 102
+        mock_user2.company = "@company2"
 
         mock_repo.contributors.return_value = [mock_user, mock_user2]
         mock_repo.full_name = "owner/repo"
@@ -156,6 +164,7 @@ class TestContributors(unittest.TestCase):
         )
         mock_contributor_stats.assert_called_once_with(
             "user",
+            "@company",
             False,
             "https://avatars.githubusercontent.com/u/12345678?v=4",
             100,
@@ -173,6 +182,7 @@ class TestContributors(unittest.TestCase):
         mock_user.login = "[bot]"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
         mock_user.contributions_count = 100
+        mock_user.company = "@company"
 
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
@@ -194,6 +204,7 @@ class TestContributors(unittest.TestCase):
         mock_user.login = "user"
         mock_user.avatar_url = "https://avatars.githubusercontent.com/u/12345678?v=4"
         mock_user.contributions_count = 100
+        mock_user.company = "@company"
 
         mock_repo.contributors.return_value = [mock_user]
         mock_repo.full_name = "owner/repo"
@@ -204,6 +215,7 @@ class TestContributors(unittest.TestCase):
         mock_repo.commits.assert_not_called()
         mock_contributor_stats.assert_called_once_with(
             "user",
+            "@company",
             False,
             "https://avatars.githubusercontent.com/u/12345678?v=4",
             100,
@@ -311,6 +323,7 @@ class TestContributors(unittest.TestCase):
         """Test main sets new_contributor when start/end dates are provided."""
         contributor = ContributorStats(
             "user1",
+            "",
             False,
             "https://avatars.githubusercontent.com/u/1",
             10,
@@ -361,6 +374,7 @@ class TestContributors(unittest.TestCase):
         """Test main fetches sponsor information when sponsor_info is enabled."""
         contributor = ContributorStats(
             "user1",
+            "",
             False,
             "https://avatars.githubusercontent.com/u/1",
             10,
@@ -369,6 +383,7 @@ class TestContributors(unittest.TestCase):
         )
         sponsored_contributor = ContributorStats(
             "user1",
+            "",
             False,
             "https://avatars.githubusercontent.com/u/1",
             10,

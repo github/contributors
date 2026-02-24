@@ -236,9 +236,9 @@ jobs:
 | ------------------ | ------------------- | ------------------ |
 | 1                  | 143                 | 0%                 |
 
-| Username  | All Time Contribution Count | New Contributor | Commits between 2021-01-01 and 2023-10-10                                                                                           |
-| --------- | --------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| @zkoppert | 143                         | False           | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-01-01&until=2023-10-10) |
+| Username  | Company | All Time Contribution Count | New Contributor | Commits between 2021-01-01 and 2023-10-10                                                                                           |
+| --------- | ------- | --------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| @zkoppert | @github | 143                         | False           | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-01-01&until=2023-10-10) |
 ```
 
 ## Example Markdown output with no dates supplied
@@ -252,9 +252,9 @@ jobs:
 | ------------------ | ------------------- | ------------------ |
 | 1                  | 1913                | 0%                 |
 
-| Username  | All Time Contribution Count | New Contributor | Sponsor URL                                          | Commits between 2021-09-01 and 2023-09-30                                                                                           |
-| --------- | --------------------------- | --------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| @zkoppert | 1913                        | False           | [Sponsor Link](https://github.com/sponsors/zkoppert) | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-09-01&until=2023-09-30) |
+| Username  | Company | All Time Contribution Count | New Contributor | Sponsor URL                                          | Commits between 2021-09-01 and 2023-09-30                                                                                           |
+| --------- | ------- | --------------------------- | --------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| @zkoppert | @github | 1913                        | False           | [Sponsor Link](https://github.com/sponsors/zkoppert) | [super-linter/super-linter](https://github.com/super-linter/super-linter/commits?author=zkoppert&since=2021-09-01&until=2023-09-30) |
 ```
 
 ## GitHub Actions Job Summary
