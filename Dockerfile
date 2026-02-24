@@ -7,9 +7,9 @@ LABEL com.github.actions.name="contributors" \
     com.github.actions.icon="users" \
     com.github.actions.color="green" \
     maintainer="@zkoppert" \
-    org.opencontainers.image.url="https://github.com/github/contributors" \
-    org.opencontainers.image.source="https://github.com/github/contributors" \
-    org.opencontainers.image.documentation="https://github.com/github/contributors" \
+    org.opencontainers.image.url="https://github.com/github-community-projects/contributors" \
+    org.opencontainers.image.source="https://github.com/github-community-projects/contributors" \
+    org.opencontainers.image.documentation="https://github.com/github-community-projects/contributors" \
     org.opencontainers.image.vendor="GitHub" \
     org.opencontainers.image.description="GitHub Action that given an organization or repository, produces information about the contributors over the specified time period."
 

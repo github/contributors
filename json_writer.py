@@ -37,7 +37,7 @@ def write_to_json(
     #     "repository_list": [
     #         "github/stale-repos",
     #         "github/issue-metrics",
-    #         "github/contributors",
+    #         "github-community-projects/contributors",
     #         "github/automatic-contrib-prs",
     #         "github/evergreen",
     #         "github/cleanowners"
