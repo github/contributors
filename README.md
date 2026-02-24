@@ -149,7 +149,7 @@ jobs:
           echo "END_DATE=$end_date" >> "$GITHUB_ENV"
 
       - name: Run contributor action
-        uses: github-community-projects/contributors@v1
+        uses: github-community-projects/contributors@v2
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           START_DATE: ${{ env.START_DATE }}
@@ -202,7 +202,7 @@ jobs:
           echo "END_DATE=$end_date" >> "$GITHUB_ENV"
 
       - name: Run contributor action
-        uses: github-community-projects/contributors@v1
+        uses: github-community-projects/contributors@v2
         env:
           GH_APP_ID: ${{ secrets.GH_APP_ID }}
           GH_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}
