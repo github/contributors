@@ -273,6 +273,7 @@ class TestContributors(unittest.TestCase):
             False,
             False,
             "contributors.md",
+            False,
         )
 
         mock_auth = MagicMock()
@@ -346,6 +347,7 @@ class TestContributors(unittest.TestCase):
                 False,
                 False,
                 "contributors.md",
+                False,
             )
             mock_auth_to_github.return_value = MagicMock()
             mock_get_all_contributors.side_effect = [[contributor], []]
@@ -401,6 +403,7 @@ class TestContributors(unittest.TestCase):
                 "true",
                 False,
                 "contributors.md",
+                False,
             )
             mock_auth_to_github.return_value = MagicMock()
             mock_get_all_contributors.return_value = [contributor]
