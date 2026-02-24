@@ -21,7 +21,3 @@ examples: "feat: add new logger" or "fix: remove unused imports"
 - [ ] run `make lint` and fix any issues that you have introduced
 - [ ] run `make test` and ensure you have test coverage for the lines you are introducing
 - [ ] If publishing new data to the public (scorecards, security scan results, code quality results, live dashboards, etc.), please request review from `@jeffrey-luszcz`
-
-### Reviewer
-
-- [ ] Label as either `bug`, `documentation`, `enhancement`, `infrastructure`, `maintenance` or `breaking`
