@@ -3,7 +3,7 @@
 > Please update your git remote:
 >
 > ```shell
-> git remote set-url origin https://github.com/github-community-projects/contributors.git
+> git remote set-url origin git@github.com:github-community-projects/contributors.git
 > ```
 >
 > Note: replace `origin` with the name of your remote if it's different.
