@@ -323,6 +323,7 @@ class TestContributors(unittest.TestCase):
         """Test main sets new_contributor when start/end dates are provided."""
         contributor = ContributorStats(
             "user1",
+            "",
             False,
             "https://avatars.githubusercontent.com/u/1",
             10,
@@ -373,6 +374,7 @@ class TestContributors(unittest.TestCase):
         """Test main fetches sponsor information when sponsor_info is enabled."""
         contributor = ContributorStats(
             "user1",
+            "",
             False,
             "https://avatars.githubusercontent.com/u/1",
             10,
@@ -381,6 +383,7 @@ class TestContributors(unittest.TestCase):
         )
         sponsored_contributor = ContributorStats(
             "user1",
+            "",
             False,
             "https://avatars.githubusercontent.com/u/1",
             10,

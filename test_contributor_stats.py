@@ -51,6 +51,7 @@ class TestContributorStats(unittest.TestCase):
         """Test the __repr__ method includes key fields."""
         expected = (
             "contributor_stats(username=zkoppert, "
+            "company=@github, "
             "new_contributor=False, "
             "avatar_url=https://avatars.githubusercontent.com/u/29484535?v=4, "
             "contribution_count=1261, "
@@ -249,6 +250,7 @@ class TestContributorStats(unittest.TestCase):
         contributors = [
             ContributorStats(
                 username="user1",
+                company="",
                 new_contributor=False,
                 avatar_url="https://avatars.githubusercontent.com/u/",
                 contribution_count=100,
