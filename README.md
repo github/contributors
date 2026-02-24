@@ -1,9 +1,9 @@
 # Contributors action
 
-[![Python package](https://github.com/github/contributors/actions/workflows/python-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/python-ci.yml)
-[![Docker Image CI](https://github.com/github/contributors/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/github/contributors/actions/workflows/docker-ci.yml)
-[![CodeQL](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/github/contributors/actions/workflows/github-code-scanning/codeql)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/github/contributors/badge)](https://scorecard.dev/viewer/?uri=github.com/github/contributors)
+[![Python package](https://github.com/github-community-projects/contributors/actions/workflows/python-ci.yml/badge.svg)](https://github.com/github-community-projects/contributors/actions/workflows/python-ci.yml)
+[![Docker Image CI](https://github.com/github-community-projects/contributors/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/github-community-projects/contributors/actions/workflows/docker-ci.yml)
+[![CodeQL](https://github.com/github-community-projects/contributors/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/github-community-projects/contributors/actions/workflows/github-code-scanning/codeql)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/github-community-projects/contributors/badge)](https://scorecard.dev/viewer/?uri=github.com/github-community-projects/contributors)
 
 This is a GitHub Action that given an organization or specified repositories, produces information about the [contributors](https://chaoss.community/kb/metric-contributors/) over the specified time period.
 
@@ -20,7 +20,7 @@ This action was developed by the GitHub OSPO for our own use and developed in a 
 
 ## Support
 
-If you need support using this project or have questions about it, please [open up an issue in this repository](https://github.com/github/contributors/issues). Requests made directly to GitHub staff or support team will be redirected here to open an issue. GitHub SLA's and support/services contracts do not apply to this repository.
+If you need support using this project or have questions about it, please [open up an issue in this repository](https://github.com/github-community-projects/contributors/issues). Requests made directly to GitHub staff or support team will be redirected here to open an issue. GitHub SLA's and support/services contracts do not apply to this repository.
 
 ### OSPO GitHub Actions as a Whole
 
@@ -85,16 +85,16 @@ This action can be configured to authenticate with GitHub App Installation or Pe
 
 #### Other Configuration Options
 
-| field               | required                                        | default           | description                                                                                                                                                                                                              |
-| ------------------- | ----------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `GH_ENTERPRISE_URL` | False                                           | ""                | The `GH_ENTERPRISE_URL` is used to connect to an enterprise server instance of GitHub. github.com users should not enter anything here.                                                                                  |
-| `ORGANIZATION`      | Required to have `ORGANIZATION` or `REPOSITORY` |                   | The name of the GitHub organization which you want the contributor information of all repos from. ie. github.com/github would be `github`                                                                                |
-| `REPOSITORY`        | Required to have `ORGANIZATION` or `REPOSITORY` |                   | The name of the repository and organization which you want the contributor information from. ie. `github/contributors` or a comma separated list of multiple repositories `github/contributor,super-linter/super-linter` |
-| `START_DATE`        | False                                           | Beginning of time | The date from which you want to start gathering contributor information. ie. Aug 1st, 2023 would be `2023-08-01`.                                                                                                        |
-| `END_DATE`          | False                                           | Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02`                                                                       |
-| `SPONSOR_INFO`      | False                                           | False             | If you want to include sponsor information in the output. This will include the sponsor count and the sponsor URL. This will impact action performance. ie. SPONSOR_INFO = "False" or SPONSOR_INFO = "True"              |
-| `LINK_TO_PROFILE`   | False                                           | True              | If you want to link usernames to their GitHub profiles in the output. ie. LINK_TO_PROFILE = "True" or LINK_TO_PROFILE = "False"                                                                                          |
-| `OUTPUT_FILENAME`   | False                                           | contributors.md   | The output filename for the markdown report. ie. OUTPUT_FILENAME = "my-report.md"                                                                                                                                        |
+| field               | required                                        | default           | description                                                                                                                                                                                                                                 |
+| ------------------- | ----------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GH_ENTERPRISE_URL` | False                                           | ""                | The `GH_ENTERPRISE_URL` is used to connect to an enterprise server instance of GitHub. github.com users should not enter anything here.                                                                                                     |
+| `ORGANIZATION`      | Required to have `ORGANIZATION` or `REPOSITORY` |                   | The name of the GitHub organization which you want the contributor information of all repos from. ie. github.com/github would be `github`                                                                                                   |
+| `REPOSITORY`        | Required to have `ORGANIZATION` or `REPOSITORY` |                   | The name of the repository and organization which you want the contributor information from. ie. `github-community-projects/contributors` or a comma separated list of multiple repositories `github/contributor,super-linter/super-linter` |
+| `START_DATE`        | False                                           | Beginning of time | The date from which you want to start gathering contributor information. ie. Aug 1st, 2023 would be `2023-08-01`.                                                                                                                           |
+| `END_DATE`          | False                                           | Current Date      | The date at which you want to stop gathering contributor information. Must be later than the `START_DATE`. ie. Aug 2nd, 2023 would be `2023-08-02`                                                                                          |
+| `SPONSOR_INFO`      | False                                           | False             | If you want to include sponsor information in the output. This will include the sponsor count and the sponsor URL. This will impact action performance. ie. SPONSOR_INFO = "False" or SPONSOR_INFO = "True"                                 |
+| `LINK_TO_PROFILE`   | False                                           | True              | If you want to link usernames to their GitHub profiles in the output. ie. LINK_TO_PROFILE = "True" or LINK_TO_PROFILE = "False"                                                                                                             |
+| `OUTPUT_FILENAME`   | False                                           | contributors.md   | The output filename for the markdown report. ie. OUTPUT_FILENAME = "my-report.md"                                                                                                                                                           |
 
 **Note**: If `start_date` and `end_date` are specified then the action will determine if the contributor is new. A new contributor is one that has contributed in the date range specified but not before the start date.
 
@@ -138,7 +138,7 @@ jobs:
           echo "END_DATE=$end_date" >> "$GITHUB_ENV"
 
       - name: Run contributor action
-        uses: github/contributors@v1
+        uses: github-community-projects/contributors@v1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           START_DATE: ${{ env.START_DATE }}
@@ -191,7 +191,7 @@ jobs:
           echo "END_DATE=$end_date" >> "$GITHUB_ENV"
 
       - name: Run contributor action
-        uses: github/contributors@v1
+        uses: github-community-projects/contributors@v1
         env:
           GH_APP_ID: ${{ secrets.GH_APP_ID }}
           GH_APP_INSTALLATION_ID: ${{ secrets.GH_APP_INSTALLATION_ID }}

@@ -6,7 +6,7 @@
 #     "new_contributor" : "False",
 #     "avatar_url" : "https://avatars.githubusercontent.com/u/29484535?v=4",
 #     "contribution_count" : 1261,
-#     "commit_url" : "https://github.com/github/contributors/commits?author=zkoppert&since=2023-10-01&until=2023-10-05"
+#     "commit_url" : "https://github.com/github-community-projects/contributors/commits?author=zkoppert&since=2023-10-01&until=2023-10-05"
 #     "sponsor_info" : "https://github.com/sponsors/zkoppert"
 #   }
 # ]
