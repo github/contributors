@@ -27,8 +27,11 @@ class TestContributors(unittest.TestCase):
         mock_repo.full_name = "owner/repo"
         mock_repo.commits.return_value = iter([mock_commit])
 
-        contributors_module.get_contributors(mock_repo, "2022-01-01", "2022-12-31", "")
+        result = contributors_module.get_contributors(
+            mock_repo, "2022-01-01", "2022-12-31", ""
+        )
 
+        self.assertEqual(len(result), 1)
         mock_repo.commits.assert_called_once_with(
             since="2022-01-01", until="2022-12-31"
         )
@@ -124,9 +127,9 @@ class TestContributors(unittest.TestCase):
         )
 
     @patch("contributors.contributor_stats.ContributorStats")
-    def test_get_contributors_skip_users_with_no_commits(self, mock_contributor_stats):
+    def test_get_contributors_with_single_commit(self, mock_contributor_stats):
         """
-        Test the get_contributors function skips users with no commits in the date range.
+        Test get_contributors returns a single contributor for one commit in the date range.
         """
         mock_repo = MagicMock()
         mock_commit = MagicMock()
@@ -139,8 +142,11 @@ class TestContributors(unittest.TestCase):
         mock_repo.commits.return_value = iter([mock_commit])
         ghe = ""
 
-        contributors_module.get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
+        result = contributors_module.get_contributors(
+            mock_repo, "2022-01-01", "2022-12-31", ghe
+        )
 
+        self.assertEqual(len(result), 1)
         mock_repo.commits.assert_called_once_with(
             since="2022-01-01", until="2022-12-31"
         )
@@ -169,8 +175,11 @@ class TestContributors(unittest.TestCase):
         mock_repo.commits.return_value = iter([mock_commit])
         ghe = ""
 
-        contributors_module.get_contributors(mock_repo, "2022-01-01", "2022-12-31", ghe)
+        result = contributors_module.get_contributors(
+            mock_repo, "2022-01-01", "2022-12-31", ghe
+        )
 
+        self.assertEqual(result, [])
         # Ensure that the bot user is skipped and ContributorStats is never instantiated
         mock_contributor_stats.assert_not_called()
 
